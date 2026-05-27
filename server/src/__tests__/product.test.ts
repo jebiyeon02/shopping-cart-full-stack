@@ -53,6 +53,17 @@ describe('상품 추가 예외 테스트', () => {
     }).toThrow('가격은 0보다 큰 숫자여야 합니다.');
   });
 
+  test('가격이 숫자가 아니면 에러를 발생시킨다.', () => {
+    // when & then
+    expect(() => {
+      productManager.addProduct({
+        ...mockProduct,
+        // @ts-ignore 예외 처리를 위한 타입 무시
+        price: '2',
+      });
+    }).toThrow('가격은 0보다 큰 숫자여야 합니다.');
+  });
+
   test('가격이 0 이하이면 에러를 발생시킨다.', () => {
     // when & then
     expect(() => {
@@ -78,5 +89,85 @@ describe('상품 추가 예외 테스트', () => {
         quantity: 100,
       });
     }).toThrow('상품 재고는 1이상 99이하의 정수이어야 합니다.');
+
+    expect(() => {
+      productManager.addProduct({
+        ...mockProduct,
+        // @ts-ignore 예외 처리를 위한 타입 무시
+        quantity: '2',
+      });
+    }).toThrow('상품 재고는 1이상 99이하의 정수이어야 합니다.');
+  });
+
+  test('상품명 필드가 누락된 경우 에러를 발생시킨다.', () => {
+    // when & then
+    expect(() => {
+      productManager.addProduct({
+        ...mockProduct,
+        name: '',
+      });
+    }).toThrow('상품명 필드가 누락되었습니다.');
+
+    expect(() => {
+      productManager.addProduct({
+        ...mockProduct,
+        // @ts-ignore 예외 처리를 위한 타입 무시
+        name: null,
+      });
+    }).toThrow('상품명 필드가 누락되었습니다.');
+
+    expect(() => {
+      productManager.addProduct({
+        ...mockProduct,
+        // @ts-ignore 예외 처리를 위한 타입 무시
+        name: undefined,
+      });
+    }).toThrow('상품명 필드가 누락되었습니다.');
+  });
+
+  test('상품 가격 필드가 누락된 경우 에러를 발생시킨다.', () => {
+    // when & then
+    expect(() => {
+      productManager.addProduct({
+        ...mockProduct,
+        // @ts-ignore 예외 처리를 위한 타입 무시
+        price: null,
+      });
+    }).toThrow('가격 필드가 누락되었습니다.');
+
+    expect(() => {
+      productManager.addProduct({
+        ...mockProduct,
+        // @ts-ignore 예외 처리를 위한 타입 무시
+        price: undefined,
+      });
+    }).toThrow('가격 필드가 누락되었습니다.');
+  });
+
+  test('재고 필드가 누락된 경우 에러를 발생시킨다.', () => {
+    // when & then
+    expect(() => {
+      productManager.addProduct({
+        ...mockProduct,
+        // @ts-ignore 예외 처리를 위한 타입 무시
+        quantity: '',
+      });
+    }).toThrow('재고 필드가 누락되었습니다.');
+
+    expect(() => {
+      productManager.addProduct({
+        ...mockProduct,
+        // @ts-ignore 예외 처리를 위한 타입 무시
+        quantity: null,
+      });
+    }).toThrow('재고 필드가 누락되었습니다.');
+
+    expect(() => {
+      productManager.addProduct({
+        ...mockProduct,
+        // @ts-ignore 예외 처리를 위한 타입 무시
+        quantity: undefined,
+      });
+    }).toThrow('재고 필드가 누락되었습니다.');
   });
 });
