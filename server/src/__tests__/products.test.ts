@@ -1,6 +1,6 @@
-import ProductManager, { ProductCreateDTO } from '../ProductManager.js';
+import ProductManager, { Product } from '../ProductManager.js';
 
-const mockProduct: ProductCreateDTO = {
+const mockProduct: Product = {
   name: '아디다스양말',
   price: 5000,
   imgUrl: 'https://abc.com',
@@ -213,7 +213,7 @@ describe('상품 삭제 예외 테스트', () => {
     // given
     const productManager = new ProductManager();
     productManager.addProduct(mockProduct);
-    
+
     const wrongProductId = 2;
 
     // when & then
