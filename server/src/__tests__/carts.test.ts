@@ -130,3 +130,16 @@ describe('장바구니 상품 삭제 기능 테스트', () => {
     expect(cart.getOrderCount(productId)).toBe(undefined);
   });
 });
+
+describe('장바구니 상품 삭제 예외 테스트', () => {
+  test('장바구니에 존재하지 않는 상품을 제거했을 때 에러를 발생시킨다.', () => {
+    // given
+    const cart = new Cart();
+    const wrongProductId = 999;
+
+    // when & then
+    expect(() => {
+      cart.deleteCartItem(wrongProductId);
+    }).toThrow('삭제하려는 상품이 장바구니에 존재하지 않습니다.');
+  });
+});

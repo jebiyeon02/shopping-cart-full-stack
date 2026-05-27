@@ -6,9 +6,23 @@ class Cart {
   constructor() {
     this.cartItems = new Map();
 
-    // 추가가 없기 때문에 mockData 사용
+    // 장바구니에 상품 추가 기능이 없기 때문에 mockData 사용
     this.cartItems.set(1, 10);
     this.cartItems.set(2, 5);
+  }
+
+  setOrderCount(id: number, orderCount: number) {
+    this.validateOrderCount(id, orderCount);
+    this.cartItems.set(id, orderCount);
+  }
+
+  deleteCartItem(id: number) {
+    this.validateCardItemDeletion(id);
+    this.cartItems.delete(id);
+  }
+
+  getOrderCount(id: number) {
+    return this.cartItems.get(id);
   }
 
   private validateOrderCount(id: number, orderCount: number) {
@@ -25,17 +39,10 @@ class Cart {
     }
   }
 
-  setOrderCount(id: number, orderCount: number) {
-    this.validateOrderCount(id, orderCount);
-    this.cartItems.set(id, orderCount);
-  }
-
-  deleteCartItem(id: number) {
-    this.cartItems.delete(id);
-  }
-
-  getOrderCount(id: number) {
-    return this.cartItems.get(id);
+  private validateCardItemDeletion(id: number) {
+    if (!this.cartItems.has(id)) {
+      throw new Error('삭제하려는 상품이 장바구니에 존재하지 않습니다.');
+    }
   }
 }
 
