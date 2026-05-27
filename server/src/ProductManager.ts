@@ -54,6 +54,11 @@ class ProductManager {
   }
 
   deleteProduct(id: number) {
+    const findProduct = this.products.find((product) => product.id === id);
+    if (!findProduct) {
+      throw new Error('삭제하려는 상품이 존재하지 않습니다.');
+    }
+
     this.products = this.products.filter((product) => product.id !== id);
   }
 

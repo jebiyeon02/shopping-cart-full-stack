@@ -207,3 +207,18 @@ describe('상품 삭제 기능 테스트', () => {
     ).toBe(undefined);
   });
 });
+
+describe('상품 삭제 예외 테스트', () => {
+  test('존재하지 않는 상품 삭제 시 에러를 발생시킨다.', () => {
+    // given
+    const productManager = new ProductManager();
+    productManager.addProduct(mockProduct);
+    
+    const wrongProductId = 2;
+
+    // when & then
+    expect(() => {
+      productManager.deleteProduct(wrongProductId);
+    }).toThrow('삭제하려는 상품이 존재하지 않습니다.');
+  });
+});
