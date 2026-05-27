@@ -19,7 +19,7 @@ class Cart {
     if (!orderCount && orderCount !== 0) {
       throw new Error('주문 수량 필드가 누락되었습니다.');
     }
-    
+
     if (typeof orderCount === 'string' || orderCount < 1) {
       throw new Error('변경할 수량은 0보다 큰 숫자여야 합니다.');
     }
@@ -28,6 +28,10 @@ class Cart {
   setOrderCount(id: number, orderCount: number) {
     this.validateOrderCount(id, orderCount);
     this.cartItems.set(id, orderCount);
+  }
+
+  deleteCartItem(id: number) {
+    this.cartItems.delete(id);
   }
 
   getOrderCount(id: number) {

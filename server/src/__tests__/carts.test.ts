@@ -117,5 +117,16 @@ describe('장바구니 상품 수량 변경 예외 테스트', () => {
   });
 });
 
-// 1. 남아있는 재고보다 더 많은 값으로 변경하려고 함
-// 2. 에러가 발생해야되는 것을 테스트 해야 함.
+describe('장바구니 상품 삭제 기능 테스트', () => {
+  test('장바구니에 담긴 상품을 삭제하면, 해당 상품이 장바구니 상품 목록에서 삭제된다.', () => {
+    // given
+    const cart = new Cart();
+    const productId = 1;
+
+    // when
+    cart.deleteCartItem(productId);
+
+    // then
+    expect(cart.getOrderCount(productId)).toBe(undefined);
+  });
+});
