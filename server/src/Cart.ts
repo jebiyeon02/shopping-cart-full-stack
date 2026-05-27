@@ -5,9 +5,13 @@ class Cart {
 
   constructor() {
     this.cartItems = new Map();
+
+    // 추가가 없기 때문에 mockData 사용
+    this.cartItems.set(1, 10);
+    this.cartItems.set(2, 5);
   }
 
-  updateProductQuantity(id: number, orderCount: number) {
+  setOrderCount(id: number, orderCount: number) {
     this.cartItems.set(id, orderCount);
   }
 
