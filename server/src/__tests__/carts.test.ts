@@ -64,6 +64,23 @@ describe('장바구니 상품 수량 변경 예외 테스트', () => {
       cartService.updateCartOrderCount(productId, orderCount);
     }).toThrow('보유한 상품의 개수를 넘어섰습니다.');
   });
+
+  test('상품 수량이 1 이상의 정수가 아닐때 에러를 발생시킨다.', () => {
+    // given
+    const cart = new Cart();
+    const productId = 1;
+
+    // when & then
+    expect(() => {
+      // @ts-ignore 예외 처리를 위한 타입 무시
+      cart.setOrderCount(productId, 'abc');
+    }).toThrow('변경할 수량은 0보다 큰 숫자여야 합니다.');
+
+    expect(() => {
+      // @ts-ignore 예외 처리를 위한 타입 무시
+      cart.setOrderCount(productId, '2');
+    }).toThrow('변경할 수량은 0보다 큰 숫자여야 합니다.');
+  });
 });
 
 // 1. 남아있는 재고보다 더 많은 값으로 변경하려고 함
