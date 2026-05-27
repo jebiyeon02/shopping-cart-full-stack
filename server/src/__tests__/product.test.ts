@@ -1,15 +1,16 @@
 import ProductManager, { ProductCreateDTO } from '../ProductManager.js';
 
+const mockProduct: ProductCreateDTO = {
+  name: '아디다스양말',
+  price: 5000,
+  imgUrl: 'https://abc.com',
+  quantity: 10,
+};
+
 describe('상품 추가 기능 테스트', () => {
   test('상품 1개를 추가하면, 해당 상품이 상품 목록에 추가된다.', () => {
     // given
     const productManager = new ProductManager();
-    const mockProduct: ProductCreateDTO = {
-      name: '아디다스 양말',
-      price: 5000,
-      imgUrl: 'https://abc.com',
-      quantity: 10,
-    };
 
     // when
     productManager.addProduct(mockProduct);
@@ -24,19 +25,41 @@ describe('상품 추가 기능 테스트', () => {
 });
 
 describe('상품 추가 예외 테스트', () => {
-  test('상품명이 100자를 초과하면 에러를 발생시킨다.', () => {
-    // given
-    const productManager = new ProductManager();
-    const mockProduct: ProductCreateDTO = {
-      name: '아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말',
-      price: 5000,
-      imgUrl: 'https://abc.com',
-      quantity: 10,
-    };
+  // given
+  let productManager: ProductManager;
 
+  beforeEach(() => {
+    productManager = new ProductManager();
+  });
+
+  test('상품명이 100자를 초과하면 에러를 발생시킨다.', () => {
     // when & then
     expect(() => {
-      productManager.addProduct(mockProduct);
+      productManager.addProduct({
+        ...mockProduct,
+        name: '아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말아디다스양말',
+      });
     }).toThrow('상품명은 100자를 초과할 수 없습니다.');
+  });
+
+  test('가격이 숫자가 아니면 에러를 발생시킨다.', () => {
+    // when & then
+    expect(() => {
+      productManager.addProduct({
+        ...mockProduct,
+        // @ts-ignore 예외 처리를 위한 타입 무시
+        price: 'abc',
+      });
+    }).toThrow('가격은 0보다 큰 숫자여야 합니다.');
+  });
+
+  test('가격이 0 이하이면 에러를 발생시킨다.', () => {
+    // when & then
+    expect(() => {
+      productManager.addProduct({
+        ...mockProduct,
+        price: 0,
+      });
+    }).toThrow('가격은 0보다 큰 숫자여야 합니다.');
   });
 });

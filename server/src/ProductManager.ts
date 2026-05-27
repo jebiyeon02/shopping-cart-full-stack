@@ -24,8 +24,15 @@ class ProductManager {
     }
   }
 
+  private validateProductPrice(price: number) {
+    if (price <= 0 || Number.isNaN(Number(price))) {
+      throw new Error('가격은 0보다 큰 숫자여야 합니다.');
+    }
+  }
+
   addProduct(product: ProductCreateDTO) {
     this.validateProductName(product.name);
+    this.validateProductPrice(product.price);
     this.products.push({ ...product, id: this.id++ });
   }
 
