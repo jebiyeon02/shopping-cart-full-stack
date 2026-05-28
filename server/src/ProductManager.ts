@@ -44,11 +44,15 @@ class ProductManager {
     }
   }
 
-  addProduct(product: Product) {
+  // 생성된 상품의 id를 반환하여, 컨트롤러가 응답 본문에 담을 수 있도록 한다.
+  addProduct(product: Product): number {
     this.validateProductQuantity(product.quantity);
     this.validateProductName(product.name);
     this.validateProductPrice(product.price);
-    this.products.set(this.id++, product);
+
+    const newId = this.id++;
+    this.products.set(newId, product);
+    return newId;
   }
 
   deleteProduct(id: number) {
