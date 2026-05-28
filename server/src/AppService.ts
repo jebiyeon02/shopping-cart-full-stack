@@ -26,7 +26,7 @@ class AppService {
     this.cart.setOrderCount(id, orderCount);
   }
 
-  deleteProduct(id: number) {
+  deleteProductWithCascade(id: number) {
     this.productManager.deleteProduct(id);
     this.cart.deleteCartItem(id);
   }
