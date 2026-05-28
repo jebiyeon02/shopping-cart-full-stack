@@ -1,11 +1,12 @@
 import express from 'express';
 import ProductManager from './ProductManager.js';
-import CartSerive from './CartService.js';
+import Cart from './Cart.js';
+import AppService from './AppService.js';
 
 const productManager = new ProductManager();
-const products = productManager.getProducts();
+const cart = new Cart();
 
-const cartService = new CartSerive(products);
+const appService = new AppService(productManager, cart);
 
 const app = express();
 app.use(express.json());

@@ -1,5 +1,5 @@
 import Cart from '../Cart.js';
-import CartService from '../CartService.js';
+import AppService from '../AppService.js';
 import ProductManager from '../ProductManager.js';
 
 describe('장바구니 상품 수량 변경 기능 테스트', () => {
@@ -54,14 +54,15 @@ describe('장바구니 상품 수량 변경 예외 테스트', () => {
     mockProducts.forEach((product) => {
       productManager.addProduct(product);
     });
+    const cart = new Cart();
 
-    const cartService = new CartService(productManager.getProducts());
+    const appService = new AppService(productManager, cart);
     const productId = 1;
     const orderCount = 11;
 
     // when & then
     expect(() => {
-      cartService.updateCartOrderCount(productId, orderCount);
+      appService.updateCartOrderCount(productId, orderCount);
     }).toThrow('보유한 상품의 개수를 넘어섰습니다.');
   });
 
