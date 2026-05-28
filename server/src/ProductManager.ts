@@ -50,8 +50,8 @@ class ProductManager {
     this.validateProductName(product.name);
     this.validateProductPrice(product.price);
 
-    const newId = this.id++;
-    this.products.set(newId, product);
+    const newId = this.id;
+    this.products.set(this.id++, product);
     return newId;
   }
 
@@ -71,6 +71,11 @@ class ProductManager {
     });
 
     return result;
+  }
+
+  reset() {
+    this.products.clear();
+    this.id = 1;
   }
 }
 

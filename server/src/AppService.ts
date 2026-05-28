@@ -29,7 +29,29 @@ class AppService {
 
   deleteProductWithCascade(id: number) {
     this.productManager.deleteProduct(id);
+
+    if (!this.cart.hasCartItem(id)) return;
     this.cart.deleteCartItem(id);
+  }
+
+  getCartItems() {
+    const cartItems = this.cart.getCartItem();
+    const products = this.productManager.getProducts();
+    return cartItems.map(({ id, orderCount }) => {
+      const findProduct = products.find((product) => product.id === id);
+      if (!findProduct) {
+        // TODO: 리팩토링 해야됨
+        throw new Error('요청하신 장바구니 상품을 조회할 수 없습니다.');
+      }
+
+      return {
+        id,
+        name: findProduct.name,
+        price: findProduct.price,
+        imgUrl: findProduct.imgUrl,
+        orderCount,
+      };
+    });
   }
 }
 

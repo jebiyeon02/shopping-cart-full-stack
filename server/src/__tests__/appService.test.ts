@@ -54,6 +54,7 @@ describe('앱 서비스 테스트', () => {
     const deleteProductId = 1;
 
     const cart = new Cart();
+    cart.addCartItem(deleteProductId, 1);
     const appService = new AppService(productManager, cart);
 
     // when

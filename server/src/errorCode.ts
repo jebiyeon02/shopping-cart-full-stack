@@ -59,6 +59,11 @@ export const ERROR_CODE = {
     status: 404,
     message: '삭제하려는 상품이 장바구니에 존재하지 않습니다.',
   },
+  INTERNAL_SERVER_ERROR: {
+    code: 'INTERNAL_SERVER_ERROR',
+    status: 500,
+    message: '서버 오류가 발생했습니다.',
+  },
 } as const;
 
 export type ErrorCodeKey = keyof typeof ERROR_CODE;

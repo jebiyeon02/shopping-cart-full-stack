@@ -7,12 +7,13 @@ class Cart {
 
   constructor() {
     this.cartItems = new Map();
-
-    // 장바구니에 상품 추가 기능이 없기 때문에 mockData 사용
-    this.cartItems.set(1, 10);
-    this.cartItems.set(2, 5);
   }
 
+  addCartItem(id: number, orderCount: number) {
+    this.cartItems.set(id, orderCount);
+  }
+
+  // 수량 변경
   setOrderCount(id: number, orderCount: number) {
     this.validateOrderCount(id, orderCount);
     this.cartItems.set(id, orderCount);
@@ -25,6 +26,20 @@ class Cart {
 
   getOrderCount(id: number) {
     return this.cartItems.get(id);
+  }
+
+  getCartItem() {
+    let result: Array<{ id: number; orderCount: number }> = [];
+
+    this.cartItems.forEach((orderCount, id) => {
+      result.push({ id, orderCount });
+    });
+
+    return result;
+  }
+
+  hasCartItem(id: number) {
+    return this.cartItems.has(id);
   }
 
   private validateOrderCount(id: number, orderCount: number) {
