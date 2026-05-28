@@ -1,6 +1,6 @@
-import AppError from './AppError.js';
-import Cart from './Cart.js';
-import ProductManager from './ProductManager.js';
+import AppError from '../errors/AppError.js';
+import Cart from '../model/Cart.js';
+import ProductManager from '../model/ProductManager.js';
 
 class AppService {
   constructor(

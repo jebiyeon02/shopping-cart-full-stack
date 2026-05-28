@@ -1,8 +1,8 @@
 import express from 'express';
-import ProductManager from './ProductManager.js';
-import Cart from './Cart.js';
-import AppService from './AppService.js';
-import { errorHandler } from './errorHandler.js';
+import ProductManager from './model/ProductManager.js';
+import Cart from './model/Cart.js';
+import AppService from './service/AppService.js';
+import { errorHandler } from './errors/errorHandler.js';
 
 // productManager, cart 인스턴스를 테스트에서 사용하기 위해서 export한다.
 export const productManager = new ProductManager();

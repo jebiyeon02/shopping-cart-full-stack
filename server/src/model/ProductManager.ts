@@ -1,4 +1,4 @@
-import AppError from './AppError.js';
+import AppError from '../errors/AppError.js';
 
 export type Product = {
   name: string;

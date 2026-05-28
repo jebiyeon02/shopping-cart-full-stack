@@ -1,7 +1,7 @@
-import AppError from '../AppError.js';
-import AppService from '../AppService.js';
-import Cart from '../Cart.js';
-import ProductManager from '../ProductManager.js';
+import AppError from '../errors/AppError.js';
+import AppService from '../service/AppService.js';
+import Cart from '../model/Cart.js';
+import ProductManager from '../model/ProductManager.js';
 
 describe('앱 서비스 테스트', () => {
   test('상품 재고보다 더 많은 수량으로 변경 시 에러를 발생시킨다.', () => {

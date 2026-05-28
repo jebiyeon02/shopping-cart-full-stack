@@ -1,5 +1,5 @@
-import AppError from '../AppError.js';
-import Cart from '../Cart.js';
+import AppError from '../errors/AppError.js';
+import Cart from '../model/Cart.js';
 
 describe('장바구니 상품 수량 변경 기능 테스트', () => {
   test('상품 1개를 추가하면, 해당 상품의 주문 수량이 1 증가한다.', () => {

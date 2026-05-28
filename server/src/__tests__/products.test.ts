@@ -1,5 +1,5 @@
-import AppError from '../AppError.js';
-import ProductManager, { Product } from '../ProductManager.js';
+import AppError from '../errors/AppError.js';
+import ProductManager, { Product } from '../model/ProductManager.js';
 
 const mockProduct: Product = {
   name: '아디다스양말',
