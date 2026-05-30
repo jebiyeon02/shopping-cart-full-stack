@@ -1,6 +1,8 @@
 import request from "supertest";
 import app, { resetApp } from "../app.js";
 
+//TODO: imMemory 가지고 테스트 진행해보기?
+
 describe("POST /products API 테스트", () => {
   beforeEach(() => {
     resetApp();
@@ -24,98 +26,123 @@ describe("POST /products API 테스트", () => {
       result: { id: expect.any(Number) },
     });
   });
+
+  test("상품명이 100자를 초과하면 400과 PRODUCT_NAME_LENGTH_EXCEEDED 코드를 응답한다.", async () => {
+    // given
+    const invalidProduct = {
+      name: "a".repeat(101),
+      price: 13000,
+      imgUrl: "https://image-url.com",
+      quantity: 2,
+    };
+
+    // when
+    const response = await request(app).post("/products").send(invalidProduct);
+
+    // then
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      code: "PRODUCT_NAME_LENGTH_EXCEEDED",
+      message: "상품명은 100자를 초과할 수 없습니다.",
+    });
+  });
+
+  test("가격이 0 이하이면 400과 INVALID_PRODUCT_PRICE_TYPE 코드를 응답한다.", async () => {
+    // given
+    const invalidProduct = {
+      name: "아디다스 양말",
+      price: 0,
+      imgUrl: "https://image-url.com",
+      quantity: 2,
+    };
+
+    // when
+    const response = await request(app).post("/products").send(invalidProduct);
+
+    // then
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      code: "INVALID_PRODUCT_PRICE_TYPE",
+      message: "가격은 0보다 큰 숫자여야 합니다.",
+    });
+  });
+
+  test("재고 수량이 범위(1~99)를 벗어나면 400과 INVALID_PRODUCT_QUANTITY_RANGE 코드를 응답한다.", async () => {
+    // given
+    const invalidProduct = {
+      name: "아디다스 양말",
+      price: 13000,
+      imgUrl: "https://image-url.com",
+      quantity: 100,
+    };
+
+    // when
+    const response = await request(app).post("/products").send(invalidProduct);
+
+    // then
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      code: "INVALID_PRODUCT_QUANTITY_RANGE",
+      message: "상품 재고는 1이상 99이하의 정수이어야 합니다.",
+    });
+  });
+
+  test("상품명 필드가 누락되면 400과 EMPTY_PRODUCT_NAME 코드를 응답한다.", async () => {
+    // given
+    const invalidProduct = {
+      price: 13000,
+      imgUrl: "https://image-url.com",
+      quantity: 2,
+    };
+
+    // when
+    const response = await request(app).post("/products").send(invalidProduct);
+
+    // then
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      code: "EMPTY_PRODUCT_NAME",
+      message: "상품명 필드가 누락되었습니다.",
+    });
+  });
 });
 
-//   test("상품명이 100자를 초과하면 400과 PRODUCT_NAME_LENGTH_EXCEEDED 코드를 응답한다.", async () => {
-//     // given
-//     const invalidProduct = {
-//       name: "a".repeat(101),
-//       price: 13000,
-//       imgUrl: "https://image-url.com",
-//       quantity: 2,
-//     };
-
-//     // when
-//     const response = await request(app).post("/products").send(invalidProduct);
-
-//     // then
-//     expect(response.status).toBe(400);
-//     expect(response.body).toEqual({
-//       code: "PRODUCT_NAME_LENGTH_EXCEEDED",
-//       message: "상품명은 100자를 초과할 수 없습니다.",
-//     });
-//   });
-
-//   test("가격이 0 이하이면 400과 INVALID_PRODUCT_PRICE_TYPE 코드를 응답한다.", async () => {
-//     // given
-//     const invalidProduct = {
-//       name: "아디다스 양말",
-//       price: 0,
-//       imgUrl: "https://image-url.com",
-//       quantity: 2,
-//     };
-
-//     // when
-//     const response = await request(app).post("/products").send(invalidProduct);
-
-//     // then
-//     expect(response.status).toBe(400);
-//     expect(response.body).toEqual({
-//       code: "INVALID_PRODUCT_PRICE_TYPE",
-//       message: "가격은 0보다 큰 숫자여야 합니다.",
-//     });
-//   });
-
-//   test("재고 수량이 범위(1~99)를 벗어나면 400과 INVALID_PRODUCT_QUANTITY_RANGE 코드를 응답한다.", async () => {
-//     // given
-//     const invalidProduct = {
-//       name: "아디다스 양말",
-//       price: 13000,
-//       imgUrl: "https://image-url.com",
-//       quantity: 100,
-//     };
-
-//     // when
-//     const response = await request(app).post("/products").send(invalidProduct);
-
-//     // then
-//     expect(response.status).toBe(400);
-//     expect(response.body).toEqual({
-//       code: "INVALID_PRODUCT_QUANTITY_RANGE",
-//       message: "상품 재고는 1이상 99이하의 정수이어야 합니다.",
-//     });
-//   });
-
-//   test("상품명 필드가 누락되면 400과 EMPTY_PRODUCT_NAME 코드를 응답한다.", async () => {
-//     // given
-//     const invalidProduct = {
-//       price: 13000,
-//       imgUrl: "https://image-url.com",
-//       quantity: 2,
-//     };
-
-//     // when
-//     const response = await request(app).post("/products").send(invalidProduct);
-
-//     // then
-//     expect(response.status).toBe(400);
-//     expect(response.body).toEqual({
-//       code: "EMPTY_PRODUCT_NAME",
-//       message: "상품명 필드가 누락되었습니다.",
-//     });
-//   });
-// });
-
 describe("DELETE /products API 테스트", () => {
-  test("정상적인 상품 삭제 시 204를 응답한다.", async () => {
-    // given
-    const deleteId = 1;
+  let deleteId = 0;
+  beforeEach(async () => {
+    resetApp();
+    const newProduct = {
+      name: "아디다스 양말",
+      price: 13000,
+      imgUrl: "https://image-url.com",
+      quantity: 2,
+    };
+    const productResponse = await request(app)
+      .post("/products")
+      .send(newProduct);
 
+    deleteId = productResponse.body.result.id;
+  });
+
+  test("정상적인 상품 삭제 시 204를 응답한다.", async () => {
     // when
     const response = await request(app).delete(`/products/${deleteId}`);
 
     // then
     expect(response.status).toBe(204);
+  });
+
+  test("존재하지 않는 상품 삭제 시 404와 PRODUCT_NOT_EXIST 코드를 응답한다.", async () => {
+    const wrongDeleteId = 999999999;
+    // when
+    const response = await request(app).delete(`/products/${wrongDeleteId}`);
+
+    // then
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({
+      code: "PRODUCT_NOT_EXIST",
+      message: "상품이 존재하지 않습니다.",
+    });
   });
 });
 
@@ -125,14 +152,16 @@ describe("GET /products API 테스트", () => {
   });
 
   test("상품 조회 시 200과 상품 목록을 응답한다.", async () => {
-    //   // given
+    // given
     const newProduct = {
       name: "아디다스 양말",
       price: 13000,
       imgUrl: "https://image-url.com",
       quantity: 2,
     };
-    await request(app).post("/products").send(newProduct);
+    const productResponse = await request(app)
+      .post("/products")
+      .send(newProduct);
 
     // when
     const response = await request(app).get(`/products`);
@@ -142,105 +171,212 @@ describe("GET /products API 테스트", () => {
     expect(response.body).toEqual({
       code: 200,
       message: "요청에 성공했습니다.",
-      result: { products: [{ ...newProduct, id: 1 }] },
+      result: {
+        products: [{ ...newProduct, id: productResponse.body.result.id }],
+      },
     });
   });
 });
 
-// describe("GET /carts API 테스트", () => {
-//   test("장바구니 상품 조회 시 200과 상품 목록을 응답한다.", async () => {
-//     // given
-//     const newProduct = {
-//       name: "아디다스 양말",
-//       price: 13000,
-//       imgUrl: "https://image-url.com",
-//       quantity: 2,
-//     };
-//     pr
+describe("GET /carts API 테스트", () => {
+  beforeEach(() => {
+    resetApp();
+  });
 
-//     // when
-//     await request(app).post("/products").send(newProduct);
+  test("장바구니 상품 조회 시 200과 상품 목록을 응답한다.", async () => {
+    // given
+    const newProduct = {
+      name: "아디다스 양말",
+      price: 13000,
+      imgUrl: "https://image-url.com",
+      quantity: 2,
+    };
+    const productResponse = await request(app)
+      .post("/products")
+      .send(newProduct);
 
-//     // 장바구니에 담는 API는 존재하지 않기때문에 App.ts에서 생성한 Cart 인스턴스를 직접 사용한다.
-//     cart.addCartItem(1, 10);
-//     const response = await request(app).get(`/carts`);
+    const newCartItem = {
+      productId: productResponse.body.result.id,
+      itemCount: 10,
+    };
+    await request(app).post("/carts").send(newCartItem);
 
-//     // then
-//     expect(response.status).toBe(200);
-//     expect(response.body).toEqual({
-//       code: 200,
-//       message: "요청에 성공했습니다.",
-//       result: {
-//         cartItems: [
-//           {
-//             id: 1,
-//             name: "아디다스 양말",
-//             price: 13000,
-//             imgUrl: "https://image-url.com",
-//             orderCount: 10,
-//           },
-//         ],
-//       },
-//     });
-//   });
-// });
+    // when
+    const response = await request(app).get(`/carts`);
 
-// describe("DELETE /carts/:id API 테스트", () => {
-//   beforeEach(() => {
-//     productManager.reset();
-//   });
+    // then
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      code: 200,
+      message: "요청에 성공했습니다.",
+      result: {
+        cartItems: [
+          {
+            id: 1,
+            name: "아디다스 양말",
+            price: 13000,
+            imgUrl: "https://image-url.com",
+            itemCount: 10,
+          },
+        ],
+      },
+    });
+  });
+});
 
-//   test("장바구니 상품 삭제 시 204를 응답한다.", async () => {
-//     // given
+describe("DELETE /carts/:id API 테스트", () => {
+  let deleteId = 0;
+  beforeEach(async () => {
+    resetApp();
+    const newProduct = {
+      name: "아디다스 양말",
+      price: 13000,
+      imgUrl: "https://image-url.com",
+      quantity: 2,
+    };
+    const productResponse = await request(app)
+      .post("/products")
+      .send(newProduct);
 
-//     // 장바구니에 담는 API는 존재하지 않기때문에 App.ts에서 생성한 Cart 인스턴스를 직접 사용한다.
-//     cart.addCartItem(1, 10);
+    const newCartItem = {
+      productId: 1,
+      itemCount: 10,
+    };
+    await request(app).post("/carts").send(newCartItem);
 
-//     const deleteId = 1;
+    deleteId = productResponse.body.result.id;
+  });
 
-//     // when
-//     const response = await request(app).delete(`/carts/${deleteId}`);
+  test("장바구니 상품 삭제 시 204를 응답한다.", async () => {
+    // when
+    const response = await request(app).delete(`/carts/${deleteId}`);
 
-//     // then
-//     expect(response.status).toBe(204);
-//   });
-// });
+    // then
+    expect(response.status).toBe(204);
+  });
 
-// describe("PATCH /carts/:id API 테스트", () => {
-//   beforeEach(() => {
-//     productManager.reset();
-//   });
+  test("장바구니에 존재하지 않는 상품 삭제 시 404와 PRODUCT_NOT_EXIST_IN_CART 코드를 응답한다.", async () => {
+    const wrongDeleteId = 999999999;
+    // when
+    const response = await request(app).delete(`/carts/${wrongDeleteId}`);
 
-//   test("장바구니 상품 수량 변경 성공 시 200과 id, orderCount를 응답한다.", async () => {
-//     //given
-//     const newProduct = {
-//       name: "아디다스 양말",
-//       price: 13000,
-//       imgUrl: "https://image-url.com",
-//       quantity: 50,
-//     };
-//     await request(app).post("/products").send(newProduct);
+    // then
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({
+      code: "PRODUCT_NOT_EXIST_IN_CART",
+      message: "해당 상품이 장바구니에 존재하지 않습니다.",
+    });
+  });
+});
 
-//     // 장바구니에 담는 API는 존재하지 않기때문에 App.ts에서 생성한 Cart 인스턴스를 직접 사용한다.
-//     const updateId = 1;
+describe("PATCH /carts/:id API 테스트", () => {
+  let updateId = 1;
+  beforeEach(async () => {
+    resetApp();
 
-//     cart.addCartItem(updateId, 10);
-//     const updateOrderCount = 5;
+    const newProduct = {
+      name: "아디다스 양말",
+      price: 13000,
+      imgUrl: "https://image-url.com",
+      quantity: 20,
+    };
+    const productResponse = await request(app)
+      .post("/products")
+      .send(newProduct);
 
-//     // when
-//     const response = await request(app).patch(`/carts/${updateId}`).send({
-//       orderCount: updateOrderCount,
-//     });
+    const newCartItem = {
+      productId: 1,
+      itemCount: 10,
+    };
+    await request(app).post("/carts").send(newCartItem);
 
-//     // then
-//     expect(response.status).toBe(200);
-//     expect(response.body).toEqual({
-//       code: 200,
-//       message: "성공적으로 수량이 변경되었습니다.",
-//       result: {
-//         id: updateId,
-//         orderCount: updateOrderCount,
-//       },
-//     });
-//   });
-// });
+    updateId = productResponse.body.result.id;
+  });
+
+  test("장바구니 상품 수량 변경 성공 시 200과 id, itemCount를 응답한다.", async () => {
+    // given
+    const updateItemCount = 5;
+
+    // when
+    const response = await request(app).patch(`/carts/${updateId}`).send({
+      itemCount: updateItemCount,
+    });
+
+    // then
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      code: 200,
+      message: "성공적으로 수량이 변경되었습니다.",
+      result: {
+        id: updateId,
+        itemCount: updateItemCount,
+      },
+    });
+  });
+
+  test("변경하고자 하는 수량이 0보다 큰 숫자가 아닌 경우 400과 INVALID_PRODUCT_ORDER_COUNT_TYPE 코드를 응답한다.", async () => {
+    // given
+    const updateItemCount = "asd";
+
+    // when
+    const response = await request(app).patch(`/carts/${updateId}`).send({
+      itemCount: updateItemCount,
+    });
+
+    // then
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      code: "INVALID_PRODUCT_ORDER_COUNT_TYPE",
+      message: "변경할 수량은 0보다 큰 숫자여야 합니다.",
+    });
+  });
+
+  test("보유한 상품의 개수를 넘어 장바구니에 담는 경우 400과 PRODUCT_ORDER_COUNT_EXCEEDED 코드를 응답한다.", async () => {
+    // given
+    const overUpdateItemCount = 999;
+
+    // when
+    const response = await request(app).patch(`/carts/${updateId}`).send({
+      itemCount: overUpdateItemCount,
+    });
+
+    // then
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      code: "PRODUCT_ORDER_COUNT_EXCEEDED",
+      message: "보유한 상품의 개수를 넘어섰습니다.",
+    });
+  });
+
+  test("수량 필드가 누락된 경우 400과 EMPTY_PRODUCT_ORDER_COUNT 코드를 응답한다.", async () => {
+    // when
+    const response = await request(app).patch(`/carts/${updateId}`).send({
+      itemCount: null,
+    });
+
+    // then
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      code: "EMPTY_PRODUCT_ORDER_COUNT",
+      message: "주문 수량 필드가 누락되었습니다.",
+    });
+  });
+
+  test("수량을 변경하려는 상품이 존재하지 않는 경우 404와 PRODUCT_NOT_EXIST 코드를 응답한다.", async () => {
+    // given
+    const wrongProductId = 999999999;
+    const updateItemCount = 5;
+
+    // when
+    const response = await request(app).patch(`/carts/${wrongProductId}`).send({
+      itemCount: updateItemCount,
+    });
+
+    // then
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({
+      code: "PRODUCT_NOT_EXIST_IN_CART",
+      message: "해당 상품이 장바구니에 존재하지 않습니다.",
+    });
+  });
+});
