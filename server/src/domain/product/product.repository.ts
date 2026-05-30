@@ -1,13 +1,12 @@
-import Product, { ProductType } from "../../model/Product.js";
+import Product from "../../model/Product.js";
 
 export interface ProductRepository {
   add: (product: Product) => void;
   delete: (id: number) => void;
-  get: () => void;
+  get: () => Product[];
   nextId: () => number;
   reset: () => void;
-  findById: (id: number) => ProductType | undefined;
-  // TOOD: 반환 타입 수정
+  findById: (id: number) => Product | undefined;
 }
 
 export class InMemoryProductRepository implements ProductRepository {
@@ -27,7 +26,7 @@ export class InMemoryProductRepository implements ProductRepository {
   delete() {}
 
   get() {
-    return this.products.map((product) => product.toJson());
+    return [...this.products];
   }
 
   nextId() {
@@ -40,12 +39,6 @@ export class InMemoryProductRepository implements ProductRepository {
   }
 
   findById(id: number) {
-    const findProduct = this.products.find(
-      (product) => product.toJson().id === id,
-    );
-    if (!findProduct) {
-      return undefined;
-    }
-    return findProduct.toJson();
+    return this.products.find((product) => product.isSameId(id));
   }
 }

@@ -14,14 +14,15 @@ class CartService {
     return cartItems.map((cartItem) => {
       const product = this.productRepository.findById(cartItem.productId);
       if (!product) {
-        throw new Error("불일치 에러");
+        throw new AppError("PRODUCT_NOT_EXIST");
       }
+      const productData = product.toJson();
 
       return {
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        imgUrl: product.imgUrl,
+        id: productData.id,
+        name: productData.name,
+        price: productData.price,
+        imgUrl: productData.imgUrl,
         itemCount: cartItem.itemCount,
       };
     });
@@ -56,7 +57,7 @@ class CartService {
       throw new AppError("PRODUCT_NOT_EXIST");
     }
 
-    if (product!.quantity < itemCount) {
+    if (!product.hasEnoughStock(itemCount)) {
       throw new AppError("PRODUCT_ORDER_COUNT_EXCEEDED");
     }
 

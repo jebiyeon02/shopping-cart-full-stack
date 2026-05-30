@@ -6,7 +6,7 @@ class ProductService {
   constructor(private productRepository: ProductRepository) {}
 
   getProducts() {
-    return this.productRepository.get();
+    return this.productRepository.get().map((product) => product.toJson());
   }
 
   addProduct({ name, price, quantity, imgUrl }: Omit<ProductType, "id">) {

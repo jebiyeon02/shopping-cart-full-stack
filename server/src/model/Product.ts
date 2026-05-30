@@ -31,6 +31,14 @@ class Product {
     };
   }
 
+  isSameId(id: number) {
+    return this.id === id;
+  }
+
+  hasEnoughStock(itemCount: number) {
+    return this.quantity >= itemCount;
+  }
+
   private validateProductName(name: string) {
     if (!name || name.trim().length === 0) {
       throw new AppError("EMPTY_PRODUCT_NAME");
