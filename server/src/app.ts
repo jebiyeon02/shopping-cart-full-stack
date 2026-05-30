@@ -31,35 +31,35 @@ app.post("/products", (req, res) => {
   }
 });
 
-// // 상품 삭제
-// app.delete('/products/:id', (req, res) => {
-//   try {
-//     const productId = req.params.id;
+// 상품 삭제
+app.delete("/products/:id", (req, res) => {
+  try {
+    const productId = req.params.id;
 
-//     appService.deleteProductWithCascade(Number(productId));
+    productService.deleteProduct(Number(productId));
 
-//     res.status(204).json();
-//   } catch (error) {
-//     const { status, code, message } = errorHandler(error);
-//     res.status(status).json({ code, message });
-//   }
-// });
+    res.status(204).json();
+  } catch (error) {
+    const { status, code, message } = errorHandler(error);
+    res.status(status).json({ code, message });
+  }
+});
 
-// // 상품 조회
-// app.get('/products', (_, res) => {
-//   try {
-//     const products = productManager.getProducts();
+// 상품 조회
+app.get("/products", (_, res) => {
+  try {
+    const products = productService.getProducts();
 
-//     res.status(200).json({
-//       code: 200,
-//       message: '요청에 성공했습니다.',
-//       result: { products },
-//     });
-//   } catch (error) {
-//     const { status, code, message } = errorHandler(error);
-//     res.status(status).json({ code, message });
-//   }
-// });
+    res.status(200).json({
+      code: 200,
+      message: "요청에 성공했습니다.",
+      result: { products },
+    });
+  } catch (error) {
+    const { status, code, message } = errorHandler(error);
+    res.status(status).json({ code, message });
+  }
+});
 
 // // 장바구니 상품 조회
 // app.get('/carts', (_, res) => {
@@ -114,3 +114,7 @@ app.post("/products", (req, res) => {
 // });
 
 export default app;
+
+export const resetApp = () => {
+  productService.reset();
+};

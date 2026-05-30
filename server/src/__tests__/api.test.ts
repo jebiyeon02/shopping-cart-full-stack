@@ -1,7 +1,10 @@
 import request from "supertest";
-import app from "../app.js";
+import app, { resetApp } from "../app.js";
 
 describe("POST /products API 테스트", () => {
+  beforeEach(() => {
+    resetApp();
+  });
   test("정상적인 상품 정보로 요청 시 201과 생성된 id를 응답한다.", async () => {
     // given
     const newProduct = {
@@ -103,58 +106,46 @@ describe("POST /products API 테스트", () => {
 //   });
 // });
 
-// describe("DELETE /products API 테스트", () => {
-//   beforeEach(() => {
-//     productManager.reset();
-//   });
+describe("DELETE /products API 테스트", () => {
+  test("정상적인 상품 삭제 시 204를 응답한다.", async () => {
+    // given
+    const deleteId = 1;
 
-//   test("정상적인 상품 삭제 시 204를 응답한다.", async () => {
-//     // given
-//     const newProduct = {
-//       name: "아디다스 양말",
-//       price: 13000,
-//       imgUrl: "https://image-url.com",
-//       quantity: 2,
-//     };
-//     await request(app).post("/products").send(newProduct);
+    // when
+    const response = await request(app).delete(`/products/${deleteId}`);
 
-//     const deleteId = 1;
+    // then
+    expect(response.status).toBe(204);
+  });
+});
 
-//     // when
-//     const response = await request(app).delete(`/products/${deleteId}`);
+describe("GET /products API 테스트", () => {
+  beforeEach(() => {
+    resetApp();
+  });
 
-//     // then
-//     expect(response.status).toBe(204);
-//   });
-// });
+  test("상품 조회 시 200과 상품 목록을 응답한다.", async () => {
+    //   // given
+    const newProduct = {
+      name: "아디다스 양말",
+      price: 13000,
+      imgUrl: "https://image-url.com",
+      quantity: 2,
+    };
+    await request(app).post("/products").send(newProduct);
 
-// describe("GET /products API 테스트", () => {
-//   beforeEach(() => {
-//     productManager.reset();
-//   });
+    // when
+    const response = await request(app).get(`/products`);
 
-//   test("상품 조회 시 200과 상품 목록을 응답한다.", async () => {
-//     // given
-//     const newProduct = {
-//       name: "아디다스 양말",
-//       price: 13000,
-//       imgUrl: "https://image-url.com",
-//       quantity: 2,
-//     };
-
-//     // when
-//     await request(app).post("/products").send(newProduct);
-//     const response = await request(app).get(`/products`);
-
-//     // then
-//     expect(response.status).toBe(200);
-//     expect(response.body).toEqual({
-//       code: 200,
-//       message: "요청에 성공했습니다.",
-//       result: { products: [{ id: 1, ...newProduct }] },
-//     });
-//   });
-// });
+    // then
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      code: 200,
+      message: "요청에 성공했습니다.",
+      result: { products: [{ ...newProduct, id: 1 }] },
+    });
+  });
+});
 
 // describe("GET /carts API 테스트", () => {
 //   test("장바구니 상품 조회 시 200과 상품 목록을 응답한다.", async () => {
@@ -165,6 +156,7 @@ describe("POST /products API 테스트", () => {
 //       imgUrl: "https://image-url.com",
 //       quantity: 2,
 //     };
+//     pr
 
 //     // when
 //     await request(app).post("/products").send(newProduct);
