@@ -105,6 +105,44 @@ describe("POST /products API 테스트", () => {
       message: "상품명 필드가 누락되었습니다.",
     });
   });
+
+  test("상품 가격 필드가 누락되면 400과 EMPTY_PRODUCT_PRICE 코드를 응답한다.", async () => {
+    // given
+    const invalidProduct = {
+      name: "아디다스 양말",
+      imgUrl: "https://image-url.com",
+      quantity: 2,
+    };
+
+    // when
+    const response = await request(app).post("/products").send(invalidProduct);
+
+    // then
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      code: "EMPTY_PRODUCT_PRICE",
+      message: "가격 필드가 누락되었습니다.",
+    });
+  });
+
+  test("재고 수량 필드가 누락되면 400과 EMPTY_PRODUCT_QUANTITY 코드를 응답한다.", async () => {
+    // given
+    const invalidProduct = {
+      name: "아디다스 양말",
+      price: 13000,
+      imgUrl: "https://image-url.com",
+    };
+
+    // when
+    const response = await request(app).post("/products").send(invalidProduct);
+
+    // then
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      code: "EMPTY_PRODUCT_QUANTITY",
+      message: "상품 재고 필드가 누락되었습니다.",
+    });
+  });
 });
 
 describe("DELETE /products API 테스트", () => {
