@@ -8,7 +8,7 @@
 | `201` | POST 요청이 성공적으로 이루어져 새로운 데이터가 생성된 경우  |
 | `204` | DELETE 요청이 성공적으로 이루어진 경우 (반환값 없음)         |
 | `400` | 클라이언트의 요청이 유효하지 않은 대부분의 경우              |
-| `404` | 엔드포인트가 잘못된 경우, 쿼리 파라미터가 존재하지 않는 경우 |
+| `404` | 요청한 리소스가 존재하지 않는 경우                           |
 | `500` | 서버 자체 에러                                               |
 
 ---
@@ -73,7 +73,6 @@
 
 ```json
 {
-  "code": 201,
   "message": "성공적으로 생성되었습니다.",
   "result": {
     "id": 1
@@ -141,7 +140,7 @@
 ```json
 {
   "code": "PRODUCT_NOT_EXIST",
-  "message": "삭제하려는 상품이 존재하지 않습니다."
+  "message": "상품이 존재하지 않습니다."
 }
 ```
 
@@ -171,14 +170,14 @@
         "name": "나이키 양말",
         "price": 5000,
         "imgUrl": "https://sdasd.asdas.com",
-        "orderCount": 3
+        "itemCount": 3
       },
       {
         "id": 2,
         "name": "아디다스 신발",
         "price": 50000,
         "imgUrl": "https://sdasd.asdas.com",
-        "orderCount": 1
+        "itemCount": 1
       }
     ]
   }
@@ -190,13 +189,14 @@
 ### 2. 장바구니 상품 추가
 
 - **Method**: `POST`
-- **Path**: `/carts/{id}`
+- **Path**: `/carts`
 
 **Request Body**
 
 ```json
 {
-  "orderCount": 2
+  "productId": 1,
+  "itemCount": 2
 }
 ```
 
@@ -204,10 +204,9 @@
 
 ```json
 {
-  "code": 201,
   "message": "성공적으로 생성되었습니다.",
   "result": {
-    "id": 1
+    "productId": 1
   }
 }
 ```
@@ -217,14 +216,7 @@
 ```json
 {
   "code": "INVALID_PRODUCT_ORDER_COUNT_TYPE",
-  "message": "추가할 수량은 0보다 큰 숫자여야 합니다."
-}
-```
-
-```json
-{
-  "code": "PRODUCT_ORDER_COUNT_EXCEEDED",
-  "message": "보유한 상품의 개수를 넘어섰습니다."
+  "message": "변경할 수량은 0보다 큰 숫자여야 합니다."
 }
 ```
 
@@ -232,15 +224,6 @@
 {
   "code": "EMPTY_PRODUCT_ORDER_COUNT",
   "message": "주문 수량 필드가 누락되었습니다."
-}
-```
-
-**Response `404`**
-
-```json
-{
-  "code": "PRODUCT_NOT_EXIST",
-  "message": "수량을 추가하려는 상품이 존재하지 않습니다."
 }
 ```
 
@@ -255,7 +238,7 @@
 
 ```json
 {
-  "orderCount": 3
+  "itemCount": 3
 }
 ```
 
@@ -267,7 +250,7 @@
   "message": "성공적으로 수량이 변경되었습니다.",
   "result": {
     "id": 1,
-    "orderCount": 3
+    "itemCount": 3
   }
 }
 ```
@@ -299,8 +282,8 @@
 
 ```json
 {
-  "code": "PRODUCT_NOT_EXIST",
-  "message": "수량을 변경하려는 상품이 존재하지 않습니다."
+  "code": "PRODUCT_NOT_EXIST_IN_CART",
+  "message": "해당 상품이 장바구니에 존재하지 않습니다."
 }
 ```
 
@@ -326,6 +309,6 @@
 ```json
 {
   "code": "PRODUCT_NOT_EXIST_IN_CART",
-  "message": "삭제하려는 상품이 장바구니에 존재하지 않습니다."
+  "message": "해당 상품이 장바구니에 존재하지 않습니다."
 }
 ```
