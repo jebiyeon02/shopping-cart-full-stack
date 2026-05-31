@@ -1,4 +1,4 @@
-export const ERROR_CODE = {
+const PRODUCT_ERROR_CODE = {
   PRODUCT_NAME_LENGTH_EXCEEDED: {
     code: "PRODUCT_NAME_LENGTH_EXCEEDED",
     status: 400,
@@ -34,6 +34,9 @@ export const ERROR_CODE = {
     status: 404,
     message: "상품이 존재하지 않습니다.",
   },
+} as const;
+
+const CART_ERROR_CODE = {
   INVALID_PRODUCT_ORDER_COUNT_TYPE: {
     code: "INVALID_PRODUCT_ORDER_COUNT_TYPE",
     status: 400,
@@ -54,11 +57,20 @@ export const ERROR_CODE = {
     status: 404,
     message: "해당 상품이 장바구니에 존재하지 않습니다.",
   },
+} as const;
+
+const COMMON_ERROR_CODE = {
   INTERNAL_SERVER_ERROR: {
     code: "INTERNAL_SERVER_ERROR",
     status: 500,
     message: "서버 오류가 발생했습니다.",
   },
+} as const;
+
+export const ERROR_CODE = {
+  ...PRODUCT_ERROR_CODE,
+  ...CART_ERROR_CODE,
+  ...COMMON_ERROR_CODE,
 } as const;
 
 export type ErrorCodeKey = keyof typeof ERROR_CODE;
