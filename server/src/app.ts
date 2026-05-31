@@ -8,7 +8,10 @@ import CartService from "./domain/cart/cart.service.js";
 const inMemoryProductRepository = new InMemoryProductRepository();
 const inMemoryCartRepository = new InMemoryCartRepository();
 
-const productService = new ProductService(inMemoryProductRepository);
+const productService = new ProductService(
+  inMemoryProductRepository,
+  inMemoryCartRepository,
+);
 const cartService = new CartService(
   inMemoryCartRepository,
   inMemoryProductRepository,

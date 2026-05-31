@@ -1,9 +1,9 @@
-import CartItem, { CartItemType } from "../../model/CartItem.js";
+import CartItem from "../../model/CartItem.js";
 
 export interface CartRepository {
   add: (productId: number, itemCount: number) => void;
   delete: (productId: number) => void;
-  get: () => CartItemType[];
+  get: () => CartItem[];
   reset: () => void;
   updateItemCount: (productId: number, itemCount: number) => boolean;
   findByProductId: (productId: number) => CartItem | undefined;
@@ -42,7 +42,7 @@ export class InMemoryCartRepository implements CartRepository {
   }
 
   get() {
-    return this.cart.map((cartItem) => cartItem.toJson());
+    return [...this.cart];
   }
 
   reset() {

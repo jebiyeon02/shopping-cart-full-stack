@@ -1,9 +1,13 @@
 import AppError from "../../errors/AppError.js";
 import Product, { ProductType } from "../../model/Product.js";
+import { CartRepository } from "../cart/cart.repository.js";
 import { ProductRepository } from "./product.repository.js";
 
 class ProductService {
-  constructor(private productRepository: ProductRepository) {}
+  constructor(
+    private productRepository: ProductRepository,
+    private cartRepository: CartRepository,
+  ) {}
 
   getProducts() {
     return this.productRepository.get().map((product) => product.toJson());
@@ -22,6 +26,8 @@ class ProductService {
     if (!targetProduct) {
       throw new AppError("PRODUCT_NOT_EXIST");
     }
+
+    this.cartRepository.delete(id);
     this.productRepository.delete(id);
   }
 

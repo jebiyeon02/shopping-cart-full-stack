@@ -12,7 +12,9 @@ class CartService {
     const cartItems = this.cartRepository.get();
 
     return cartItems.map((cartItem) => {
-      const product = this.productRepository.findById(cartItem.productId);
+      const product = this.productRepository.findById(
+        cartItem.toJson().productId,
+      );
       if (!product) {
         throw new AppError("PRODUCT_NOT_EXIST");
       }
@@ -23,7 +25,7 @@ class CartService {
         name: productData.name,
         price: productData.price,
         imgUrl: productData.imgUrl,
-        itemCount: cartItem.itemCount,
+        itemCount: cartItem.toJson().itemCount,
       };
     });
   }

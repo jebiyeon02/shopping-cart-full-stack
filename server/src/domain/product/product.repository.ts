@@ -23,7 +23,9 @@ export class InMemoryProductRepository implements ProductRepository {
     this.id++;
   }
 
-  delete() {}
+  delete(id: number) {
+    this.products = this.products.filter((product) => !product.isSameId(id));
+  }
 
   get() {
     return [...this.products];
