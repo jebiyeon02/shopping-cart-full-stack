@@ -6,8 +6,9 @@ class CartController {
 
   addCartItem = (req: Request, res: Response, next: NextFunction) => {
     try {
+      const { cartId } = req.params;
       const { productId, itemCount } = req.body;
-      this.cartService.addCartItem(productId, itemCount);
+      this.cartService.addCartItem(Number(cartId), productId, itemCount);
 
       res.status(201).json({
         message: "성공적으로 생성되었습니다.",

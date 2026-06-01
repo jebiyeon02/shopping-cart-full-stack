@@ -9,6 +9,12 @@ class CartService {
     private productRepository: ProductRepository,
   ) {}
 
+  addCart() {
+    const newCart = this.cartRepository.create();
+
+    return newCart;
+  }
+
   getCartItems(cartId: number) {
     const cart = this.getCart(cartId);
 
@@ -20,6 +26,7 @@ class CartService {
       }
 
       const productData = product.toJson();
+      // TODO itemCount update할 때처럼 재고와 값 비교 필요
 
       return {
         id: productData.id,

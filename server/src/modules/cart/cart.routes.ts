@@ -4,10 +4,10 @@ import CartController from "./cart.controller.js";
 const createCartRouter = (cartController: CartController) => {
   const cartRouter = Router();
 
-  cartRouter.post("/", cartController.addCartItem);
-  cartRouter.get("/", cartController.getCartItems);
-  cartRouter.delete("/:id", cartController.deleteCartItem);
-  cartRouter.patch("/:id", cartController.updateItemCount);
+  cartRouter.post("/:cartId", cartController.addCartItem);
+  cartRouter.get("/:cartId", cartController.getCartItems);
+  cartRouter.delete("/:cartId/items/:productId", cartController.deleteCartItem);
+  cartRouter.patch("/:cartId/items/:productId", cartController.updateItemCount);
 
   return cartRouter;
 };

@@ -1,6 +1,7 @@
 import Cart from "./Cart.js";
 
 export interface CartRepository {
+  create(): Cart;
   findById(cartId: number): Cart | undefined;
 }
 

@@ -219,8 +219,10 @@ describe("GET /products API 테스트", () => {
   });
 });
 
-describe("GET /carts API 테스트", () => {
+describe("GET /carts/:cartId/items API 테스트", () => {
   let app: Express;
+  const cartId = 1;
+
   beforeEach(() => {
     app = createApp();
   });
@@ -231,7 +233,7 @@ describe("GET /carts API 테스트", () => {
       name: "아디다스 양말",
       price: 13000,
       imgUrl: "https://image-url.com",
-      quantity: 2,
+      quantity: 20,
     };
     const productResponse = await request(app)
       .post("/products")
@@ -242,10 +244,10 @@ describe("GET /carts API 테스트", () => {
       productId,
       itemCount: 10,
     };
-    await request(app).post("/carts").send(newCartItem);
+    await request(app).post(`/carts/${cartId}/items`).send(newCartItem);
 
     // when
-    const response = await request(app).get(`/carts`);
+    const response = await request(app).get(`/carts/${cartId}/items`);
 
     // then
     expect(response.status).toBe(200);
@@ -265,59 +267,28 @@ describe("GET /carts API 테스트", () => {
       },
     });
   });
-});
 
-describe("DELETE /carts/:id API 테스트", () => {
-  let app: Express;
-  let deleteId = 0;
-  beforeEach(async () => {
-    app = createApp();
+  test("존재하지 않는 장바구니 조회 시 404와 CART_NOT_EXIST 코드를 응답한다.", async () => {
+    // given
+    const wrongCartId = 999999999;
 
-    const newProduct = {
-      name: "아디다스 양말",
-      price: 13000,
-      imgUrl: "https://image-url.com",
-      quantity: 2,
-    };
-    const productResponse = await request(app)
-      .post("/products")
-      .send(newProduct);
-    const productId = productResponse.body.result.id;
-
-    const newCartItem = {
-      productId,
-      itemCount: 10,
-    };
-    await request(app).post("/carts").send(newCartItem);
-
-    deleteId = productId;
-  });
-
-  test("장바구니 상품 삭제 시 204를 응답한다.", async () => {
     // when
-    const response = await request(app).delete(`/carts/${deleteId}`);
-
-    // then
-    expect(response.status).toBe(204);
-  });
-
-  test("장바구니에 존재하지 않는 상품 삭제 시 404와 PRODUCT_NOT_EXIST_IN_CART 코드를 응답한다.", async () => {
-    const wrongDeleteId = 999999999;
-    // when
-    const response = await request(app).delete(`/carts/${wrongDeleteId}`);
+    const response = await request(app).get(`/carts/${wrongCartId}/items`);
 
     // then
     expect(response.status).toBe(404);
     expect(response.body).toEqual({
-      code: "PRODUCT_NOT_EXIST_IN_CART",
-      message: "해당 상품이 장바구니에 존재하지 않습니다.",
+      code: "CART_NOT_EXIST",
+      message: "장바구니가 존재하지 않습니다.",
     });
   });
 });
 
-describe("PATCH /carts/:id API 테스트", () => {
-  let updateId = 0;
+describe("DELETE /carts/:cartId/items/:productId API 테스트", () => {
   let app: Express;
+  const cartId = 1;
+  let deleteId = 0;
+
   beforeEach(async () => {
     app = createApp();
 
@@ -336,7 +307,62 @@ describe("PATCH /carts/:id API 테스트", () => {
       productId,
       itemCount: 10,
     };
-    await request(app).post("/carts").send(newCartItem);
+    await request(app).post(`/carts/${cartId}/items`).send(newCartItem);
+
+    deleteId = productId;
+  });
+
+  test("장바구니 상품 삭제 시 204를 응답한다.", async () => {
+    // when
+    const response = await request(app).delete(
+      `/carts/${cartId}/items/${deleteId}`,
+    );
+
+    // then
+    expect(response.status).toBe(204);
+  });
+
+  test("장바구니에 존재하지 않는 상품 삭제 시 404와 PRODUCT_NOT_EXIST_IN_CART 코드를 응답한다.", async () => {
+    const wrongDeleteId = 999999999;
+
+    // when
+    const response = await request(app).delete(
+      `/carts/${cartId}/items/${wrongDeleteId}`,
+    );
+
+    // then
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({
+      code: "PRODUCT_NOT_EXIST_IN_CART",
+      message: "해당 상품이 장바구니에 존재하지 않습니다.",
+    });
+  });
+});
+
+describe("PATCH /carts/:cartId/items/:productId API 테스트", () => {
+  let updateId = 0;
+  let app: Express;
+  const cartId = 1;
+
+  beforeEach(async () => {
+    app = createApp();
+
+    const newProduct = {
+      name: "아디다스 양말",
+      price: 13000,
+      imgUrl: "https://image-url.com",
+      quantity: 20,
+    };
+    const productResponse = await request(app)
+      .post("/products")
+      .send(newProduct);
+    const productId = productResponse.body.result.id;
+
+    const newCartItem = {
+      productId,
+      itemCount: 10,
+    };
+    await request(app).post(`/carts/${cartId}/items`).send(newCartItem);
 
     updateId = productId;
   });
@@ -346,9 +372,11 @@ describe("PATCH /carts/:id API 테스트", () => {
     const updateItemCount = 5;
 
     // when
-    const response = await request(app).patch(`/carts/${updateId}`).send({
-      itemCount: updateItemCount,
-    });
+    const response = await request(app)
+      .patch(`/carts/${cartId}/items/${updateId}`)
+      .send({
+        itemCount: updateItemCount,
+      });
 
     // then
     expect(response.status).toBe(200);
@@ -367,9 +395,11 @@ describe("PATCH /carts/:id API 테스트", () => {
     const updateItemCount = "asd";
 
     // when
-    const response = await request(app).patch(`/carts/${updateId}`).send({
-      itemCount: updateItemCount,
-    });
+    const response = await request(app)
+      .patch(`/carts/${cartId}/items/${updateId}`)
+      .send({
+        itemCount: updateItemCount,
+      });
 
     // then
     expect(response.status).toBe(400);
@@ -384,9 +414,11 @@ describe("PATCH /carts/:id API 테스트", () => {
     const overUpdateItemCount = 999;
 
     // when
-    const response = await request(app).patch(`/carts/${updateId}`).send({
-      itemCount: overUpdateItemCount,
-    });
+    const response = await request(app)
+      .patch(`/carts/${cartId}/items/${updateId}`)
+      .send({
+        itemCount: overUpdateItemCount,
+      });
 
     // then
     expect(response.status).toBe(400);
@@ -398,9 +430,11 @@ describe("PATCH /carts/:id API 테스트", () => {
 
   test("수량 필드가 누락된 경우 400과 EMPTY_PRODUCT_ORDER_COUNT 코드를 응답한다.", async () => {
     // when
-    const response = await request(app).patch(`/carts/${updateId}`).send({
-      itemCount: null,
-    });
+    const response = await request(app)
+      .patch(`/carts/${cartId}/items/${updateId}`)
+      .send({
+        itemCount: null,
+      });
 
     // then
     expect(response.status).toBe(400);
@@ -410,15 +444,17 @@ describe("PATCH /carts/:id API 테스트", () => {
     });
   });
 
-  test("수량을 변경하려는 상품이 존재하지 않는 경우 404와 PRODUCT_NOT_EXIST 코드를 응답한다.", async () => {
+  test("장바구니에 존재하지 않는 상품의 수량을 변경하면 404와 PRODUCT_NOT_EXIST_IN_CART 코드를 응답한다.", async () => {
     // given
     const wrongProductId = 999999999;
     const updateItemCount = 5;
 
     // when
-    const response = await request(app).patch(`/carts/${wrongProductId}`).send({
-      itemCount: updateItemCount,
-    });
+    const response = await request(app)
+      .patch(`/carts/${cartId}/items/${wrongProductId}`)
+      .send({
+        itemCount: updateItemCount,
+      });
 
     // then
     expect(response.status).toBe(404);
