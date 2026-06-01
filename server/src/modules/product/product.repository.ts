@@ -1,10 +1,9 @@
-import Product from "./Product.js";
+import Product, { ProductType } from "./Product.js";
 
 export interface ProductRepository {
-  add: (product: Product) => void;
+  add: ({ name, price, quantity, imgUrl }: Omit<ProductType, "id">) => Product;
   delete: (id: number) => void;
   get: () => Product[];
-  nextId: () => number;
   reset: () => void;
   findById: (id: number) => Product | undefined;
 }
@@ -18,9 +17,12 @@ export class InMemoryProductRepository implements ProductRepository {
     this.id = 1;
   }
 
-  add(newProduct: Product) {
+  add({ name, price, quantity, imgUrl }: Omit<ProductType, "id">) {
+    const newProduct = new Product(this.id, name, price, quantity, imgUrl);
     this.products.push(newProduct);
     this.id++;
+
+    return newProduct;
   }
 
   delete(id: number) {
@@ -29,10 +31,6 @@ export class InMemoryProductRepository implements ProductRepository {
 
   get() {
     return [...this.products];
-  }
-
-  nextId() {
-    return this.id;
   }
 
   reset() {

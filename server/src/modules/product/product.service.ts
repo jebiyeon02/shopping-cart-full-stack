@@ -14,9 +14,12 @@ class ProductService {
   }
 
   addProduct({ name, price, quantity, imgUrl }: Omit<ProductType, "id">) {
-    const id = this.productRepository.nextId();
-    const newProduct = new Product(id, name, price, quantity, imgUrl);
-    this.productRepository.add(newProduct);
+    const newProduct = this.productRepository.add({
+      name,
+      price,
+      quantity,
+      imgUrl,
+    });
 
     return newProduct.toJson().id;
   }
