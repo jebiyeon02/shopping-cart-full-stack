@@ -4,7 +4,6 @@ export interface CartRepository {
   add: (productId: number, itemCount: number) => void;
   delete: (productId: number) => void;
   get: () => CartItem[];
-  reset: () => void;
   updateItemCount: (productId: number, itemCount: number) => void;
   findByProductId: (productId: number) => CartItem | undefined;
 }
@@ -39,9 +38,5 @@ export class InMemoryCartRepository implements CartRepository {
 
   get() {
     return [...this.cart];
-  }
-
-  reset() {
-    this.cart = [];
   }
 }

@@ -1,10 +1,13 @@
 import request from "supertest";
-import app, { resetApp } from "../app.js";
+import createApp from "../app.js";
+import type { Express } from "express";
 
 describe("POST /products API 테스트", () => {
+  let app: Express;
   beforeEach(() => {
-    resetApp();
+    app = createApp();
   });
+
   test("정상적인 상품 정보로 요청 시 201과 생성된 id를 응답한다.", async () => {
     // given
     const newProduct = {
@@ -145,8 +148,9 @@ describe("POST /products API 테스트", () => {
 
 describe("DELETE /products API 테스트", () => {
   let deleteId = 0;
+  let app: Express;
   beforeEach(async () => {
-    resetApp();
+    app = createApp();
     const newProduct = {
       name: "아디다스 양말",
       price: 13000,
@@ -183,8 +187,9 @@ describe("DELETE /products API 테스트", () => {
 });
 
 describe("GET /products API 테스트", () => {
+  let app: Express;
   beforeEach(() => {
-    resetApp();
+    app = createApp();
   });
 
   test("상품 조회 시 200과 상품 목록을 응답한다.", async () => {
@@ -215,8 +220,9 @@ describe("GET /products API 테스트", () => {
 });
 
 describe("GET /carts API 테스트", () => {
+  let app: Express;
   beforeEach(() => {
-    resetApp();
+    app = createApp();
   });
 
   test("장바구니 상품 조회 시 200과 상품 목록을 응답한다.", async () => {
@@ -262,9 +268,11 @@ describe("GET /carts API 테스트", () => {
 });
 
 describe("DELETE /carts/:id API 테스트", () => {
+  let app: Express;
   let deleteId = 0;
   beforeEach(async () => {
-    resetApp();
+    app = createApp();
+
     const newProduct = {
       name: "아디다스 양말",
       price: 13000,
@@ -309,8 +317,9 @@ describe("DELETE /carts/:id API 테스트", () => {
 
 describe("PATCH /carts/:id API 테스트", () => {
   let updateId = 0;
+  let app: Express;
   beforeEach(async () => {
-    resetApp();
+    app = createApp();
 
     const newProduct = {
       name: "아디다스 양말",

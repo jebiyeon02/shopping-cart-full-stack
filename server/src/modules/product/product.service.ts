@@ -33,10 +33,6 @@ class ProductService {
     this.cartRepository.delete(id);
     this.productRepository.delete(id);
   }
-
-  reset() {
-    this.productRepository.reset();
-  }
 }
 
 export default ProductService;

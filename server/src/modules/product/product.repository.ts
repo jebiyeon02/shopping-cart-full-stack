@@ -4,7 +4,6 @@ export interface ProductRepository {
   add: ({ name, price, quantity, imgUrl }: Omit<ProductType, "id">) => Product;
   delete: (id: number) => void;
   get: () => Product[];
-  reset: () => void;
   findById: (id: number) => Product | undefined;
 }
 
@@ -31,11 +30,6 @@ export class InMemoryProductRepository implements ProductRepository {
 
   get() {
     return [...this.products];
-  }
-
-  reset() {
-    this.products = [];
-    this.id = 1;
   }
 
   findById(id: number) {

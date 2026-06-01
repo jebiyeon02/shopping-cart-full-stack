@@ -71,10 +71,6 @@ class CartService {
       itemCount,
     };
   }
-
-  reset() {
-    this.cartRepository.reset();
-  }
 }
 
 export default CartService;
