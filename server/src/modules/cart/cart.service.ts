@@ -9,16 +9,16 @@ class CartService {
     private productRepository: ProductRepository,
   ) {}
 
-  getCartItems() {
-    const cartItems = this.cartRepository.get();
+  getCartItems(cartId: number) {
+    const cart = this.getCart(cartId);
 
-    return cartItems.map((cartItem) => {
-      const product = this.productRepository.findById(
-        cartItem.toJson().productId,
-      );
+    return cart.toJsonCartItems().map((cartItem) => {
+      const product = this.productRepository.findById(cartItem.productId);
+
       if (!product) {
         throw new AppError("PRODUCT_NOT_EXIST");
       }
+
       const productData = product.toJson();
 
       return {
@@ -26,31 +26,27 @@ class CartService {
         name: productData.name,
         price: productData.price,
         imgUrl: productData.imgUrl,
-        itemCount: cartItem.toJson().itemCount,
+        itemCount: cartItem.itemCount,
       };
     });
   }
 
-  addCartItem(productId: number, itemCount: number) {
-    this.cartRepository.add(productId, itemCount);
+  addCartItem(cartId: number, productId: number, itemCount: number) {
+    const cart = this.getCart(cartId);
+
+    cart.addCartItem(productId, itemCount);
 
     return productId;
   }
 
-  deleteCartItem(id: number) {
-    const targetCartItem = this.cartRepository.findByProductId(id);
-    if (!targetCartItem) {
-      throw new AppError("PRODUCT_NOT_EXIST_IN_CART");
-    }
-    this.cartRepository.delete(id);
+  deleteCartItem(cartId: number, productId: number) {
+    const cart = this.getCart(cartId);
+
+    cart.deleteCartItem(productId);
   }
 
-  updateItemCount(productId: number, itemCount: number) {
-    const cartItem = this.cartRepository.findByProductId(productId);
-
-    if (!cartItem) {
-      throw new AppError("PRODUCT_NOT_EXIST_IN_CART");
-    }
+  updateItemCount(cartId: number, productId: number, itemCount: number) {
+    const cart = this.getCart(cartId);
 
     CartItem.validateItemCount(itemCount);
 
@@ -64,12 +60,22 @@ class CartService {
       throw new AppError("PRODUCT_ORDER_COUNT_EXCEEDED");
     }
 
-    this.cartRepository.updateItemCount(productId, itemCount);
+    cart.updateCartItemCount(productId, itemCount);
 
     return {
       productId,
       itemCount,
     };
+  }
+
+  private getCart(cartId: number) {
+    const cart = this.cartRepository.findById(cartId);
+
+    if (!cart) {
+      throw new AppError("CART_NOT_EXIST");
+    }
+
+    return cart;
   }
 }
 

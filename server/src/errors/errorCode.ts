@@ -46,6 +46,10 @@ const CART_ERROR_CODE = {
     code: "PRODUCT_NOT_EXIST_IN_CART",
     message: "해당 상품이 장바구니에 존재하지 않습니다.",
   },
+  CART_NOT_EXIST: {
+    code: "CART_NOT_EXIST",
+    message: "장바구니가 존재하지 않습니다.",
+  },
 } as const;
 
 const COMMON_ERROR_CODE = {
@@ -76,6 +80,7 @@ export const ERROR_STATUS: Record<ErrorCodeKey, number> = {
   PRODUCT_ORDER_COUNT_EXCEEDED: 400,
   EMPTY_PRODUCT_ORDER_COUNT: 400,
   PRODUCT_NOT_EXIST_IN_CART: 404,
+  CART_NOT_EXIST: 404,
 
   INTERNAL_SERVER_ERROR: 500,
 };

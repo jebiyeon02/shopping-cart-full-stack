@@ -1,42 +1,23 @@
-import CartItem from "./CartItem.js";
+import Cart from "./Cart.js";
 
 export interface CartRepository {
-  add: (productId: number, itemCount: number) => void;
-  delete: (productId: number) => void;
-  get: () => CartItem[];
-  updateItemCount: (productId: number, itemCount: number) => void;
-  findByProductId: (productId: number) => CartItem | undefined;
+  findById(cartId: number): Cart | undefined;
 }
 
 export class InMemoryCartRepository implements CartRepository {
-  private cart: Array<CartItem>;
+  private carts: Array<Cart> = [];
+  private id = 1;
 
-  constructor() {
-    this.cart = [];
+  create() {
+    const cart = new Cart(this.id);
+
+    this.carts.push(cart);
+    this.id++;
+
+    return cart;
   }
 
-  add(productId: number, itemCount: number) {
-    const newCartItem = new CartItem(productId, itemCount);
-    this.cart.push(newCartItem);
-  }
-
-  findByProductId(productId: number) {
-    return this.cart.find((cartItem) => cartItem.isSameProductId(productId));
-  }
-
-  delete(productId: number) {
-    this.cart = this.cart.filter(
-      (cartItem) => !cartItem.isSameProductId(productId),
-    );
-  }
-
-  updateItemCount(productId: number, itemCount: number) {
-    const cartItem = this.findByProductId(productId);
-
-    cartItem?.updateItemCount(itemCount);
-  }
-
-  get() {
-    return [...this.cart];
+  findById(cartId: number) {
+    return this.carts.find((cart) => cart.isSameId(cartId));
   }
 }
