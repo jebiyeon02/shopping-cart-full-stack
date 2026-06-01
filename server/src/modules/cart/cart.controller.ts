@@ -4,6 +4,19 @@ import CartService from "./cart.service.js";
 class CartController {
   constructor(private cartService: CartService) {}
 
+  addCart = (_req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = this.cartService.addCart();
+
+      res.status(201).json({
+        message: "성공적으로 생성되었습니다.",
+        result: { id },
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   addCartItem = (req: Request, res: Response, next: NextFunction) => {
     try {
       const { cartId } = req.params;
@@ -19,9 +32,10 @@ class CartController {
     }
   };
 
-  getCartItems = (_req: Request, res: Response, next: NextFunction) => {
+  getCartItems = (req: Request, res: Response, next: NextFunction) => {
     try {
-      const cartItems = this.cartService.getCartItems();
+      const { cartId } = req.params;
+      const cartItems = this.cartService.getCartItems(Number(cartId));
 
       res.status(200).json({
         code: 200,
@@ -35,9 +49,9 @@ class CartController {
 
   deleteCartItem = (req: Request, res: Response, next: NextFunction) => {
     try {
-      const productId = req.params.id;
+      const { cartId, productId } = req.params;
 
-      this.cartService.deleteCartItem(Number(productId));
+      this.cartService.deleteCartItem(Number(cartId), Number(productId));
 
       res.status(204).send();
     } catch (error) {
@@ -47,16 +61,20 @@ class CartController {
 
   updateItemCount = (req: Request, res: Response, next: NextFunction) => {
     try {
-      const productId = Number(req.params.id);
+      const { cartId, productId } = req.params;
       const { itemCount } = req.body;
 
-      this.cartService.updateItemCount(productId, itemCount);
+      this.cartService.updateItemCount(
+        Number(cartId),
+        Number(productId),
+        itemCount,
+      );
 
       res.status(200).json({
         code: 200,
         message: "성공적으로 수량이 변경되었습니다.",
         result: {
-          id: productId,
+          id: Number(productId),
           itemCount: itemCount,
         },
       });

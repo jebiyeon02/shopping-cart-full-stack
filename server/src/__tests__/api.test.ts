@@ -455,12 +455,23 @@ describe("PATCH /carts/:cartId/items/:productId API 테스트", () => {
 
   test("장바구니에 존재하지 않는 상품의 수량을 변경하면 404와 PRODUCT_NOT_EXIST_IN_CART 코드를 응답한다.", async () => {
     // given
-    const wrongProductId = 999999999;
+    const anotherProduct = {
+      name: "나이키 양말",
+      price: 15000,
+      imgUrl: "https://image-url.com",
+      quantity: 20,
+    };
+
+    const anotherProductResponse = await request(app)
+      .post("/products")
+      .send(anotherProduct);
+
+    const notInCartProductId = anotherProductResponse.body.result.id;
     const updateItemCount = 5;
 
     // when
     const response = await request(app)
-      .patch(`/carts/${cartId}/items/${wrongProductId}`)
+      .patch(`/carts/${cartId}/items/${notInCartProductId}`)
       .send({
         itemCount: updateItemCount,
       });
