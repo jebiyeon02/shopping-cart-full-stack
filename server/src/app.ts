@@ -10,6 +10,13 @@ import createProductRouter from "./modules/product/product.routes.js";
 import createCartRouter from "./modules/cart/cart.routes.js";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
 
+const ALLOWED_ORIGINS = new Set([
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "http://localhost:3030",
+  "http://127.0.0.1:3030",
+]);
+
 const createApp = (): Express => {
   const inMemoryProductRepository = new InMemoryProductRepository();
   const inMemoryCartRepository = new InMemoryCartRepository();
@@ -28,6 +35,27 @@ const createApp = (): Express => {
   const cartRouter = createCartRouter(cartController);
 
   const app = express();
+
+  app.use((req, res, next) => {
+    const origin = req.headers.origin;
+
+    if (origin && ALLOWED_ORIGINS.has(origin)) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+    }
+
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PATCH, DELETE, OPTIONS",
+    );
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+    if (req.method === "OPTIONS") {
+      res.sendStatus(204);
+      return;
+    }
+
+    next();
+  });
 
   app.use(express.json());
 
