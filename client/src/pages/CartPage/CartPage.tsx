@@ -5,8 +5,11 @@ import CartEmpty from "./components/CartEmpty";
 import BaseButton from "../../shared/components/BaseButton";
 import useCartItem from "./useCartItem";
 import { getOrderPrice } from "../../domain/cart/cart.util";
+import { useNavigate } from "react-router-dom";
+import { DELIVERY } from "../../domain/cart/cart.constants";
 
 const CartPage = ({ cartId }: { cartId: number }) => {
+  const navigate = useNavigate();
   const { cartItems, requestDeleteCartItem, requestUpdateCartItemCount } =
     useCartItem(cartId);
 
@@ -39,6 +42,19 @@ const CartPage = ({ cartId }: { cartId: number }) => {
       setCheckedProductIds((prev) => [...prev, productId]);
     }
   };
+
+  const handleOrderConfirmClick = () => {
+    navigate("/cart/order-confirm", {
+      state: {
+        productCount: filteredCartItem.length,
+        productItemCount: filteredCartItem.map((item) => item.itemCount),
+        totalPrice:
+          orderPrice +
+          (orderPrice >= DELIVERY.FREE_PRICE_BOUNDARY ? 0 : DELIVERY.FEE),
+      },
+    });
+  };
+
   return (
     <div>
       <Header actionIcon={<div>SHOP</div>} />
@@ -56,6 +72,7 @@ const CartPage = ({ cartId }: { cartId: number }) => {
       <CartEmpty />
       <BaseButton
         disabled={cartItems.length === 0 || checkedProductIds.length === 0}
+        onClick={handleOrderConfirmClick}
       >
         주문 확인
       </BaseButton>
