@@ -18,7 +18,7 @@ const CartContent = ({ cartItems }: { cartItems: CartItemResponse[] }) => {
   // TODO CartItemList 내부 CartItem을 children으로 받게할 때 장단점 생각해보기
   return (
     <div>
-      <CartItemList />
+      <CartItemList cartItems={cartItems} />
       <CartPaymentSummary orderPrice={orderPrice} deliveryFee={3000} />
     </div>
   );

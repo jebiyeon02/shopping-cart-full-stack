@@ -1,13 +1,11 @@
-import { useState } from "react";
 import Header from "../../shared/components/Header";
 import CartContent from "./components/CartContent/CartContent/CartContent";
 import CartEmpty from "./components/CartEmpty";
 import BaseButton from "../../shared/components/BaseButton";
-import type { CartItemResponse } from "../../domain/cart/cart.api";
+import useCartItem from "./useCartItem";
 
-const CartPage = () => {
-  const [cartItems, setCartItems] = useState<CartItemResponse[] | null>(null);
-
+const CartPage = ({ cartId }: { cartId: number }) => {
+  const { cartItems } = useCartItem(cartId);
   return (
     <div>
       <Header />
