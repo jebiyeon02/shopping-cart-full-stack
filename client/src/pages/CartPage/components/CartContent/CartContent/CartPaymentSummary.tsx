@@ -16,7 +16,7 @@ const CartPaymentSummary = ({
       <WarningSection>
         <WarningIconImage src={WarningIcon} />
         <CartPaymentSummarySpan>
-          총 주문 금액이 100,000원 이상일 경우 무료 배송됩니다.{" "}
+          총 주문 금액이 100,000원 이상일 경우 무료 배송됩니다.
         </CartPaymentSummarySpan>
       </WarningSection>
       <SummaryTable>
