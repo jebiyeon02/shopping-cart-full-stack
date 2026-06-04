@@ -13,8 +13,8 @@ const CartItemList = ({
 }: {
   cartItems: CartItemResponse[];
   onDeleteCartItem: (productId: number) => void;
-  onAllProductSelect: (action: "check" | "uncheck") => void;
-  onProductSelect: (productId: number, action: "check" | "uncheck") => void;
+  onAllProductSelect: (isChecked: boolean) => void;
+  onProductSelect: (productId: number, isChecked: boolean) => void;
   checkedProductIds: number[];
   isSelectAllProduct: boolean;
   onUpdateCartItemCount: (productId: number, itemCount: number) => void;
@@ -26,11 +26,7 @@ const CartItemList = ({
           type="checkbox"
           checked={isSelectAllProduct}
           onChange={() => {
-            if (isSelectAllProduct) {
-              onAllProductSelect("uncheck");
-            } else {
-              onAllProductSelect("check");
-            }
+            onAllProductSelect(isSelectAllProduct);
           }}
         />
         전체선택

@@ -1,0 +1,24 @@
+export const checkedproductIdsReducer = (
+  productIds: number[],
+  action: {
+    type: "init" | "insert" | "remove";
+    productId?: number | number[];
+  },
+) => {
+  switch (action.type) {
+    case "init": {
+      return [];
+    }
+    case "insert": {
+      if (!action.productId) return productIds;
+      if (Array.isArray(action.productId)) {
+        return [...productIds, ...action.productId];
+      }
+
+      return [...productIds, action.productId];
+    }
+    case "remove": {
+      return productIds.filter((id) => id !== action.productId);
+    }
+  }
+};

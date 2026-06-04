@@ -18,8 +18,8 @@ const CartContent = ({
   orderPrice: number;
   onDeleteCartItem: (productId: number) => void;
   onUpdateCartItemCount: (productId: number, itemCount: number) => void;
-  onAllProductSelect: (action: "check" | "uncheck") => void;
-  onProductSelect: (productId: number, action: "check" | "uncheck") => void;
+  onAllProductSelect: (isChecked: boolean) => void;
+  onProductSelect: (productId: number, isChecked: boolean) => void;
 }) => {
   // TODO CartItemList 내부 CartItem을 children으로 받게할 때 장단점 생각해보기
   return (
