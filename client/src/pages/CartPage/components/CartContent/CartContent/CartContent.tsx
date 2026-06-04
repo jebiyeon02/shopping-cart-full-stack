@@ -38,6 +38,7 @@ const CartContent = ({
         isSelectAllProduct={checkedProductIds.length === cartItems.length}
         onUpdateCartItemCount={onUpdateCartItemCount}
       />
+
       <CartPaymentSummary
         orderPrice={orderPrice}
         deliveryFee={
