@@ -5,11 +5,16 @@ import BaseButton from "../../shared/components/BaseButton";
 import useCartItem from "./useCartItem";
 
 const CartPage = ({ cartId }: { cartId: number }) => {
-  const { cartItems } = useCartItem(cartId);
+  const { cartItems, requestDeleteCartItem } = useCartItem(cartId);
   return (
     <div>
       <Header />
-      {cartItems && <CartContent cartItems={cartItems} />}
+      {cartItems && (
+        <CartContent
+          cartItems={cartItems}
+          onDeleteCartItem={requestDeleteCartItem}
+        />
+      )}
       <CartEmpty />
       <BaseButton />
     </div>

@@ -3,7 +3,13 @@ import type { CartItemResponse } from "../../../../../domain/cart/cart.api";
 import CartItemList from "./CartItemList/CartItemList";
 import CartPaymentSummary from "./CartPaymentSummary";
 
-const CartContent = ({ cartItems }: { cartItems: CartItemResponse[] }) => {
+const CartContent = ({
+  cartItems,
+  onDeleteCartItem,
+}: {
+  cartItems: CartItemResponse[];
+  onDeleteCartItem: (productId: number) => void;
+}) => {
   const [checkedProductIds, setCheckedProductIds] = useState<Number[]>([]);
   const filteredCartItem = cartItems.filter((cartItem) =>
     checkedProductIds.includes(cartItem.id),
@@ -18,7 +24,7 @@ const CartContent = ({ cartItems }: { cartItems: CartItemResponse[] }) => {
   // TODO CartItemList 내부 CartItem을 children으로 받게할 때 장단점 생각해보기
   return (
     <div>
-      <CartItemList cartItems={cartItems} />
+      <CartItemList cartItems={cartItems} onDeleteCartItem={onDeleteCartItem} />
       <CartPaymentSummary orderPrice={orderPrice} deliveryFee={3000} />
     </div>
   );
