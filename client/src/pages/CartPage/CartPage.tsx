@@ -9,7 +9,7 @@ const CartPage = ({ cartId }: { cartId: number }) => {
     useCartItem(cartId);
   return (
     <div>
-      <Header />
+      <Header actionIcon={<div>SHOP</div>} />
       {cartItems && (
         <CartContent
           cartItems={cartItems}
@@ -18,7 +18,7 @@ const CartPage = ({ cartId }: { cartId: number }) => {
         />
       )}
       <CartEmpty />
-      <BaseButton />
+      <BaseButton>주문 확인</BaseButton>
     </div>
   );
 };
