@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useReducer } from "react";
 import Header from "../../shared/components/Header";
 import CartContent from "./components/CartContent/CartContent/CartContent";
 import CartEmpty from "./components/CartEmpty";
@@ -7,13 +7,17 @@ import useCartItem from "./useCartItem";
 import { getOrderPrice } from "../../domain/cart/cart.util";
 import { useNavigate } from "react-router-dom";
 import { DELIVERY } from "../../domain/cart/cart.constants";
+import { checkedproductIdsReducer } from "./checkedProductsIdReducer";
 
 const CartPage = ({ cartId }: { cartId: number }) => {
   const navigate = useNavigate();
   const { cartItems, requestDeleteCartItem, requestUpdateCartItemCount } =
     useCartItem(cartId);
 
-  const [checkedProductIds, setCheckedProductIds] = useState<number[]>([]);
+  const [checkedProductIds, checkedProductIdsDispatch] = useReducer(
+    checkedproductIdsReducer,
+    [],
+  );
 
   if (!cartItems) return;
 
@@ -22,24 +26,21 @@ const CartPage = ({ cartId }: { cartId: number }) => {
   );
   const orderPrice = getOrderPrice(filteredCartItem);
 
-  const handleAllProductSelect = (action: "check" | "uncheck") => {
-    if (action === "uncheck") {
-      setCheckedProductIds([]);
+  const handleAllProductSelect = (isChecked: boolean) => {
+    if (isChecked) {
+      checkedProductIdsDispatch({ type: "init" });
       return;
     }
     // TODO: 전체 덮어쓰기 vs 체크 안된 것만 찾아서 checkedProductIds에 넣어주기 트레이드 오프 고민
     const allProductIds = cartItems.map((cartItem) => cartItem.id);
-    setCheckedProductIds(allProductIds);
+    checkedProductIdsDispatch({ type: "insert", productId: allProductIds });
   };
 
-  const handleProductSelect = (
-    productId: number,
-    action: "check" | "uncheck",
-  ) => {
-    if (action === "uncheck") {
-      setCheckedProductIds((prev) => prev.filter((id) => id !== productId));
+  const handleProductSelect = (productId: number, isChecked: boolean) => {
+    if (isChecked) {
+      checkedProductIdsDispatch({ type: "remove", productId: productId });
     } else {
-      setCheckedProductIds((prev) => [...prev, productId]);
+      checkedProductIdsDispatch({ type: "insert", productId: productId });
     }
   };
 

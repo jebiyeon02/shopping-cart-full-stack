@@ -11,7 +11,7 @@ const CartItem = ({
 }: {
   cartItem: CartItemResponse;
   onDeleteCartItem: (productId: number) => void;
-  onProductSelect: (productId: number, action: "check" | "uncheck") => void;
+  onProductSelect: (productId: number, isChecked: boolean) => void;
   onUpdateCartItemCount: (productId: number, itemCount: number) => void;
   isChecked: boolean;
 }) => {
@@ -25,11 +25,7 @@ const CartItem = ({
           type="checkbox"
           checked={isChecked}
           onChange={() => {
-            if (isChecked) {
-              onProductSelect(id, "uncheck");
-            } else {
-              onProductSelect(id, "check");
-            }
+            onProductSelect(id, isChecked);
           }}
         />
         <DeleteButton type="button" onClick={() => onDeleteCartItem(id)}>
