@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { formatPrice } from "../../../../../shared/utils";
+import WarningIcon from "../../../../../assets/warning.png";
 
 const CartPaymentSummary = ({
   orderPrice,
@@ -12,6 +13,12 @@ const CartPaymentSummary = ({
 
   return (
     <CartPaymentSummaryLayout>
+      <WarningSection>
+        <WarningIconImage src={WarningIcon} />
+        <CartPaymentSummarySpan>
+          총 주문 금액이 100,000원 이상일 경우 무료 배송됩니다.{" "}
+        </CartPaymentSummarySpan>
+      </WarningSection>
       <SummaryTable>
         <tbody>
           <SummaryTr>
@@ -36,6 +43,25 @@ export default CartPaymentSummary;
 
 const CartPaymentSummaryLayout = styled.div`
   margin-top: 32px;
+`;
+
+const WarningSection = styled.div`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+`;
+
+const WarningIconImage = styled.img`
+  width: 16px;
+  height: 16px;
+`;
+
+const CartPaymentSummarySpan = styled.span`
+  color: black;
+  font-weight: 500;
+  font-size: 12px;
 `;
 
 const SummaryTable = styled.table`
