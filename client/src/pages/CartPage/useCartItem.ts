@@ -5,6 +5,7 @@ import {
   updateCartItemCount,
   type CartItemResponse,
 } from "../../domain/cart/cart.api";
+import { errorHandler } from "../../error/errorHandler";
 // import ApiError from "../../error/ApiError";
 
 // 이 훅은 서버상태인 cartItem을 관리하는 훅임
@@ -18,8 +19,7 @@ const useCartItem = (cartId: number) => {
 
       setCartItems(fetchedCartItems);
     } catch (error) {
-      //TODO: 커스텀 에러처리 필요
-      alert(error);
+      errorHandler(error);
     }
   };
 
@@ -30,14 +30,12 @@ const useCartItem = (cartId: number) => {
     // TODO: cleanup 해보기
   }, [cartId]);
 
-  // TODO: requestDeleteCartItem 네이밍 수정 필요
   const requestDeleteCartItem = async (productId: number) => {
     try {
       await deleteCartItem(cartId, productId);
       await loadCartItems();
     } catch (error) {
-      //TODO: 커스텀 에러처리 필요
-      alert(error);
+      errorHandler(error);
     }
   };
 
@@ -49,8 +47,7 @@ const useCartItem = (cartId: number) => {
       await updateCartItemCount(cartId, productId, itemCount);
       await loadCartItems();
     } catch (error) {
-      //TODO: 커스텀 에러처리 필요
-      alert(error);
+      errorHandler(error);
     }
   };
 
