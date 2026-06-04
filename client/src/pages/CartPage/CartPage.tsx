@@ -24,6 +24,7 @@ const CartPage = ({ cartId }: { cartId: number }) => {
   const filteredCartItem = cartItems.filter((cartItem) =>
     checkedProductIds.includes(cartItem.id),
   );
+
   const orderPrice = getOrderPrice(filteredCartItem);
 
   const handleAllProductSelect = (isChecked: boolean) => {
@@ -39,9 +40,10 @@ const CartPage = ({ cartId }: { cartId: number }) => {
   const handleProductSelect = (productId: number, isChecked: boolean) => {
     if (isChecked) {
       checkedProductIdsDispatch({ type: "remove", productId: productId });
-    } else {
-      checkedProductIdsDispatch({ type: "insert", productId: productId });
+      return;
     }
+
+    checkedProductIdsDispatch({ type: "insert", productId: productId });
   };
 
   const handleOrderConfirmClick = () => {
@@ -64,7 +66,10 @@ const CartPage = ({ cartId }: { cartId: number }) => {
           cartItems={cartItems}
           checkedProductIds={checkedProductIds}
           orderPrice={orderPrice}
-          onDeleteCartItem={requestDeleteCartItem}
+          onDeleteCartItem={async (productId) => {
+            await requestDeleteCartItem(productId);
+            checkedProductIdsDispatch({ type: "remove", productId: productId });
+          }}
           onUpdateCartItemCount={requestUpdateCartItemCount}
           onAllProductSelect={handleAllProductSelect}
           onProductSelect={handleProductSelect}
