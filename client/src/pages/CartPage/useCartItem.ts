@@ -10,18 +10,20 @@ import {
 // 실제로는 그럴일이 없겠지만, 비로그인 상태에서 여러 카트에 담을 수 있다고 가정
 const useCartItem = (cartId: number) => {
   const [cartItems, setCartItems] = useState<CartItemResponse[] | null>(null);
+
+  const loadCartItems = async () => {
+    try {
+      const fetchedCartItems = await getCartItems(cartId);
+
+      setCartItems(fetchedCartItems);
+    } catch (error) {
+      //TODO: 커스텀 에러처리 필요
+      alert(error);
+    }
+  };
+
   // TODO: api요청별로 asyncState 훅 사용 필요
   useEffect(() => {
-    const loadCartItems = async () => {
-      try {
-        const fetchedCartItems = await getCartItems(cartId);
-
-        setCartItems(fetchedCartItems);
-      } catch (error) {
-        //TODO: 커스텀 에러처리 필요
-        alert(error);
-      }
-    };
     void loadCartItems();
 
     // TODO: cleanup 해보기
@@ -31,6 +33,7 @@ const useCartItem = (cartId: number) => {
   const requestDeleteCartItem = async (productId: number) => {
     try {
       await deleteCartItem(cartId, productId);
+      await loadCartItems();
     } catch (error) {
       //TODO: 커스텀 에러처리 필요
       alert(error);
