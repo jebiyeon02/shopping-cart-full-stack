@@ -1,6 +1,7 @@
 import ApiError from "../../error/ApiError";
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL =
+  "https://shopping-cart-full-stack-production-0cf6.up.railway.app";
 
 type ApiResponse<T> = {
   code: string;
@@ -13,6 +14,7 @@ type ApiErrorResponse = {
   message: string;
 };
 
+// TODO: CartItemResponse 밖으로 뺄지 말지 생각해보기 -> 외부에서도 쓸건데 Response라고 해도 되나?
 export type CartItemResponse = {
   id: number;
   name: string;
