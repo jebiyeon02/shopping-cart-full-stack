@@ -1,4 +1,6 @@
+import styled from "@emotion/styled";
 import type { CartItemResponse } from "../../../../../../domain/cart/cart.api";
+import { formatPrice } from "../../../../../../shared/utils";
 
 const CartItem = ({
   cartItem,
@@ -15,36 +17,135 @@ const CartItem = ({
 }) => {
   const { id, name, price, itemCount, imgUrl } = cartItem;
   return (
-    <div>
-      <input
-        type="checkbox"
-        checked={isChecked}
-        onChange={() => {
-          if (isChecked) {
-            onProductSelect(id, "uncheck");
-          } else {
-            onProductSelect(id, "check");
-          }
-        }}
-      />
-      <button
-        type="button"
-        onClick={() => onUpdateCartItemCount(id, itemCount - 1)}
-      >
-        -
-      </button>
-      <button
-        type="button"
-        onClick={() => onUpdateCartItemCount(id, itemCount + 1)}
-      >
-        +
-      </button>
-      {`${name}, ${price}, ${itemCount}`}
-      <button type="button" onClick={() => onDeleteCartItem(id)}>
-        삭제하기
-      </button>
-    </div>
+    <CartItemLayout>
+      <Divider />
+
+      <CartItemHeader>
+        <input
+          type="checkbox"
+          checked={isChecked}
+          onChange={() => {
+            if (isChecked) {
+              onProductSelect(id, "uncheck");
+            } else {
+              onProductSelect(id, "check");
+            }
+          }}
+        />
+        <DeleteButton type="button" onClick={() => onDeleteCartItem(id)}>
+          삭제
+        </DeleteButton>
+      </CartItemHeader>
+
+      <CartItemBody>
+        <CartItemImage src={imgUrl} alt={`상품 이미지-${name}`} />
+        <CartItemInformation>
+          <ProductName>{name}</ProductName>
+          <ProductPrice>{formatPrice(price * itemCount)}원</ProductPrice>
+          <CartItemCountStepper>
+            <StepperButton
+              type="button"
+              onClick={() => {
+                if (itemCount <= 1) {
+                  return;
+                }
+                onUpdateCartItemCount(id, itemCount - 1);
+              }}
+            >
+              -
+            </StepperButton>
+            {itemCount}
+            <StepperButton
+              type="button"
+              onClick={() => onUpdateCartItemCount(id, itemCount + 1)}
+            >
+              +
+            </StepperButton>
+          </CartItemCountStepper>
+        </CartItemInformation>
+      </CartItemBody>
+    </CartItemLayout>
   );
 };
 
 export default CartItem;
+
+const CartItemLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+`;
+
+const Divider = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: #0000001a;
+  margin-bottom: 12px;
+`;
+
+const CartItemHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const DeleteButton = styled.button`
+  width: 40px;
+  height: 24px;
+  border: 1px solid #0000001a;
+  border-radius: 8px;
+  background-color: white;
+  color: black;
+  font-size: 12px;
+  cursor: pointer;
+`;
+
+const CartItemBody = styled.div`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 24px;
+`;
+
+const CartItemImage = styled.img`
+  width: 112px;
+  height: 112px;
+  border-radius: 8px;
+`;
+
+const CartItemInformation = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  gap: 4px;
+`;
+
+const ProductName = styled.div`
+  color: black;
+  font-weight: 500;
+  font-size: 12px;
+`;
+
+const ProductPrice = styled.div`
+  color: black;
+  font-weight: 700;
+  font-size: 24px;
+`;
+
+const CartItemCountStepper = styled.div`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+`;
+
+const StepperButton = styled.button`
+  width: 24px;
+  height: 24px;
+  border: 1px solid #0000001a;
+  border-radius: 8px;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+`;
