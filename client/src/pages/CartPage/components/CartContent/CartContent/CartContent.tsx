@@ -1,46 +1,25 @@
-import { useState } from "react";
 import type { CartItemResponse } from "../../../../../domain/cart/cart.api";
 import CartItemList from "./CartItemList/CartItemList";
 import CartPaymentSummary from "./CartPaymentSummary";
-import { getOrderPrice } from "../../../../../domain/cart/cart.util";
 import styled from "@emotion/styled";
 
 const CartContent = ({
   cartItems,
+  checkedProductIds,
+  orderPrice,
   onDeleteCartItem,
   onUpdateCartItemCount,
+  onAllProductSelect,
+  onProductSelect,
 }: {
   cartItems: CartItemResponse[];
+  checkedProductIds: number[];
+  orderPrice: number;
   onDeleteCartItem: (productId: number) => void;
   onUpdateCartItemCount: (productId: number, itemCount: number) => void;
+  onAllProductSelect: (action: "check" | "uncheck") => void;
+  onProductSelect: (productId: number, action: "check" | "uncheck") => void;
 }) => {
-  const [checkedProductIds, setCheckedProductIds] = useState<number[]>([]);
-  const filteredCartItem = cartItems.filter((cartItem) =>
-    checkedProductIds.includes(cartItem.id),
-  );
-  const orderPrice = getOrderPrice(filteredCartItem);
-
-  const handleAllProductSelect = (action: "check" | "uncheck") => {
-    if (action === "uncheck") {
-      setCheckedProductIds([]);
-      return;
-    }
-    // TODO: 전체 덮어쓰기 vs 체크 안된 것만 찾아서 checkedProductIds에 넣어주기 트레이드 오프 고민
-    const allProductIds = cartItems.map((cartItem) => cartItem.id);
-    setCheckedProductIds(allProductIds);
-  };
-
-  const handleProductSelect = (
-    productId: number,
-    action: "check" | "uncheck",
-  ) => {
-    if (action === "uncheck") {
-      setCheckedProductIds((prev) => prev.filter((id) => id !== productId));
-    } else {
-      setCheckedProductIds((prev) => [...prev, productId]);
-    }
-  };
-
   // TODO CartItemList 내부 CartItem을 children으로 받게할 때 장단점 생각해보기
   return (
     <CartContentLayout>
@@ -52,8 +31,8 @@ const CartContent = ({
       <CartItemList
         cartItems={cartItems}
         onDeleteCartItem={onDeleteCartItem}
-        onAllProductSelect={handleAllProductSelect}
-        onProductSelect={handleProductSelect}
+        onAllProductSelect={onAllProductSelect}
+        onProductSelect={onProductSelect}
         checkedProductIds={checkedProductIds}
         isSelectAllProduct={checkedProductIds.length === cartItems.length}
         onUpdateCartItemCount={onUpdateCartItemCount}
