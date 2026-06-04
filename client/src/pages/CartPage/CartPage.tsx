@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import Header from "../../shared/components/Header";
 import CartContent from "./components/CartContent/CartContent/CartContent";
 import CartEmpty from "./components/CartEmpty";
@@ -19,6 +19,28 @@ const CartPage = ({ cartId }: { cartId: number }) => {
     [],
   );
 
+  useEffect(() => {
+    if (!cartItems) {
+      return;
+    }
+
+    const savedCheckedProductIds = localStorage.getItem(
+      "cart-checked-product-ids",
+    );
+
+    if (!savedCheckedProductIds) {
+      const allProductIds = cartItems.map((cartItem) => cartItem.id);
+      checkedProductIdsDispatch({ type: "insert", productId: allProductIds });
+      return;
+    }
+
+    const parsedCheckedProductIds = JSON.parse(savedCheckedProductIds);
+    checkedProductIdsDispatch({
+      type: "insert",
+      productId: parsedCheckedProductIds,
+    });
+  }, [cartItems]);
+
   if (!cartItems) return;
 
   const filteredCartItem = cartItems.filter((cartItem) =>
@@ -30,20 +52,33 @@ const CartPage = ({ cartId }: { cartId: number }) => {
   const handleAllProductSelect = (isChecked: boolean) => {
     if (isChecked) {
       checkedProductIdsDispatch({ type: "init" });
+      localStorage.removeItem("cart-checked-product-ids");
       return;
     }
     // TODO: 전체 덮어쓰기 vs 체크 안된 것만 찾아서 checkedProductIds에 넣어주기 트레이드 오프 고민
     const allProductIds = cartItems.map((cartItem) => cartItem.id);
     checkedProductIdsDispatch({ type: "insert", productId: allProductIds });
+    localStorage.setItem(
+      "cart-checked-product-ids",
+      JSON.stringify(allProductIds),
+    );
   };
 
   const handleProductSelect = (productId: number, isChecked: boolean) => {
     if (isChecked) {
       checkedProductIdsDispatch({ type: "remove", productId: productId });
+      localStorage.setItem(
+        "cart-checked-product-ids",
+        JSON.stringify(checkedProductIds.filter((id) => id !== productId)),
+      );
       return;
     }
 
     checkedProductIdsDispatch({ type: "insert", productId: productId });
+    localStorage.setItem(
+      "cart-checked-product-ids",
+      JSON.stringify([...checkedProductIds, productId]),
+    );
   };
 
   const handleOrderConfirmClick = () => {
