@@ -10,19 +10,30 @@ const CartContent = ({
   cartItems: CartItemResponse[];
   onDeleteCartItem: (productId: number) => void;
 }) => {
-  const [checkedProductIds, setCheckedProductIds] = useState<Number[]>([]);
+  const [checkedProductIds, setCheckedProductIds] = useState<number[]>([]);
   const filteredCartItem = cartItems.filter((cartItem) =>
     checkedProductIds.includes(cartItem.id),
   );
 
-  const handleAllProductSelect = (action: "fill" | "empty") => {
-    if (action === "empty") {
+  const handleAllProductSelect = (action: "check" | "uncheck") => {
+    if (action === "uncheck") {
       setCheckedProductIds([]);
       return;
     }
     // TODO: 전체 덮어쓰기 vs 체크 안된 것만 찾아서 checkedProductIds에 넣어주기 트레이드 오프 고민
     const allProductIds = cartItems.map((cartItem) => cartItem.id);
     setCheckedProductIds(allProductIds);
+  };
+
+  const handleProductSelect = (
+    productId: number,
+    action: "check" | "uncheck",
+  ) => {
+    if (action === "uncheck") {
+      setCheckedProductIds((prev) => prev.filter((id) => id !== productId));
+    } else {
+      setCheckedProductIds((prev) => [...prev, productId]);
+    }
   };
 
   // TODO 계산로직 분리 필요
@@ -38,6 +49,9 @@ const CartContent = ({
         cartItems={cartItems}
         onDeleteCartItem={onDeleteCartItem}
         onAllProductSelect={handleAllProductSelect}
+        onProductSelect={handleProductSelect}
+        checkedProductIds={checkedProductIds}
+        isSelectAllProduct={checkedProductIds.length === cartItems.length}
       />
       <CartPaymentSummary
         orderPrice={orderPrice}
