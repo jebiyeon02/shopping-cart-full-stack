@@ -1,0 +1,4 @@
+export const DELIVERY = {
+  FREE_PRICE_BOUNDARY: 100_000,
+  FEE: 3_000,
+};
