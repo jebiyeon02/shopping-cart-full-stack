@@ -7,9 +7,10 @@ const BaseButton = ({
   children,
   type = "button",
   disabled = false,
+  onClick,
 }: BaseButtonProps) => {
   return (
-    <Button type={type} disabled={disabled}>
+    <Button type={type} disabled={disabled} onClick={onClick}>
       {children}
     </Button>
   );
