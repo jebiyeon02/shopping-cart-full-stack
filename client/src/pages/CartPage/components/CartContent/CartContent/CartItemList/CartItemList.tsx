@@ -8,6 +8,7 @@ const CartItemList = ({
   onProductSelect,
   checkedProductIds,
   isSelectAllProduct,
+  onUpdateCartItemCount,
 }: {
   cartItems: CartItemResponse[];
   onDeleteCartItem: (productId: number) => void;
@@ -15,6 +16,7 @@ const CartItemList = ({
   onProductSelect: (productId: number, action: "check" | "uncheck") => void;
   checkedProductIds: number[];
   isSelectAllProduct: boolean;
+  onUpdateCartItemCount: (productId: number, itemCount: number) => void;
 }) => {
   return (
     <div>
@@ -36,6 +38,7 @@ const CartItemList = ({
           cartItem={cartItem}
           onProductSelect={onProductSelect}
           onDeleteCartItem={onDeleteCartItem}
+          onUpdateCartItemCount={onUpdateCartItemCount}
           isChecked={checkedProductIds.includes(cartItem.id)}
         />
       ))}

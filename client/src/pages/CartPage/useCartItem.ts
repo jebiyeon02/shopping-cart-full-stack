@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   deleteCartItem,
   getCartItems,
+  updateCartItemCount,
   type CartItemResponse,
 } from "../../domain/cart/cart.api";
 // import ApiError from "../../error/ApiError";
@@ -40,7 +41,20 @@ const useCartItem = (cartId: number) => {
     }
   };
 
-  return { cartItems, requestDeleteCartItem };
+  const requestUpdateCartItemCount = async (
+    productId: number,
+    itemCount: number,
+  ) => {
+    try {
+      await updateCartItemCount(cartId, productId, itemCount);
+      await loadCartItems();
+    } catch (error) {
+      //TODO: 커스텀 에러처리 필요
+      alert(error);
+    }
+  };
+
+  return { cartItems, requestDeleteCartItem, requestUpdateCartItemCount };
 };
 
 export default useCartItem;
