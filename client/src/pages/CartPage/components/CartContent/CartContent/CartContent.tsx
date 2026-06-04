@@ -1,4 +1,5 @@
 import type { CartItemResponse } from "../../../../../domain/cart/cart.api";
+import { DELIVERY } from "../../../../../domain/cart/cart.constants";
 import CartItemList from "./CartItemList/CartItemList";
 import CartPaymentSummary from "./CartPaymentSummary";
 import styled from "@emotion/styled";
@@ -39,7 +40,9 @@ const CartContent = ({
       />
       <CartPaymentSummary
         orderPrice={orderPrice}
-        deliveryFee={orderPrice >= 100000 ? 0 : 3000}
+        deliveryFee={
+          orderPrice >= DELIVERY.FREE_PRICE_BOUNDARY ? 0 : DELIVERY.FEE
+        }
       />
     </CartContentLayout>
   );

@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { formatPrice } from "../../../../../shared/utils";
 import WarningIcon from "../../../../../assets/warning.png";
+import { DELIVERY } from "../../../../../domain/cart/cart.constants";
 
 const CartPaymentSummary = ({
   orderPrice,
@@ -16,7 +17,8 @@ const CartPaymentSummary = ({
       <WarningSection>
         <WarningIconImage src={WarningIcon} />
         <CartPaymentSummarySpan>
-          총 주문 금액이 100,000원 이상일 경우 무료 배송됩니다.
+          총 주문 금액이 {formatPrice(DELIVERY.FREE_PRICE_BOUNDARY)}원 이상일
+          경우 무료 배송됩니다.
         </CartPaymentSummarySpan>
       </WarningSection>
       <SummaryTable>
