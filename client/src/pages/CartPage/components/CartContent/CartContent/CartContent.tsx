@@ -6,9 +6,11 @@ import CartPaymentSummary from "./CartPaymentSummary";
 const CartContent = ({
   cartItems,
   onDeleteCartItem,
+  onUpdateCartItemCount,
 }: {
   cartItems: CartItemResponse[];
   onDeleteCartItem: (productId: number) => void;
+  onUpdateCartItemCount: (productId: number, itemCount: number) => void;
 }) => {
   const [checkedProductIds, setCheckedProductIds] = useState<number[]>([]);
   const filteredCartItem = cartItems.filter((cartItem) =>
@@ -52,6 +54,7 @@ const CartContent = ({
         onProductSelect={handleProductSelect}
         checkedProductIds={checkedProductIds}
         isSelectAllProduct={checkedProductIds.length === cartItems.length}
+        onUpdateCartItemCount={onUpdateCartItemCount}
       />
       <CartPaymentSummary
         orderPrice={orderPrice}

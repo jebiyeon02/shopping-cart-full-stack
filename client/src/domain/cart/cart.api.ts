@@ -87,3 +87,33 @@ export const deleteCartItem = async (
     throw new ApiError(errorData.code, errorData.message);
   }
 };
+
+export const updateCartItemCount = async (
+  cartId: number,
+  productId: number,
+  itemCount: number,
+): Promise<{ id: number; itemCount: number }> => {
+  const response = await fetch(
+    `${BASE_URL}/carts/${cartId}/items/${productId}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        itemCount,
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    const errorData: ApiErrorResponse = await response.json();
+    throw new ApiError(errorData.code, errorData.message);
+  }
+
+  const data: ApiResponse<{ id: number; itemCount: number }> =
+    await response.json();
+  const updatedProduct = data.result;
+
+  return updatedProduct;
+};

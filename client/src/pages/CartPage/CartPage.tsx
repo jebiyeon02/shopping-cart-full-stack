@@ -5,7 +5,8 @@ import BaseButton from "../../shared/components/BaseButton";
 import useCartItem from "./useCartItem";
 
 const CartPage = ({ cartId }: { cartId: number }) => {
-  const { cartItems, requestDeleteCartItem } = useCartItem(cartId);
+  const { cartItems, requestDeleteCartItem, requestUpdateCartItemCount } =
+    useCartItem(cartId);
   return (
     <div>
       <Header />
@@ -13,6 +14,7 @@ const CartPage = ({ cartId }: { cartId: number }) => {
         <CartContent
           cartItems={cartItems}
           onDeleteCartItem={requestDeleteCartItem}
+          onUpdateCartItemCount={requestUpdateCartItemCount}
         />
       )}
       <CartEmpty />
