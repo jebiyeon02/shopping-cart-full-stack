@@ -5,7 +5,7 @@ const CartPaymentSummary = ({
   orderPrice: number;
   deliveryFee: number;
 }) => {
-  return <div>장바구니 결제 정보 요약</div>;
+  return <div>{`주문 금액: ${orderPrice}, 배송비: ${deliveryFee}`}</div>;
 };
 
 export default CartPaymentSummary;
