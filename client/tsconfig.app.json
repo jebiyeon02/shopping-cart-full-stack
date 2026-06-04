@@ -6,6 +6,7 @@
     "module": "esnext",
     "types": ["vite/client"],
     "skipLibCheck": true,
+    "jsxImportSource": "@emotion/react",
 
     /* Bundler mode */
     "moduleResolution": "bundler",
