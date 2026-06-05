@@ -24,8 +24,8 @@ const CartItem = ({
         <input
           type="checkbox"
           checked={isChecked}
-          onChange={() => {
-            onProductSelect(id, isChecked);
+          onChange={(event) => {
+            onProductSelect(id, event.target.checked);
           }}
         />
         <DeleteButton type="button" onClick={() => onDeleteCartItem(id)}>

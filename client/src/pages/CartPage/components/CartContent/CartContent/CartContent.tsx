@@ -18,10 +18,9 @@ const CartContent = ({
   orderPrice: number;
   onDeleteCartItem: (productId: number) => void;
   onUpdateCartItemCount: (productId: number, itemCount: number) => void;
-  onAllProductSelect: (isChecked: boolean) => void;
-  onProductSelect: (productId: number, isChecked: boolean) => void;
+  onAllProductSelect: (nextChecked: boolean) => void;
+  onProductSelect: (productId: number, nextChecked: boolean) => void;
 }) => {
-  // TODO CartItemList 내부 CartItem을 children으로 받게할 때 장단점 생각해보기
   return (
     <CartContentLayout>
       <CartContentTitle>장바구니</CartContentTitle>
@@ -31,11 +30,11 @@ const CartContent = ({
 
       <CartItemList
         cartItems={cartItems}
+        checkedProductIds={checkedProductIds}
+        isSelectAllProduct={checkedProductIds.length === cartItems.length}
         onDeleteCartItem={onDeleteCartItem}
         onAllProductSelect={onAllProductSelect}
         onProductSelect={onProductSelect}
-        checkedProductIds={checkedProductIds}
-        isSelectAllProduct={checkedProductIds.length === cartItems.length}
         onUpdateCartItemCount={onUpdateCartItemCount}
       />
 
