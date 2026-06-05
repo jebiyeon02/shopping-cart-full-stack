@@ -8,6 +8,7 @@ import { getOrderPrice } from "../../domain/cart/cart.util";
 import { useNavigate } from "react-router-dom";
 import { DELIVERY } from "../../domain/cart/cart.constants";
 import { checkedproductIdsReducer } from "./checkedProductsIdReducer";
+import styled from "@emotion/styled";
 
 const CartPage = ({ cartId }: { cartId: number }) => {
   const navigate = useNavigate();
@@ -44,15 +45,21 @@ const CartPage = ({ cartId }: { cartId: number }) => {
     });
   }, [cartItemsAsyncState.data]);
 
+  useEffect(() => {
+    if (cartItemsAsyncState.status === "fail") {
+      alert(cartItemsAsyncState.error.message);
+    }
+  }, [cartItemsAsyncState]);
+
   if (
     cartItemsAsyncState.status === "idle" ||
     cartItemsAsyncState.status === "loading"
   ) {
-    return <>로딩중...</>;
+    return <FallbackLayout>로딩중...</FallbackLayout>;
   }
 
   if (cartItemsAsyncState.status === "fail") {
-    return <>에러...</>;
+    return <FallbackLayout>에러...</FallbackLayout>;
   }
 
   const cartItems = cartItemsAsyncState.data;
@@ -138,6 +145,16 @@ const CartPage = ({ cartId }: { cartId: number }) => {
 };
 
 export default CartPage;
+
+const FallbackLayout = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: black;
+  font-weight: 500;
+  font-size: 14px;
+`;
 
 const checkedProductIdsLocalStorageManager = {
   get() {
