@@ -43,51 +43,11 @@ const CartPage = ({ cartId }: { cartId: number }) => {
     });
   }, [cartItems]);
 
-  // TODO: 중간에 UI가 나와서 별로인데
   if (!cartItems) return <>로딩중...</>;
 
   const filteredCartItem = cartItems.filter((cartItem) =>
     checkedProductIds.includes(cartItem.id),
   );
-
-  const handleAllProductSelect = (isChecked: boolean) => {
-    if (isChecked) {
-      checkedProductIdsDispatch({ type: "init" });
-      checkedProductIdsLocalStorageManager.clear();
-      return;
-    }
-
-    const allProductIds = cartItems.map((cartItem) => cartItem.id);
-    checkedProductIdsDispatch({ type: "insert", productId: allProductIds });
-    checkedProductIdsLocalStorageManager.set(allProductIds);
-  };
-
-  const handleProductSelect = (productId: number, isChecked: boolean) => {
-    if (isChecked) {
-      checkedProductIdsDispatch({ type: "remove", productId: productId });
-      checkedProductIdsLocalStorageManager.set(
-        checkedProductIds.filter((id) => id !== productId),
-      );
-
-      return;
-    }
-
-    checkedProductIdsDispatch({ type: "insert", productId: productId });
-    checkedProductIdsLocalStorageManager.set([...checkedProductIds, productId]);
-  };
-
-  const handleOrderConfirmClick = () => {
-    const orderPrice = getOrderPrice(filteredCartItem);
-    navigate("/cart/order-confirm", {
-      state: {
-        productCount: filteredCartItem.length,
-        productItemCount: filteredCartItem.map((item) => item.itemCount),
-        totalPrice:
-          orderPrice +
-          (orderPrice >= DELIVERY.FREE_PRICE_BOUNDARY ? 0 : DELIVERY.FEE),
-      },
-    });
-  };
 
   return (
     <div>
@@ -106,14 +66,58 @@ const CartPage = ({ cartId }: { cartId: number }) => {
             if (updateCartItemCountAsyncState === "loading") return;
             requestUpdateCartItemCount(productId, itemCount);
           }}
-          onAllProductSelect={handleAllProductSelect}
-          onProductSelect={handleProductSelect}
+          onAllProductSelect={(nextChecked: boolean) => {
+            if (nextChecked) {
+              const allProductIds = cartItems.map((cartItem) => cartItem.id);
+              checkedProductIdsDispatch({
+                type: "insert",
+                productId: allProductIds,
+              });
+              checkedProductIdsLocalStorageManager.set(allProductIds);
+              return;
+            }
+
+            checkedProductIdsDispatch({ type: "init" });
+            checkedProductIdsLocalStorageManager.clear();
+          }}
+          onProductSelect={(productId: number, nextChecked: boolean) => {
+            if (nextChecked) {
+              checkedProductIdsDispatch({
+                type: "insert",
+                productId: productId,
+              });
+              checkedProductIdsLocalStorageManager.set([
+                ...checkedProductIds,
+                productId,
+              ]);
+              return;
+            }
+
+            checkedProductIdsDispatch({
+              type: "remove",
+              productId: productId,
+            });
+            checkedProductIdsLocalStorageManager.set(
+              checkedProductIds.filter((id) => id !== productId),
+            );
+          }}
         />
       )}
       {cartItems.length === 0 && <CartEmpty />}
       <BaseButton
         disabled={cartItems.length === 0 || checkedProductIds.length === 0}
-        onClick={handleOrderConfirmClick}
+        onClick={() => {
+          const orderPrice = getOrderPrice(filteredCartItem);
+          navigate("/cart/order-confirm", {
+            state: {
+              productCount: filteredCartItem.length,
+              productItemCount: filteredCartItem.map((item) => item.itemCount),
+              totalPrice:
+                orderPrice +
+                (orderPrice >= DELIVERY.FREE_PRICE_BOUNDARY ? 0 : DELIVERY.FEE),
+            },
+          });
+        }}
       >
         주문 확인
       </BaseButton>
