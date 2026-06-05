@@ -1,19 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   deleteCartItem,
   getCartItems,
   updateCartItemCount,
   type CartItemResponse,
 } from "../../domain/cart/cart.api";
-import { errorHandler } from "../../error/errorHandler";
-import useAsyncState from "../../useAsyncState";
+import useAsyncState from "../../shared/useAsyncState";
+import { normalizeError } from "../../error/normalizeError";
 
 // 서버상태인 cartItem을 관리하는 Custom Hook
 const useCartItem = (cartId: number) => {
-  const [cartItems, setCartItems] = useState<CartItemResponse[] | null>(null);
-  const getCartItemsAsyncState = useAsyncState();
-  const deleteCartItemAsyncState = useAsyncState();
-  const updateCartItemCountAsyncState = useAsyncState();
+  const getCartItemsAsyncState = useAsyncState<CartItemResponse[]>();
+  const deleteCartItemAsyncState = useAsyncState<null>();
+  const updateCartItemCountAsyncState = useAsyncState<{
+    id: number;
+    itemCount: number;
+  }>();
 
   const loadCartItems = async () => {
     try {
@@ -21,11 +23,9 @@ const useCartItem = (cartId: number) => {
 
       const fetchedCartItems = await getCartItems(cartId);
 
-      setCartItems(fetchedCartItems);
-      getCartItemsAsyncState.setSuccess();
+      getCartItemsAsyncState.setSuccess(fetchedCartItems);
     } catch (error) {
-      errorHandler(error);
-      getCartItemsAsyncState.setFail();
+      getCartItemsAsyncState.setFail(normalizeError(error));
     }
   };
 
@@ -41,10 +41,9 @@ const useCartItem = (cartId: number) => {
 
       await deleteCartItem(cartId, productId);
       await loadCartItems();
-      deleteCartItemAsyncState.setSuccess();
+      deleteCartItemAsyncState.setSuccess(null);
     } catch (error) {
-      errorHandler(error);
-      deleteCartItemAsyncState.setFail();
+      deleteCartItemAsyncState.setFail(normalizeError(error));
     }
   };
 
@@ -55,20 +54,22 @@ const useCartItem = (cartId: number) => {
     try {
       updateCartItemCountAsyncState.setLoading();
 
-      await updateCartItemCount(cartId, productId, itemCount);
+      const updatedInformation = await updateCartItemCount(
+        cartId,
+        productId,
+        itemCount,
+      );
       await loadCartItems();
-      updateCartItemCountAsyncState.setSuccess();
+      updateCartItemCountAsyncState.setSuccess({ ...updatedInformation });
     } catch (error) {
-      errorHandler(error);
-      updateCartItemCountAsyncState.setFail();
+      updateCartItemCountAsyncState.setFail(normalizeError(error));
     }
   };
 
   return {
-    cartItems,
     requestDeleteCartItem,
     requestUpdateCartItemCount,
-    getCartItemsAsyncState: getCartItemsAsyncState.asyncState,
+    cartItemsAsyncState: getCartItemsAsyncState.asyncState,
     deleteCartItemAsyncState: deleteCartItemAsyncState.asyncState,
     updateCartItemCountAsyncState: updateCartItemCountAsyncState.asyncState,
   };
