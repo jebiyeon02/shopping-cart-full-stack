@@ -25,8 +25,8 @@ const CartItemList = ({
         <input
           type="checkbox"
           checked={isSelectAllProduct}
-          onChange={() => {
-            onAllProductSelect(isSelectAllProduct);
+          onChange={(event) => {
+            onAllProductSelect(event.target.checked);
           }}
         />
         전체선택
