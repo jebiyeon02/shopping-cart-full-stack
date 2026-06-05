@@ -7,10 +7,8 @@ import {
 } from "../../domain/cart/cart.api";
 import { errorHandler } from "../../error/errorHandler";
 import useAsyncState from "../../useAsyncState";
-// import ApiError from "../../error/ApiError";
 
-// 이 훅은 서버상태인 cartItem을 관리하는 훅임
-// 실제로는 그럴일이 없겠지만, 비로그인 상태에서 여러 카트에 담을 수 있다고 가정
+// 서버상태인 cartItem을 관리하는 Custom Hook
 const useCartItem = (cartId: number) => {
   const [cartItems, setCartItems] = useState<CartItemResponse[] | null>(null);
   const getCartItemsAsyncState = useAsyncState();
@@ -31,7 +29,6 @@ const useCartItem = (cartId: number) => {
     }
   };
 
-  // TODO: api요청별로 asyncState 훅 사용 필요
   useEffect(() => {
     void loadCartItems();
 
