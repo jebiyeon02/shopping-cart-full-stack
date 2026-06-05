@@ -2,7 +2,7 @@ name: Deploy client to gh-pages
 
 on:
   push:
-    branches: ["step2"]
+    branches: ["new-step2"]
   workflow_dispatch:
 
 permissions:
