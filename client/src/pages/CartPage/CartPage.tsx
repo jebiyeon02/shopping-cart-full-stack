@@ -12,7 +12,7 @@ import { checkedproductIdsReducer } from "./checkedProductsIdReducer";
 const CartPage = ({ cartId }: { cartId: number }) => {
   const navigate = useNavigate();
   const {
-    cartItems,
+    cartItemsAsyncState,
     requestDeleteCartItem,
     deleteCartItemAsyncState,
     requestUpdateCartItemCount,
@@ -25,9 +25,10 @@ const CartPage = ({ cartId }: { cartId: number }) => {
   );
 
   useEffect(() => {
-    if (!cartItems) {
+    if (cartItemsAsyncState.status !== "success") {
       return;
     }
+    const cartItems = cartItemsAsyncState.data;
 
     const savedCheckedProductIds = checkedProductIdsLocalStorageManager.get();
 
@@ -41,10 +42,20 @@ const CartPage = ({ cartId }: { cartId: number }) => {
       type: "insert",
       productId: savedCheckedProductIds,
     });
-  }, [cartItems]);
+  }, [cartItemsAsyncState.data]);
 
-  if (!cartItems) return <>로딩중...</>;
+  if (
+    cartItemsAsyncState.status === "idle" ||
+    cartItemsAsyncState.status === "loading"
+  ) {
+    return <>로딩중...</>;
+  }
 
+  if (cartItemsAsyncState.status === "fail") {
+    return <>에러...</>;
+  }
+
+  const cartItems = cartItemsAsyncState.data;
   const filteredCartItem = cartItems.filter((cartItem) =>
     checkedProductIds.includes(cartItem.id),
   );
@@ -58,12 +69,13 @@ const CartPage = ({ cartId }: { cartId: number }) => {
           checkedProductIds={checkedProductIds}
           orderPrice={getOrderPrice(filteredCartItem)}
           onDeleteCartItem={async (productId) => {
-            if (deleteCartItemAsyncState === "loading") return;
+            if (deleteCartItemAsyncState.status === "loading") return;
             await requestDeleteCartItem(productId);
             checkedProductIdsDispatch({ type: "remove", productId: productId });
+            checkedProductIdsLocalStorageManager.remove(productId);
           }}
           onUpdateCartItemCount={(productId: number, itemCount: number) => {
-            if (updateCartItemCountAsyncState === "loading") return;
+            if (updateCartItemCountAsyncState.status === "loading") return;
             requestUpdateCartItemCount(productId, itemCount);
           }}
           onAllProductSelect={(nextChecked: boolean) => {
@@ -138,6 +150,16 @@ const checkedProductIdsLocalStorageManager = {
       "cart-checked-product-ids",
       JSON.stringify(productIds),
     );
+  },
+
+  remove(productId: number) {
+    const savedProductIds = this.get();
+
+    if (!savedProductIds) {
+      return;
+    }
+
+    this.set(savedProductIds.filter((id) => id !== productId));
   },
 
   clear() {
