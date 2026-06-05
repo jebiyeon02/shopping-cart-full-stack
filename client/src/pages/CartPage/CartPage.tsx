@@ -45,12 +45,6 @@ const CartPage = ({ cartId }: { cartId: number }) => {
     });
   }, [cartItemsAsyncState.data]);
 
-  useEffect(() => {
-    if (cartItemsAsyncState.status === "fail") {
-      alert(cartItemsAsyncState.error.message);
-    }
-  }, [cartItemsAsyncState]);
-
   if (
     cartItemsAsyncState.status === "idle" ||
     cartItemsAsyncState.status === "loading"
@@ -59,7 +53,7 @@ const CartPage = ({ cartId }: { cartId: number }) => {
   }
 
   if (cartItemsAsyncState.status === "fail") {
-    return <FallbackLayout>에러...</FallbackLayout>;
+    return <FallbackLayout>{cartItemsAsyncState.error.message}</FallbackLayout>;
   }
 
   const cartItems = cartItemsAsyncState.data;
