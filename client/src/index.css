@@ -1,0 +1,14 @@
+html {
+  width: 100%;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+#root {
+  width: min(100vw, 400px);
+  min-height: 100vh;
+}
