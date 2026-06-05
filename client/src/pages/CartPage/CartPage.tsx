@@ -61,6 +61,68 @@ const CartPage = ({ cartId }: { cartId: number }) => {
     checkedProductIds.includes(cartItem.id),
   );
 
+  const handleDeleteCartItem = async (productId: number) => {
+    if (deleteCartItemAsyncState.status === "loading") return;
+    await requestDeleteCartItem(productId);
+    checkedProductIdsDispatch({ type: "remove", productId: productId });
+    checkedProductIdsLocalStorageManager.remove(productId);
+  };
+
+  const handleUpdateCartItemCount = (productId: number, itemCount: number) => {
+    if (updateCartItemCountAsyncState.status === "loading") return;
+    requestUpdateCartItemCount(productId, itemCount);
+  };
+
+  const handleAllProductSelect = (nextChecked: boolean) => {
+    if (nextChecked) {
+      const allProductIds = cartItems.map((cartItem) => cartItem.id);
+      checkedProductIdsDispatch({
+        type: "insert",
+        productId: allProductIds,
+      });
+      checkedProductIdsLocalStorageManager.set(allProductIds);
+      return;
+    }
+
+    checkedProductIdsDispatch({ type: "init" });
+    checkedProductIdsLocalStorageManager.clear();
+  };
+
+  const handleProductSelect = (productId: number, nextChecked: boolean) => {
+    if (nextChecked) {
+      checkedProductIdsDispatch({
+        type: "insert",
+        productId: productId,
+      });
+      checkedProductIdsLocalStorageManager.set([
+        ...checkedProductIds,
+        productId,
+      ]);
+      return;
+    }
+
+    checkedProductIdsDispatch({
+      type: "remove",
+      productId: productId,
+    });
+    checkedProductIdsLocalStorageManager.set(
+      checkedProductIds.filter((id) => id !== productId),
+    );
+  };
+
+  const handleOrderConfirmButtonClick = () => {
+    const orderPrice = getOrderPrice(filteredCartItem);
+    navigate("/cart/order-confirm", {
+      state: {
+        productCount: filteredCartItem.length,
+        productItemCount: filteredCartItem.map((item) => item.itemCount),
+        totalPrice:
+          orderPrice +
+          (orderPrice >= DELIVERY.FREE_PRICE_BOUNDARY ? 0 : DELIVERY.FEE),
+      },
+    });
+  };
+
   return (
     <div>
       <Header actionIcon={<div>SHOP</div>} />
@@ -69,68 +131,16 @@ const CartPage = ({ cartId }: { cartId: number }) => {
           cartItems={cartItems}
           checkedProductIds={checkedProductIds}
           orderPrice={getOrderPrice(filteredCartItem)}
-          onDeleteCartItem={async (productId) => {
-            if (deleteCartItemAsyncState.status === "loading") return;
-            await requestDeleteCartItem(productId);
-            checkedProductIdsDispatch({ type: "remove", productId: productId });
-            checkedProductIdsLocalStorageManager.remove(productId);
-          }}
-          onUpdateCartItemCount={(productId: number, itemCount: number) => {
-            if (updateCartItemCountAsyncState.status === "loading") return;
-            requestUpdateCartItemCount(productId, itemCount);
-          }}
-          onAllProductSelect={(nextChecked: boolean) => {
-            if (nextChecked) {
-              const allProductIds = cartItems.map((cartItem) => cartItem.id);
-              checkedProductIdsDispatch({
-                type: "insert",
-                productId: allProductIds,
-              });
-              checkedProductIdsLocalStorageManager.set(allProductIds);
-              return;
-            }
-
-            checkedProductIdsDispatch({ type: "init" });
-            checkedProductIdsLocalStorageManager.clear();
-          }}
-          onProductSelect={(productId: number, nextChecked: boolean) => {
-            if (nextChecked) {
-              checkedProductIdsDispatch({
-                type: "insert",
-                productId: productId,
-              });
-              checkedProductIdsLocalStorageManager.set([
-                ...checkedProductIds,
-                productId,
-              ]);
-              return;
-            }
-
-            checkedProductIdsDispatch({
-              type: "remove",
-              productId: productId,
-            });
-            checkedProductIdsLocalStorageManager.set(
-              checkedProductIds.filter((id) => id !== productId),
-            );
-          }}
+          onDeleteCartItem={handleDeleteCartItem}
+          onUpdateCartItemCount={handleUpdateCartItemCount}
+          onAllProductSelect={handleAllProductSelect}
+          onProductSelect={handleProductSelect}
         />
       )}
       {cartItems.length === 0 && <CartEmpty />}
       <BaseButton
         disabled={cartItems.length === 0 || checkedProductIds.length === 0}
-        onClick={() => {
-          const orderPrice = getOrderPrice(filteredCartItem);
-          navigate("/cart/order-confirm", {
-            state: {
-              productCount: filteredCartItem.length,
-              productItemCount: filteredCartItem.map((item) => item.itemCount),
-              totalPrice:
-                orderPrice +
-                (orderPrice >= DELIVERY.FREE_PRICE_BOUNDARY ? 0 : DELIVERY.FEE),
-            },
-          });
-        }}
+        onClick={handleOrderConfirmButtonClick}
       >
         주문 확인
       </BaseButton>
