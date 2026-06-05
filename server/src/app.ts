@@ -11,6 +11,7 @@ import createCartRouter from "./modules/cart/cart.routes.js";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
 
 const ALLOWED_ORIGINS = new Set([
+  "https://jebiyeon02.github.io",
   "http://localhost:5173",
   "http://127.0.0.1:5173",
   "http://localhost:3030",
