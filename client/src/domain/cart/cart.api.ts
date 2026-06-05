@@ -14,12 +14,11 @@ type ApiErrorResponse = {
   message: string;
 };
 
-// TODO: CartItemResponse 밖으로 뺄지 말지 생각해보기 -> 외부에서도 쓸건데 Response라고 해도 되나?
 export type CartItemResponse = {
   id: number;
   name: string;
   price: number;
-  imgUrl: string | null; // TODO: 서버에서 처리를 잘 못해주는 것 같음
+  imgUrl: string | undefined; // TODO: 서버에서 처리를 잘 못해주는 것 같음
   itemCount: number;
 };
 
