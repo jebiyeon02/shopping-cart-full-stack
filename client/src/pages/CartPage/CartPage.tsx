@@ -11,8 +11,13 @@ import { checkedproductIdsReducer } from "./checkedProductsIdReducer";
 
 const CartPage = ({ cartId }: { cartId: number }) => {
   const navigate = useNavigate();
-  const { cartItems, requestDeleteCartItem, requestUpdateCartItemCount } =
-    useCartItem(cartId);
+  const {
+    cartItems,
+    requestDeleteCartItem,
+    deleteCartItemAsyncState,
+    requestUpdateCartItemCount,
+    updateCartItemCountAsyncState,
+  } = useCartItem(cartId);
 
   const [checkedProductIds, checkedProductIdsDispatch] = useReducer(
     checkedproductIdsReducer,
@@ -38,13 +43,12 @@ const CartPage = ({ cartId }: { cartId: number }) => {
     });
   }, [cartItems]);
 
-  if (!cartItems) return;
+  // TODO: 중간에 UI가 나와서 별로인데
+  if (!cartItems) return <>로딩중...</>;
 
   const filteredCartItem = cartItems.filter((cartItem) =>
     checkedProductIds.includes(cartItem.id),
   );
-
-  const orderPrice = getOrderPrice(filteredCartItem);
 
   const handleAllProductSelect = (isChecked: boolean) => {
     if (isChecked) {
@@ -52,7 +56,7 @@ const CartPage = ({ cartId }: { cartId: number }) => {
       checkedProductIdsLocalStorageManager.clear();
       return;
     }
-    // TODO: 전체 덮어쓰기 vs 체크 안된 것만 찾아서 checkedProductIds에 넣어주기 트레이드 오프 고민
+
     const allProductIds = cartItems.map((cartItem) => cartItem.id);
     checkedProductIdsDispatch({ type: "insert", productId: allProductIds });
     checkedProductIdsLocalStorageManager.set(allProductIds);
@@ -73,6 +77,7 @@ const CartPage = ({ cartId }: { cartId: number }) => {
   };
 
   const handleOrderConfirmClick = () => {
+    const orderPrice = getOrderPrice(filteredCartItem);
     navigate("/cart/order-confirm", {
       state: {
         productCount: filteredCartItem.length,
@@ -87,21 +92,25 @@ const CartPage = ({ cartId }: { cartId: number }) => {
   return (
     <div>
       <Header actionIcon={<div>SHOP</div>} />
-      {cartItems && (
+      {cartItems.length !== 0 && (
         <CartContent
           cartItems={cartItems}
           checkedProductIds={checkedProductIds}
-          orderPrice={orderPrice}
+          orderPrice={getOrderPrice(filteredCartItem)}
           onDeleteCartItem={async (productId) => {
+            if (deleteCartItemAsyncState === "loading") return;
             await requestDeleteCartItem(productId);
             checkedProductIdsDispatch({ type: "remove", productId: productId });
           }}
-          onUpdateCartItemCount={requestUpdateCartItemCount}
+          onUpdateCartItemCount={(productId: number, itemCount: number) => {
+            if (updateCartItemCountAsyncState === "loading") return;
+            requestUpdateCartItemCount(productId, itemCount);
+          }}
           onAllProductSelect={handleAllProductSelect}
           onProductSelect={handleProductSelect}
         />
       )}
-      <CartEmpty />
+      {cartItems.length === 0 && <CartEmpty />}
       <BaseButton
         disabled={cartItems.length === 0 || checkedProductIds.length === 0}
         onClick={handleOrderConfirmClick}
