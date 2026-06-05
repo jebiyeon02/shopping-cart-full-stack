@@ -17,9 +17,11 @@ const useCartItem = (cartId: number) => {
     itemCount: number;
   }>();
 
-  const loadCartItems = async () => {
+  const loadCartItems = async ({ showLoading }: { showLoading: boolean }) => {
     try {
-      getCartItemsAsyncState.setLoading();
+      if (showLoading) {
+        getCartItemsAsyncState.setLoading();
+      }
 
       const fetchedCartItems = await getCartItems(cartId);
 
@@ -30,7 +32,7 @@ const useCartItem = (cartId: number) => {
   };
 
   useEffect(() => {
-    void loadCartItems();
+    void loadCartItems({ showLoading: true });
 
     // TODO: cleanup 해보기
   }, [cartId]);
@@ -40,7 +42,7 @@ const useCartItem = (cartId: number) => {
       deleteCartItemAsyncState.setLoading();
 
       await deleteCartItem(cartId, productId);
-      await loadCartItems();
+      await loadCartItems({ showLoading: false });
       deleteCartItemAsyncState.setSuccess(null);
     } catch (error) {
       deleteCartItemAsyncState.setFail(normalizeError(error));
@@ -59,7 +61,7 @@ const useCartItem = (cartId: number) => {
         productId,
         itemCount,
       );
-      await loadCartItems();
+      await loadCartItems({ showLoading: false });
       updateCartItemCountAsyncState.setSuccess({ ...updatedInformation });
     } catch (error) {
       updateCartItemCountAsyncState.setFail(normalizeError(error));
