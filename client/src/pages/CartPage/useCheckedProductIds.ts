@@ -56,13 +56,13 @@ export const useCheckedProductIds = (
   return { checkedProductIds, checkedProductIdsDispatch };
 };
 
-type CheckedProductIdsReducerAction =
+export type CheckedProductIdsReducerAction =
   | { type: "init" }
   | { type: "insert"; productId: number }
   | { type: "insertAll"; productIds: number[] }
   | { type: "remove"; productId: number };
 
-const checkedProductIdsReducer = (
+export const checkedProductIdsReducer = (
   productIds: number[],
   action: CheckedProductIdsReducerAction,
 ) => {
