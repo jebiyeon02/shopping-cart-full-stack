@@ -25,8 +25,7 @@ export const getCartItems = async (
   });
 
   if (!response.ok) {
-    const errorData: ApiErrorResponse = await response.json();
-    throw new ApiError(errorData.code, errorData.message);
+    await throwCartApiError(response);
   }
 
   const data: ApiResponse<{ cartItems: CartItemModel[] }> =
@@ -53,8 +52,7 @@ export const addCartItem = async (
   });
 
   if (!response.ok) {
-    const errorData: ApiErrorResponse = await response.json();
-    throw new ApiError(errorData.code, errorData.message);
+    await throwCartApiError(response);
   }
 
   const data: ApiResponse<{ productId: number }> = await response.json();
@@ -75,8 +73,7 @@ export const deleteCartItem = async (
   );
 
   if (!response.ok) {
-    const errorData: ApiErrorResponse = await response.json();
-    throw new ApiError(errorData.code, errorData.message);
+    await throwCartApiError(response);
   }
 };
 
@@ -99,8 +96,7 @@ export const updateCartItemCount = async (
   );
 
   if (!response.ok) {
-    const errorData: ApiErrorResponse = await response.json();
-    throw new ApiError(errorData.code, errorData.message);
+    await throwCartApiError(response);
   }
 
   const data: ApiResponse<{ id: number; itemCount: number }> =
@@ -108,4 +104,9 @@ export const updateCartItemCount = async (
   const updatedProduct = data.result;
 
   return updatedProduct;
+};
+
+const throwCartApiError = async (response: Response) => {
+  const errorData: ApiErrorResponse = await response.json();
+  throw new ApiError(errorData.code, errorData.message);
 };
