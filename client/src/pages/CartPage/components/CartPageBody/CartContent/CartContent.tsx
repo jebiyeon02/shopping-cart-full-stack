@@ -9,6 +9,7 @@ const CartContent = ({
   checkedProductIds,
   orderPrice,
   deliveryFee,
+  totalPrice,
   deleteCartItemAsyncState,
   updateCartItemCountAsyncState,
   onDeleteCartItem,
@@ -20,6 +21,7 @@ const CartContent = ({
   checkedProductIds: number[];
   orderPrice: number;
   deliveryFee: number;
+  totalPrice: number;
   deleteCartItemAsyncState: AsyncState<null>;
   updateCartItemCountAsyncState: AsyncState<{
     id: number;
@@ -48,7 +50,11 @@ const CartContent = ({
         onUpdateCartItemCount={onUpdateCartItemCount}
       />
 
-      <CartPaymentSummary orderPrice={orderPrice} deliveryFee={deliveryFee} />
+      <CartPaymentSummary
+        orderPrice={orderPrice}
+        deliveryFee={deliveryFee}
+        totalPrice={totalPrice}
+      />
     </CartContentLayout>
   );
 };

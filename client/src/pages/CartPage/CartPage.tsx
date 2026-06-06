@@ -28,6 +28,7 @@ const CartPage = ({ cartId }: { cartId: number }) => {
   const filteredCartItem = getFilteredCartItem(cartItems, checkedProductIds);
   const orderPrice = getOrderPrice(filteredCartItem);
   const deliveryFee = getDeliveryFee(orderPrice);
+  const totalPrice = orderPrice + deliveryFee;
   const isOrderConfirm =
     cartItems.length === 0 || checkedProductIds.length === 0;
 
@@ -53,6 +54,7 @@ const CartPage = ({ cartId }: { cartId: number }) => {
           checkedProductIds={checkedProductIds}
           orderPrice={orderPrice}
           deliveryFee={deliveryFee}
+          totalPrice={totalPrice}
           cartItemsAsyncState={cartItemsAsyncState}
           deleteCartItemAsyncState={deleteCartItemAsyncState}
           updateCartItemCountAsyncState={updateCartItemCountAsyncState}

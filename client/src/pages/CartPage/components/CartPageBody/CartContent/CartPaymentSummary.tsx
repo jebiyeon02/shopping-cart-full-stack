@@ -6,12 +6,12 @@ import { DELIVERY } from "../../../../../domain/cart/cart.constants";
 const CartPaymentSummary = ({
   orderPrice,
   deliveryFee,
+  totalPrice,
 }: {
   orderPrice: number;
   deliveryFee: number;
+  totalPrice: number;
 }) => {
-  const totalPrice = orderPrice + deliveryFee;
-
   return (
     <CartPaymentSummaryLayout>
       <WarningSection>
