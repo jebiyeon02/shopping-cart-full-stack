@@ -28,7 +28,10 @@ const CartPage = ({ cartId }: { cartId: number }) => {
     navigate("/cart/order-confirm", {
       state: {
         productCount: filteredCartItem.length,
-        productItemCount: filteredCartItem.map((item) => item.itemCount),
+        productItemCount: filteredCartItem.reduce(
+          (acc, item) => acc + item.itemCount,
+          0,
+        ),
         totalPrice:
           orderPrice +
           (orderPrice >= DELIVERY.FREE_PRICE_BOUNDARY ? 0 : DELIVERY.FEE),
