@@ -17,20 +17,11 @@ const useCartPage = ({ cartId }: { cartId: number }) => {
     cartItemsAsyncState.status === "success" ? cartItemsAsyncState.data : [];
 
   const handleDeleteCartItem = async (productId: number) => {
-    if (deleteCartItemAsyncState.status === "loading") return;
-    if (deleteCartItemAsyncState.status === "fail") {
-      alert(deleteCartItemAsyncState.error.message);
-    }
-
     await requestDeleteCartItem(productId);
     checkedProductIdsDispatch({ type: "remove", productId: productId });
   };
 
   const handleUpdateCartItemCount = (productId: number, itemCount: number) => {
-    if (updateCartItemCountAsyncState.status === "loading") return;
-    if (updateCartItemCountAsyncState.status === "fail") {
-      alert(updateCartItemCountAsyncState.error.message);
-    }
     requestUpdateCartItemCount(productId, itemCount);
   };
 
@@ -66,6 +57,8 @@ const useCartPage = ({ cartId }: { cartId: number }) => {
     cartItems,
     cartItemsAsyncState,
     checkedProductIds,
+    deleteCartItemAsyncState,
+    updateCartItemCountAsyncState,
     handleDeleteCartItem,
     handleUpdateCartItemCount,
     handleAllProductSelect,

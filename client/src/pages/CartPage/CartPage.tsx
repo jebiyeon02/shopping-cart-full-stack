@@ -12,6 +12,8 @@ const CartPage = ({ cartId }: { cartId: number }) => {
   const {
     cartItems,
     cartItemsAsyncState,
+    deleteCartItemAsyncState,
+    updateCartItemCountAsyncState,
     checkedProductIds,
     handleDeleteCartItem,
     handleUpdateCartItemCount,
@@ -51,6 +53,8 @@ const CartPage = ({ cartId }: { cartId: number }) => {
           checkedProductIds={checkedProductIds}
           orderPrice={getOrderPrice(filteredCartItem)}
           cartItemsAsyncState={cartItemsAsyncState}
+          deleteCartItemAsyncState={deleteCartItemAsyncState}
+          updateCartItemCountAsyncState={updateCartItemCountAsyncState}
           onDeleteCartItem={handleDeleteCartItem}
           onUpdateCartItemCount={handleUpdateCartItemCount}
           onAllProductSelect={handleAllProductSelect}

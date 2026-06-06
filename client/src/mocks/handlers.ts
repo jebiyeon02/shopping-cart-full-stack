@@ -1,4 +1,4 @@
-import { HttpResponse, http } from "msw";
+import { HttpResponse, delay, http } from "msw";
 export const API_BASE_URL =
   "https://shopping-cart-full-stack-production-0cf6.up.railway.app";
 
@@ -56,10 +56,12 @@ const initialMockCartItems: MockCartItem[] = [
 
 export let mockProducts = structuredClone(initialMockProducts);
 export let mockCartItems = structuredClone(initialMockCartItems);
+let mockCartId = 1;
 
 export const resetMockData = () => {
   mockProducts = structuredClone(initialMockProducts);
   mockCartItems = structuredClone(initialMockCartItems);
+  mockCartId = 1;
 };
 
 const createSuccessResponse = <T>(result: T, status = 200) => {
@@ -98,6 +100,12 @@ export const handlers = [
     mockCartItems = mockCartItems.filter(({ id }) => id !== productId);
 
     return new HttpResponse(null, { status: 204 });
+  }),
+
+  http.post(`${API_BASE_URL}/carts`, () => {
+    mockCartId += 1;
+
+    return createSuccessResponse({ id: mockCartId }, 201);
   }),
 
   http.get(`${API_BASE_URL}/carts/:cartId/items`, () => {
@@ -168,63 +176,11 @@ export const handlers = [
 
   http.delete(
     `${API_BASE_URL}/carts/:cartId/items/:productId`,
-    ({ params }) => {
+    async ({ params }) => {
       const productId = Number(params.productId);
       mockCartItems = mockCartItems.filter(({ id }) => id !== productId);
 
       return new HttpResponse(null, { status: 204 });
     },
   ),
-
-  http.get(`${API_BASE_URL}/carts`, () => {
-    return createSuccessResponse({
-      cartItems: mockCartItems,
-    });
-  }),
-
-  http.post(`${API_BASE_URL}/carts`, async ({ request }) => {
-    const { productId, itemCount } = (await request.json()) as {
-      productId: number;
-      itemCount: number;
-    };
-
-    const product = mockProducts.find(({ id }) => id === productId);
-
-    if (product) {
-      mockCartItems.push({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        imgUrl: product.imgUrl,
-        itemCount,
-      });
-    }
-
-    return createSuccessResponse({ productId }, 201);
-  }),
-
-  http.patch(
-    `${API_BASE_URL}/carts/:productId`,
-    async ({ params, request }) => {
-      const productId = Number(params.productId);
-      const { itemCount } = (await request.json()) as { itemCount: number };
-      const cartItem = mockCartItems.find(({ id }) => id === productId);
-
-      if (cartItem) {
-        cartItem.itemCount = itemCount;
-      }
-
-      return createSuccessResponse({
-        id: productId,
-        itemCount,
-      });
-    },
-  ),
-
-  http.delete(`${API_BASE_URL}/carts/:productId`, ({ params }) => {
-    const productId = Number(params.productId);
-    mockCartItems = mockCartItems.filter(({ id }) => id !== productId);
-
-    return new HttpResponse(null, { status: 204 });
-  }),
 ];

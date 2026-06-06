@@ -1,15 +1,23 @@
 import styled from "@emotion/styled";
 import type { CartItemModel } from "../../../../../../domain/cart/cart.api";
 import { formatPrice } from "../../../../../../shared/utils";
+import type { AsyncState } from "../../../../../../shared/useAsyncState";
 
 const CartItem = ({
   cartItem,
+  deleteCartItemAsyncState,
+  updateCartItemCountAsyncState,
   onDeleteCartItem,
   onProductSelect,
   onUpdateCartItemCount,
   isChecked,
 }: {
   cartItem: CartItemModel;
+  deleteCartItemAsyncState: AsyncState<null>;
+  updateCartItemCountAsyncState: AsyncState<{
+    id: number;
+    itemCount: number;
+  }>;
   onDeleteCartItem: (productId: number) => void;
   onProductSelect: (productId: number, isChecked: boolean) => void;
   onUpdateCartItemCount: (productId: number, itemCount: number) => void;
@@ -28,7 +36,11 @@ const CartItem = ({
             onProductSelect(id, event.target.checked);
           }}
         />
-        <DeleteButton type="button" onClick={() => onDeleteCartItem(id)}>
+        <DeleteButton
+          type="button"
+          onClick={() => onDeleteCartItem(id)}
+          disabled={deleteCartItemAsyncState.status === "loading"}
+        >
           삭제
         </DeleteButton>
       </CartItemHeader>
@@ -41,12 +53,12 @@ const CartItem = ({
           <CartItemCountStepper>
             <StepperButton
               type="button"
-              onClick={() => {
-                if (itemCount <= 1) {
-                  return;
-                }
-                onUpdateCartItemCount(id, itemCount - 1);
-              }}
+              onClick={() => onUpdateCartItemCount(id, itemCount - 1)}
+              disabled={
+                itemCount <= 1 ||
+                deleteCartItemAsyncState.status === "loading" ||
+                updateCartItemCountAsyncState.status === "loading"
+              }
             >
               -
             </StepperButton>
@@ -54,6 +66,10 @@ const CartItem = ({
             <StepperButton
               type="button"
               onClick={() => onUpdateCartItemCount(id, itemCount + 1)}
+              disabled={
+                deleteCartItemAsyncState.status === "loading" ||
+                updateCartItemCountAsyncState.status === "loading"
+              }
             >
               +
             </StepperButton>
@@ -93,6 +109,12 @@ const DeleteButton = styled.button`
   color: black;
   font-size: 12px;
   cursor: pointer;
+
+  &:disabled {
+    border-color: #e5e5e5;
+    color: #bebebe;
+    cursor: not-allowed;
+  }
 `;
 
 const CartItemBody = styled.div`
@@ -144,4 +166,10 @@ const StepperButton = styled.button`
   background-color: white;
   color: black;
   cursor: pointer;
+
+  &:disabled {
+    border-color: #e5e5e5;
+    color: #bebebe;
+    cursor: not-allowed;
+  }
 `;

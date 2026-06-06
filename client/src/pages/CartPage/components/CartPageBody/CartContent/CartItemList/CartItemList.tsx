@@ -1,9 +1,12 @@
 import styled from "@emotion/styled";
 import type { CartItemModel } from "../../../../../../domain/cart/cart.api";
 import CartItem from "./CartItem";
+import type { AsyncState } from "../../../../../../shared/useAsyncState";
 
 const CartItemList = ({
   cartItems,
+  deleteCartItemAsyncState,
+  updateCartItemCountAsyncState,
   onDeleteCartItem,
   onAllProductSelect,
   onProductSelect,
@@ -12,6 +15,11 @@ const CartItemList = ({
   onUpdateCartItemCount,
 }: {
   cartItems: CartItemModel[];
+  deleteCartItemAsyncState: AsyncState<null>;
+  updateCartItemCountAsyncState: AsyncState<{
+    id: number;
+    itemCount: number;
+  }>;
   onDeleteCartItem: (productId: number) => void;
   onAllProductSelect: (isChecked: boolean) => void;
   onProductSelect: (productId: number, isChecked: boolean) => void;
@@ -35,6 +43,8 @@ const CartItemList = ({
         <CartItem
           key={cartItem.id}
           cartItem={cartItem}
+          deleteCartItemAsyncState={deleteCartItemAsyncState}
+          updateCartItemCountAsyncState={updateCartItemCountAsyncState}
           onProductSelect={onProductSelect}
           onDeleteCartItem={onDeleteCartItem}
           onUpdateCartItemCount={onUpdateCartItemCount}
