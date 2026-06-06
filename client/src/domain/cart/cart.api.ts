@@ -1,18 +1,11 @@
 import ApiError from "../../error/ApiError";
+import type {
+  ApiErrorResponse,
+  ApiResponse,
+} from "../../shared/apiRespone.type";
 
 const BASE_URL =
   "https://shopping-cart-full-stack-production-0cf6.up.railway.app";
-
-type ApiResponse<T> = {
-  code: string;
-  message: string;
-  result: T;
-};
-
-type ApiErrorResponse = {
-  code: string;
-  message: string;
-};
 
 export type CartItemResponse = {
   id: number;
