@@ -1,4 +1,3 @@
-import { useEffect, useReducer } from "react";
 import Header from "../../shared/components/Header";
 import CartContent from "./components/CartContent/CartContent/CartContent";
 import CartEmpty from "./components/CartEmpty";
@@ -7,8 +6,8 @@ import useCartItem from "./useCartItem";
 import { getOrderPrice } from "../../domain/cart/cart.util";
 import { useNavigate } from "react-router-dom";
 import { DELIVERY } from "../../domain/cart/cart.constants";
-import { checkedproductIdsReducer } from "./checkedProductsIdReducer";
 import styled from "@emotion/styled";
+import { useCheckedProductIds } from "./useCheckedProductIds";
 
 const CartPage = ({ cartId }: { cartId: number }) => {
   const navigate = useNavigate();
@@ -20,30 +19,8 @@ const CartPage = ({ cartId }: { cartId: number }) => {
     updateCartItemCountAsyncState,
   } = useCartItem(cartId);
 
-  const [checkedProductIds, checkedProductIdsDispatch] = useReducer(
-    checkedproductIdsReducer,
-    [],
-  );
-
-  useEffect(() => {
-    if (cartItemsAsyncState.status !== "success") {
-      return;
-    }
-    const cartItems = cartItemsAsyncState.data;
-
-    const savedCheckedProductIds = checkedProductIdsLocalStorageManager.get();
-
-    if (!savedCheckedProductIds) {
-      const allProductIds = cartItems.map((cartItem) => cartItem.id);
-      checkedProductIdsDispatch({ type: "insert", productId: allProductIds });
-      return;
-    }
-
-    checkedProductIdsDispatch({
-      type: "insert",
-      productId: savedCheckedProductIds,
-    });
-  }, [cartItemsAsyncState.data]);
+  const { checkedProductIds, checkedProductIdsDispatch } =
+    useCheckedProductIds(cartItemsAsyncState);
 
   if (
     cartItemsAsyncState.status === "idle" ||
@@ -65,7 +42,6 @@ const CartPage = ({ cartId }: { cartId: number }) => {
     if (deleteCartItemAsyncState.status === "loading") return;
     await requestDeleteCartItem(productId);
     checkedProductIdsDispatch({ type: "remove", productId: productId });
-    checkedProductIdsLocalStorageManager.remove(productId);
   };
 
   const handleUpdateCartItemCount = (productId: number, itemCount: number) => {
@@ -80,12 +56,10 @@ const CartPage = ({ cartId }: { cartId: number }) => {
         type: "insert",
         productId: allProductIds,
       });
-      checkedProductIdsLocalStorageManager.set(allProductIds);
       return;
     }
 
     checkedProductIdsDispatch({ type: "init" });
-    checkedProductIdsLocalStorageManager.clear();
   };
 
   const handleProductSelect = (productId: number, nextChecked: boolean) => {
@@ -94,10 +68,6 @@ const CartPage = ({ cartId }: { cartId: number }) => {
         type: "insert",
         productId: productId,
       });
-      checkedProductIdsLocalStorageManager.set([
-        ...checkedProductIds,
-        productId,
-      ]);
       return;
     }
 
@@ -105,9 +75,6 @@ const CartPage = ({ cartId }: { cartId: number }) => {
       type: "remove",
       productId: productId,
     });
-    checkedProductIdsLocalStorageManager.set(
-      checkedProductIds.filter((id) => id !== productId),
-    );
   };
 
   const handleOrderConfirmButtonClick = () => {
@@ -159,31 +126,3 @@ const FallbackLayout = styled.div`
   font-weight: 500;
   font-size: 14px;
 `;
-
-const checkedProductIdsLocalStorageManager = {
-  get() {
-    const value = localStorage.getItem("cart-checked-product-ids");
-    return value ? (JSON.parse(value) as number[]) : null;
-  },
-
-  set(productIds: number[]) {
-    localStorage.setItem(
-      "cart-checked-product-ids",
-      JSON.stringify(productIds),
-    );
-  },
-
-  remove(productId: number) {
-    const savedProductIds = this.get();
-
-    if (!savedProductIds) {
-      return;
-    }
-
-    this.set(savedProductIds.filter((id) => id !== productId));
-  },
-
-  clear() {
-    localStorage.removeItem("cart-checked-product-ids");
-  },
-};

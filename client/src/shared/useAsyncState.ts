@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { AsyncError } from "../error/normalizeError";
 
-type AsyncState<T> =
+export type AsyncState<T> =
   | { status: "idle"; data: null; error: null }
   | { status: "loading"; data: null; error: null }
   | { status: "success"; data: T; error: null }
