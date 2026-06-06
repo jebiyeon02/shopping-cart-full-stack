@@ -1,8 +1,26 @@
 import type { CartItemModel } from "./cart.api";
+import { DELIVERY } from "./cart.constants";
 
 export const getOrderPrice = (filteredCartItem: CartItemModel[]) => {
   return filteredCartItem.reduce(
     (acc, cartItem) => acc + cartItem.price * cartItem.itemCount,
     0,
   );
+};
+
+export const getFilteredCartItem = (
+  cartItems: CartItemModel[],
+  checkedProductIds: number[],
+) => {
+  return cartItems.filter((cartItem) =>
+    checkedProductIds.includes(cartItem.id),
+  );
+};
+
+export const getDeliveryFee = (orderPrice: number) => {
+  return orderPrice >= DELIVERY.FREE_PRICE_BOUNDARY ? 0 : DELIVERY.FEE;
+};
+
+export const getProductAllItemCount = (filteredCartItem: CartItemModel[]) => {
+  return filteredCartItem.reduce((acc, item) => acc + item.itemCount, 0);
 };

@@ -9,6 +9,7 @@ const CartPageBody = ({
   cartItems,
   checkedProductIds,
   orderPrice,
+  deliveryFee,
   cartItemsAsyncState,
   deleteCartItemAsyncState,
   updateCartItemCountAsyncState,
@@ -20,6 +21,7 @@ const CartPageBody = ({
   cartItems: CartItemModel[];
   checkedProductIds: number[];
   orderPrice: number;
+  deliveryFee: number;
   cartItemsAsyncState: AsyncState<CartItemModel[]>;
   deleteCartItemAsyncState: AsyncState<null>;
   updateCartItemCountAsyncState: AsyncState<{
@@ -49,6 +51,7 @@ const CartPageBody = ({
           cartItems={cartItems}
           checkedProductIds={checkedProductIds}
           orderPrice={orderPrice}
+          deliveryFee={deliveryFee}
           deleteCartItemAsyncState={deleteCartItemAsyncState}
           updateCartItemCountAsyncState={updateCartItemCountAsyncState}
           onDeleteCartItem={onDeleteCartItem}

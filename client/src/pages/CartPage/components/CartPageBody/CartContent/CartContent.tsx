@@ -1,5 +1,4 @@
 import type { CartItemModel } from "../../../../../domain/cart/cart.api";
-import { DELIVERY } from "../../../../../domain/cart/cart.constants";
 import type { AsyncState } from "../../../../../shared/useAsyncState";
 import CartItemList from "./CartItemList/CartItemList";
 import CartPaymentSummary from "./CartPaymentSummary";
@@ -9,6 +8,7 @@ const CartContent = ({
   cartItems,
   checkedProductIds,
   orderPrice,
+  deliveryFee,
   deleteCartItemAsyncState,
   updateCartItemCountAsyncState,
   onDeleteCartItem,
@@ -19,6 +19,7 @@ const CartContent = ({
   cartItems: CartItemModel[];
   checkedProductIds: number[];
   orderPrice: number;
+  deliveryFee: number;
   deleteCartItemAsyncState: AsyncState<null>;
   updateCartItemCountAsyncState: AsyncState<{
     id: number;
@@ -47,12 +48,7 @@ const CartContent = ({
         onUpdateCartItemCount={onUpdateCartItemCount}
       />
 
-      <CartPaymentSummary
-        orderPrice={orderPrice}
-        deliveryFee={
-          orderPrice >= DELIVERY.FREE_PRICE_BOUNDARY ? 0 : DELIVERY.FEE
-        }
-      />
+      <CartPaymentSummary orderPrice={orderPrice} deliveryFee={deliveryFee} />
     </CartContentLayout>
   );
 };

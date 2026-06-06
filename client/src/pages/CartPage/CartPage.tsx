@@ -1,8 +1,12 @@
 import Header from "../../shared/components/Header";
 import BaseButton from "../../shared/components/BaseButton";
-import { getOrderPrice } from "../../domain/cart/cart.util";
+import {
+  getDeliveryFee,
+  getFilteredCartItem,
+  getOrderPrice,
+  getProductAllItemCount,
+} from "../../domain/cart/cart.util";
 import { useNavigate } from "react-router-dom";
-import { DELIVERY } from "../../domain/cart/cart.constants";
 import useCartPage from "./useCartPage";
 import CartPageBody from "./components/CartPageBody/CartPageBody";
 import styled from "@emotion/styled";
@@ -21,22 +25,18 @@ const CartPage = ({ cartId }: { cartId: number }) => {
     handleProductSelect,
   } = useCartPage({ cartId });
 
-  const filteredCartItem = cartItems.filter((cartItem) =>
-    checkedProductIds.includes(cartItem.id),
-  );
+  const filteredCartItem = getFilteredCartItem(cartItems, checkedProductIds);
+  const orderPrice = getOrderPrice(filteredCartItem);
+  const deliveryFee = getDeliveryFee(orderPrice);
+  const isOrderConfirm =
+    cartItems.length === 0 || checkedProductIds.length === 0;
 
   const handleOrderConfirmButtonClick = () => {
-    const orderPrice = getOrderPrice(filteredCartItem);
     navigate("/cart/order-confirm", {
       state: {
         productCount: filteredCartItem.length,
-        productItemCount: filteredCartItem.reduce(
-          (acc, item) => acc + item.itemCount,
-          0,
-        ),
-        totalPrice:
-          orderPrice +
-          (orderPrice >= DELIVERY.FREE_PRICE_BOUNDARY ? 0 : DELIVERY.FEE),
+        productItemCount: getProductAllItemCount(filteredCartItem),
+        totalPrice: orderPrice + deliveryFee,
       },
     });
   };
@@ -51,7 +51,8 @@ const CartPage = ({ cartId }: { cartId: number }) => {
         <CartPageBody
           cartItems={cartItems}
           checkedProductIds={checkedProductIds}
-          orderPrice={getOrderPrice(filteredCartItem)}
+          orderPrice={orderPrice}
+          deliveryFee={deliveryFee}
           cartItemsAsyncState={cartItemsAsyncState}
           deleteCartItemAsyncState={deleteCartItemAsyncState}
           updateCartItemCountAsyncState={updateCartItemCountAsyncState}
@@ -63,7 +64,7 @@ const CartPage = ({ cartId }: { cartId: number }) => {
       </CartPageBodyArea>
       <BottomArea>
         <BaseButton
-          disabled={cartItems.length === 0 || checkedProductIds.length === 0}
+          disabled={isOrderConfirm}
           onClick={handleOrderConfirmButtonClick}
         >
           주문 확인
@@ -94,10 +95,11 @@ const CartPageBodyArea = styled.div`
 `;
 
 const BottomArea = styled.div`
-  position: absolute;
-  right: 0;
+  position: fixed;
   bottom: 0;
-  left: 0;
+  left: 50%;
+  width: min(100vw, 400px);
+  transform: translateX(-50%);
 `;
 
 const CartContentTitle = styled.div`
