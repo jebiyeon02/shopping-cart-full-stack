@@ -34,7 +34,7 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
     opacity: 1;
     cursor: not-allowed;
   }
-`,ra={FREE_PRICE_BOUNDARY:1e5,FEE:3e3},ia=e=>e.reduce((e,t)=>e+t.price*t.itemCount,0),aa=(e,t)=>e.filter(e=>t.includes(e.id)),oa=e=>e>=ra.FREE_PRICE_BOUNDARY?0:ra.FEE,sa=e=>e.reduce((e,t)=>e+t.itemCount,0),ca=class extends Error{code;constructor(e,t){super(t),this.code=e,super.name=t}},R=`https://shopping-cart-full-stack-production-0cf6.up.railway.app`,la=async e=>{let t=await fetch(`${R}/carts/${e}/items`,{headers:{"Content-Type":`application/json`}});return t.ok||await fa(t),(await t.json()).result.cartItems},ua=async(e,t)=>{let n=await fetch(`${R}/carts/${e}/items/${t}`,{method:`DELETE`});n.ok||await fa(n)},da=async(e,t,n)=>{let r=await fetch(`${R}/carts/${e}/items/${t}`,{method:`PATCH`,headers:{"Content-Type":`application/json`},body:JSON.stringify({itemCount:n})});return r.ok||await fa(r),(await r.json()).result},fa=async e=>{let t=await e.json();throw new ca(t.code,t.message)},pa=()=>{let[e,t]=(0,_.useState)({status:`idle`,data:null,error:null});return{asyncState:e,setLoading:()=>{t({status:`loading`,data:null,error:null})},setSuccess:e=>{t({status:`success`,data:e,error:null})},setFail:e=>{t({status:`fail`,data:null,error:e})}}},ma=e=>e instanceof ca?{code:e.code,message:e.message}:{message:`알 수 없는 에러가 발생했습니다.`},ha=e=>{let t=pa(),n=pa(),r=pa(),i=async({showLoading:n})=>{try{n&&t.setLoading();let r=await la(e);t.setSuccess(r)}catch(e){t.setFail(ma(e))}};return(0,_.useEffect)(()=>{i({showLoading:!0})},[e]),{requestDeleteCartItem:async t=>{try{n.setLoading(),await ua(e,t),await i({showLoading:!1}),n.setSuccess(null)}catch(e){throw n.setFail(ma(e)),e}},requestUpdateCartItemCount:async(t,n)=>{try{r.setLoading();let a=await da(e,t,n);await i({showLoading:!1}),r.setSuccess({...a})}catch(e){throw r.setFail(ma(e)),e}},cartItemsAsyncState:t.asyncState,deleteCartItemAsyncState:n.asyncState,updateCartItemCountAsyncState:r.asyncState}},ga=e=>{let[t,n]=(0,_.useReducer)(_a,[]),[r,i]=(0,_.useState)(!1);return(0,_.useEffect)(()=>{if(e.status!==`success`||r)return;let t=e.data,a=localStorage.getItem(`cart-checked-product-ids`);n(a?{type:`insertAll`,productIds:JSON.parse(a)}:{type:`insertAll`,productIds:t.map(e=>e.id)}),i(!0)},[e.status,r]),(0,_.useEffect)(()=>{r&&localStorage.setItem(`cart-checked-product-ids`,JSON.stringify(t))},[t,r]),{checkedProductIds:t,checkedProductIdsDispatch:n}},_a=(e,t)=>{switch(t.type){case`init`:return[];case`insert`:return Array.from(new Set([...e,t.productId]));case`insertAll`:return Array.from(new Set([...e,...t.productIds]));case`remove`:return e.filter(e=>e!==t.productId);default:return e}},va=({cartId:e})=>{let{cartItemsAsyncState:t,requestDeleteCartItem:n,deleteCartItemAsyncState:r,requestUpdateCartItemCount:i,updateCartItemCountAsyncState:a}=ha(e),{checkedProductIds:o,checkedProductIdsDispatch:s}=ga(t),c=t.status===`success`?t.data:[];return{cartItems:c,cartItemsAsyncState:t,checkedProductIds:o,deleteCartItemAsyncState:r,updateCartItemCountAsyncState:a,handleDeleteCartItem:async e=>{try{await n(e),s({type:`remove`,productId:e})}catch(e){e instanceof ca?alert(e.message):alert(`알 수 없는 에러가 발생했습니다.`)}},handleUpdateCartItemCount:async(e,t)=>{try{await i(e,t)}catch(e){e instanceof ca?alert(e.message):alert(`알 수 없는 에러가 발생했습니다.`)}},handleAllProductSelect:e=>{if(e){s({type:`insertAll`,productIds:c.map(e=>e.id)});return}s({type:`init`})},handleProductSelect:(e,t)=>{if(t){s({type:`insert`,productId:e});return}s({type:`remove`,productId:e})}}},ya=e=>e.toLocaleString(),ba={bodySmall:Bi`
+`,ra={FREE_PRICE_BOUNDARY:1e5,FEE:3e3},ia=e=>e.reduce((e,t)=>e+t.price*t.itemCount,0),aa=(e,t)=>e.filter(e=>t.includes(e.id)),oa=e=>e>=ra.FREE_PRICE_BOUNDARY?0:ra.FEE,sa=e=>e.reduce((e,t)=>e+t.itemCount,0),ca=class extends Error{code;constructor(e,t){super(t),this.code=e,super.name=t}},R=`https://shopping-cart-full-stack-production-0cf6.up.railway.app`,la=async e=>{let t=await fetch(`${R}/carts/${e}/items`,{headers:{"Content-Type":`application/json`}});return t.ok||await pa(t),(await t.json()).result.cartItems},ua=async(e,t,n)=>{let r=await fetch(`${R}/carts/${e}/items`,{method:`POST`,headers:{"Content-Type":`application/json`},body:JSON.stringify({productId:t,itemCount:n})});return r.ok||await pa(r),(await r.json()).result.productId},da=async(e,t)=>{let n=await fetch(`${R}/carts/${e}/items/${t}`,{method:`DELETE`});n.ok||await pa(n)},fa=async(e,t,n)=>{let r=await fetch(`${R}/carts/${e}/items/${t}`,{method:`PATCH`,headers:{"Content-Type":`application/json`},body:JSON.stringify({itemCount:n})});return r.ok||await pa(r),(await r.json()).result},pa=async e=>{let t=await e.json();throw new ca(t.code,t.message)},ma=()=>{let[e,t]=(0,_.useState)({status:`idle`,data:null,error:null});return{asyncState:e,setLoading:()=>{t({status:`loading`,data:null,error:null})},setSuccess:e=>{t({status:`success`,data:e,error:null})},setFail:e=>{t({status:`fail`,data:null,error:e})}}},ha=e=>e instanceof ca?{code:e.code,message:e.message}:{message:`알 수 없는 에러가 발생했습니다.`},ga=e=>{let t=ma(),n=ma(),r=ma(),i=async({showLoading:n})=>{try{n&&t.setLoading();let r=await la(e);t.setSuccess(r)}catch(e){t.setFail(ha(e))}};return(0,_.useEffect)(()=>{i({showLoading:!0})},[e]),{requestDeleteCartItem:async t=>{try{n.setLoading(),await da(e,t),await i({showLoading:!1}),n.setSuccess(null)}catch(e){throw n.setFail(ha(e)),e}},requestUpdateCartItemCount:async(t,n)=>{try{r.setLoading();let a=await fa(e,t,n);await i({showLoading:!1}),r.setSuccess({...a})}catch(e){throw r.setFail(ha(e)),e}},cartItemsAsyncState:t.asyncState,deleteCartItemAsyncState:n.asyncState,updateCartItemCountAsyncState:r.asyncState}},_a=e=>{let[t,n]=(0,_.useReducer)(va,[]),[r,i]=(0,_.useState)(!1);return(0,_.useEffect)(()=>{if(e.status!==`success`||r)return;let t=e.data,a=localStorage.getItem(`cart-checked-product-ids`);n(a?{type:`insertAll`,productIds:JSON.parse(a)}:{type:`insertAll`,productIds:t.map(e=>e.id)}),i(!0)},[e.status,r]),(0,_.useEffect)(()=>{r&&localStorage.setItem(`cart-checked-product-ids`,JSON.stringify(t))},[t,r]),{checkedProductIds:t,checkedProductIdsDispatch:n}},va=(e,t)=>{switch(t.type){case`init`:return[];case`insert`:return Array.from(new Set([...e,t.productId]));case`insertAll`:return Array.from(new Set([...e,...t.productIds]));case`remove`:return e.filter(e=>e!==t.productId);default:return e}},ya=({cartId:e})=>{let{cartItemsAsyncState:t,requestDeleteCartItem:n,deleteCartItemAsyncState:r,requestUpdateCartItemCount:i,updateCartItemCountAsyncState:a}=ga(e),{checkedProductIds:o,checkedProductIdsDispatch:s}=_a(t),c=t.status===`success`?t.data:[];return{cartItems:c,cartItemsAsyncState:t,checkedProductIds:o,deleteCartItemAsyncState:r,updateCartItemCountAsyncState:a,handleDeleteCartItem:async e=>{try{await n(e),s({type:`remove`,productId:e})}catch(e){e instanceof ca?alert(e.message):alert(`알 수 없는 에러가 발생했습니다.`)}},handleUpdateCartItemCount:async(e,t)=>{try{await i(e,t)}catch(e){e instanceof ca?alert(e.message):alert(`알 수 없는 에러가 발생했습니다.`)}},handleAllProductSelect:e=>{if(e){s({type:`insertAll`,productIds:c.map(e=>e.id)});return}s({type:`init`})},handleProductSelect:(e,t)=>{if(t){s({type:`insert`,productId:e});return}s({type:`remove`,productId:e})}}},ba=e=>e.toLocaleString(),xa={bodySmall:Bi`
     color: black;
     font-weight: 500;
     font-size: 12px;
@@ -50,19 +50,19 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
     color: black;
     font-weight: 700;
     font-size: 24px;
-  `},xa=({cartItem:e,deleteCartItemAsyncState:t,updateCartItemCountAsyncState:n,onDeleteCartItem:r,onProductSelect:i,onUpdateCartItemCount:a,isChecked:o})=>{let{id:s,name:c,price:l,itemCount:u,imgUrl:d}=e;return L(Sa,{children:[I(Ca,{}),L(wa,{children:[I(`input`,{type:`checkbox`,checked:o,onChange:e=>{i(s,e.target.checked)}}),I(Ta,{type:`button`,onClick:()=>r(s),disabled:t.status===`loading`,children:`삭제`})]}),L(Ea,{children:[I(Da,{src:d,alt:`상품 이미지-${c}`}),L(Oa,{children:[I(ka,{children:c}),L(Aa,{children:[ya(l*u),`원`]}),L(ja,{children:[I(Ma,{type:`button`,onClick:()=>a(s,u-1),disabled:u<=1||t.status===`loading`||n.status===`loading`,children:`-`}),u,I(Ma,{type:`button`,onClick:()=>a(s,u+1),disabled:t.status===`loading`||n.status===`loading`,children:`+`})]})]})]})]})},Sa=F.div`
+  `},Sa=({cartItem:e,deleteCartItemAsyncState:t,updateCartItemCountAsyncState:n,onDeleteCartItem:r,onProductSelect:i,onUpdateCartItemCount:a,isChecked:o})=>{let{id:s,name:c,price:l,itemCount:u,imgUrl:d}=e;return L(Ca,{children:[I(wa,{}),L(Ta,{children:[I(`input`,{type:`checkbox`,checked:o,onChange:e=>{i(s,e.target.checked)}}),I(Ea,{type:`button`,onClick:()=>r(s),disabled:t.status===`loading`,children:`삭제`})]}),L(Da,{children:[I(Oa,{src:d,alt:`상품 이미지-${c}`}),L(ka,{children:[I(Aa,{children:c}),L(ja,{children:[ba(l*u),`원`]}),L(Ma,{children:[I(Na,{type:`button`,onClick:()=>a(s,u-1),disabled:u<=1||t.status===`loading`||n.status===`loading`,children:`-`}),u,I(Na,{type:`button`,onClick:()=>a(s,u+1),disabled:t.status===`loading`||n.status===`loading`,children:`+`})]})]})]})]})},Ca=F.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
-`,Ca=F.div`
+`,wa=F.div`
   width: 100%;
   height: 1px;
   background-color: #0000001a;
   margin-bottom: 12px;
-`,wa=F.div`
+`,Ta=F.div`
   display: flex;
   justify-content: space-between;
-`,Ta=F.button`
+`,Ea=F.button`
   width: 40px;
   height: 24px;
   border: 1px solid #0000001a;
@@ -77,32 +77,32 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
     color: #bebebe;
     cursor: not-allowed;
   }
-`,Ea=F.div`
+`,Da=F.div`
   display: flex;
   justify-content: start;
   align-items: center;
   gap: 24px;
-`,Da=F.img`
+`,Oa=F.img`
   width: 112px;
   height: 112px;
   border-radius: 8px;
-`,Oa=F.div`
+`,ka=F.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: start;
   gap: 4px;
-`,ka=F.div`
-  ${ba.bodySmall}
 `,Aa=F.div`
-  ${ba.titleLarge}
+  ${xa.bodySmall}
 `,ja=F.div`
+  ${xa.titleLarge}
+`,Ma=F.div`
   display: flex;
   justify-content: start;
   align-items: center;
   gap: 8px;
   margin-top: 12px;
-`,Ma=F.button`
+`,Na=F.button`
   width: 24px;
   height: 24px;
   border: 1px solid #0000001a;
@@ -116,106 +116,115 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
     color: #bebebe;
     cursor: not-allowed;
   }
-`,Na=({cartItems:e,deleteCartItemAsyncState:t,updateCartItemCountAsyncState:n,onDeleteCartItem:r,onAllProductSelect:i,onProductSelect:a,checkedProductIds:o,isSelectAllProduct:s,onUpdateCartItemCount:c})=>L(Fa,{children:[L(Pa,{children:[I(`input`,{type:`checkbox`,checked:s,onChange:e=>{i(e.target.checked)}}),`전체선택`]}),e.map(e=>I(xa,{cartItem:e,deleteCartItemAsyncState:t,updateCartItemCountAsyncState:n,onProductSelect:a,onDeleteCartItem:r,onUpdateCartItemCount:c,isChecked:o.includes(e.id)},e.id))]}),Pa=F.label`
+`,Pa=({cartItems:e,deleteCartItemAsyncState:t,updateCartItemCountAsyncState:n,onDeleteCartItem:r,onAllProductSelect:i,onProductSelect:a,checkedProductIds:o,isSelectAllProduct:s,onUpdateCartItemCount:c})=>L(Ia,{children:[L(Fa,{children:[I(`input`,{type:`checkbox`,checked:s,onChange:e=>{i(e.target.checked)}}),`전체선택`]}),e.map(e=>I(Sa,{cartItem:e,deleteCartItemAsyncState:t,updateCartItemCountAsyncState:n,onProductSelect:a,onDeleteCartItem:r,onUpdateCartItemCount:c,isChecked:o.includes(e.id)},e.id))]}),Fa=F.label`
   display: flex;
   justify-content: start;
   align-items: center;
   gap: 6px;
-  ${ba.bodySmall}
-`,Fa=F.div`
+  ${xa.bodySmall}
+`,Ia=F.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-`,Ia=`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAANBJREFUeAGtUoENgzAMM1zQD9YPtg/WU3rCTtgn8AEvcMJ2AeMCTugSLYgqS8ukYclSmwQnNAb+RFOIB+KFeJb7TOyJL+zAEQdiIi5yZk4S64i+9LGXwkkm0IhZ3lkCnSR9FgtKbG0yWN2TdMnRizCUaIKa8i7Kv4Lf58aHNpvgaRRGfE/FGCEbalFHIF5rBavAY69QgT0yawEHe30aEZ9f7nViNYzPYgH2GjsYcNiMEo18yPIeBXgZLWEzDHOR2ADlwqYiFIknufOK+Z1GHI039AkyBuz4ZwoAAAAASUVORK5CYII=`,La=({orderPrice:e,deliveryFee:t,totalPrice:n})=>L(Ra,{children:[L(za,{children:[I(Ba,{src:Ia}),L(Va,{children:[`총 주문 금액이 `,ya(ra.FREE_PRICE_BOUNDARY),`원 이상일 경우 무료 배송됩니다.`]})]}),I(Ha,{children:L(`tbody`,{children:[L(Ua,{children:[I(Wa,{scope:`row`,children:`주문 금액`}),L(Ga,{children:[ya(e),`원`]})]}),L(Ua,{$hasDivider:!0,children:[I(Wa,{scope:`row`,children:`배송비`}),L(Ga,{children:[ya(t),`원`]})]}),L(Ua,{children:[I(Wa,{scope:`row`,children:`총 결제 금액`}),L(Ga,{children:[ya(n),`원`]})]})]})})]}),Ra=F.div`
+`,La=`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAANBJREFUeAGtUoENgzAMM1zQD9YPtg/WU3rCTtgn8AEvcMJ2AeMCTugSLYgqS8ukYclSmwQnNAb+RFOIB+KFeJb7TOyJL+zAEQdiIi5yZk4S64i+9LGXwkkm0IhZ3lkCnSR9FgtKbG0yWN2TdMnRizCUaIKa8i7Kv4Lf58aHNpvgaRRGfE/FGCEbalFHIF5rBavAY69QgT0yawEHe30aEZ9f7nViNYzPYgH2GjsYcNiMEo18yPIeBXgZLWEzDHOR2ADlwqYiFIknufOK+Z1GHI039AkyBuz4ZwoAAAAASUVORK5CYII=`,Ra=({orderPrice:e,deliveryFee:t,totalPrice:n})=>L(za,{children:[L(Ba,{children:[I(Va,{src:La}),L(Ha,{children:[`총 주문 금액이 `,ba(ra.FREE_PRICE_BOUNDARY),`원 이상일 경우 무료 배송됩니다.`]})]}),I(Ua,{children:L(`tbody`,{children:[L(Wa,{children:[I(Ga,{scope:`row`,children:`주문 금액`}),L(Ka,{children:[ba(e),`원`]})]}),L(Wa,{$hasDivider:!0,children:[I(Ga,{scope:`row`,children:`배송비`}),L(Ka,{children:[ba(t),`원`]})]}),L(Wa,{children:[I(Ga,{scope:`row`,children:`총 결제 금액`}),L(Ka,{children:[ba(n),`원`]})]})]})})]}),za=F.div`
   margin-top: 32px;
-`,za=F.div`
+`,Ba=F.div`
   display: flex;
   justify-content: start;
   align-items: center;
   gap: 4px;
   margin-bottom: 12px;
-`,Ba=F.img`
+`,Va=F.img`
   width: 16px;
   height: 16px;
-`,Va=F.span`
-  ${ba.bodySmall}
-`,Ha=F.table`
+`,Ha=F.span`
+  ${xa.bodySmall}
+`,Ua=F.table`
   width: 100%;
   border-collapse: collapse;
   border-top: 1px solid #0000001a;
-`,Ua=F.tr`
+`,Wa=F.tr`
   border-bottom: ${({$hasDivider:e})=>e?`1px solid #0000001a`:`none`};
-`,Wa=F.th`
-  ${ba.titleMedium}
+`,Ga=F.th`
+  ${xa.titleMedium}
   text-align: left;
-`,Ga=F.td`
+`,Ka=F.td`
   padding: 12px;
-  ${ba.titleLarge}
+  ${xa.titleLarge}
   text-align: right;
-`,Ka=({cartItems:e,checkedProductIds:t,orderPrice:n,deliveryFee:r,totalPrice:i,deleteCartItemAsyncState:a,updateCartItemCountAsyncState:o,onDeleteCartItem:s,onUpdateCartItemCount:c,onAllProductSelect:l,onProductSelect:u})=>L(qa,{children:[L(Ja,{children:[`현재`,e.length,`종류의 상품이 담겨있습니다.`]}),I(Na,{cartItems:e,checkedProductIds:t,isSelectAllProduct:t.length===e.length,deleteCartItemAsyncState:a,updateCartItemCountAsyncState:o,onDeleteCartItem:s,onAllProductSelect:l,onProductSelect:u,onUpdateCartItemCount:c}),I(La,{orderPrice:n,deliveryFee:r,totalPrice:i})]}),qa=F.div`
+`,qa=({cartItems:e,checkedProductIds:t,orderPrice:n,deliveryFee:r,totalPrice:i,deleteCartItemAsyncState:a,updateCartItemCountAsyncState:o,onDeleteCartItem:s,onUpdateCartItemCount:c,onAllProductSelect:l,onProductSelect:u})=>L(Ja,{children:[L(Ya,{children:[`현재`,e.length,`종류의 상품이 담겨있습니다.`]}),I(Pa,{cartItems:e,checkedProductIds:t,isSelectAllProduct:t.length===e.length,deleteCartItemAsyncState:a,updateCartItemCountAsyncState:o,onDeleteCartItem:s,onAllProductSelect:l,onProductSelect:u,onUpdateCartItemCount:c}),I(Ra,{orderPrice:n,deliveryFee:r,totalPrice:i})]}),Ja=F.div`
   width: 100%;
   height: 100%;
-`,Ja=F.div`
-  ${ba.bodySmall}
+`,Ya=F.div`
+  ${xa.bodySmall}
   margin-bottom: 30px;
-`,Ya=({message:e})=>I(Xa,{children:e}),Xa=F.div`
+`,Xa=({message:e})=>I(Za,{children:e}),Za=F.div`
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  ${ba.bodyMedium}
-`,Za=()=>I(Qa,{children:`로딩중...`}),Qa=F.div`
+  ${xa.bodyMedium}
+`,Qa=()=>I($a,{children:`로딩중...`}),$a=F.div`
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  ${ba.bodyMedium}
-`,$a=()=>I(eo,{children:I(to,{children:`장바구니에 담은 상품이 없습니다.`})}),eo=F.div`
+  ${xa.bodyMedium}
+`,eo=()=>I(to,{children:I(no,{children:`장바구니에 담은 상품이 없습니다.`})}),to=F.div`
   display: flex;
   flex: 1;
   flex-direction: column;
   min-height: calc(100vh - 128px);
   padding: 36px 24px;
-`,to=F.p`
+`,no=F.p`
   display: flex;
   flex: 1;
   justify-content: center;
   align-items: center;
   margin: 0;
-  ${ba.bodyMedium}
-`,no=({cartItems:e,checkedProductIds:t,orderPrice:n,deliveryFee:r,totalPrice:i,cartItemsAsyncState:a,deleteCartItemAsyncState:o,updateCartItemCountAsyncState:s,onDeleteCartItem:c,onUpdateCartItemCount:l,onAllProductSelect:u,onProductSelect:d})=>{switch(a.status){case`idle`:return I(Za,{});case`loading`:return I(Za,{});case`fail`:return I(Ya,{message:a.error.message});case`success`:return e.length===0?I($a,{}):I(Ka,{cartItems:e,checkedProductIds:t,orderPrice:n,deliveryFee:r,totalPrice:i,deleteCartItemAsyncState:o,updateCartItemCountAsyncState:s,onDeleteCartItem:c,onUpdateCartItemCount:l,onAllProductSelect:u,onProductSelect:d});default:return I(Ya,{message:`알 수 없는 에러가 발생했습니다.`})}},ro=({cartId:e})=>{let t=pt(),{cartItems:n,cartItemsAsyncState:r,deleteCartItemAsyncState:i,updateCartItemCountAsyncState:a,checkedProductIds:o,handleDeleteCartItem:s,handleUpdateCartItemCount:c,handleAllProductSelect:l,handleProductSelect:u}=va({cartId:e}),d=aa(n,o),f=ia(d),p=oa(f),m=f+p,h=n.length===0||o.length===0;return L(io,{children:[I(ao,{children:I($i,{actionIcon:I(`div`,{children:`SHOP`})})}),L(oo,{children:[I(co,{children:`장바구니`}),I(no,{cartItems:n,checkedProductIds:o,orderPrice:f,deliveryFee:p,totalPrice:m,cartItemsAsyncState:r,deleteCartItemAsyncState:i,updateCartItemCountAsyncState:a,onDeleteCartItem:s,onUpdateCartItemCount:c,onAllProductSelect:l,onProductSelect:u})]}),I(so,{children:I(ta,{disabled:h,onClick:()=>{t(`/cart/order-confirm`,{state:{productCount:d.length,productItemCount:sa(d),totalPrice:f+p}})},children:`주문 확인`})})]})},io=F.div`
+  ${xa.bodyMedium}
+`,ro=({cartItems:e,checkedProductIds:t,orderPrice:n,deliveryFee:r,totalPrice:i,cartItemsAsyncState:a,deleteCartItemAsyncState:o,updateCartItemCountAsyncState:s,onDeleteCartItem:c,onUpdateCartItemCount:l,onAllProductSelect:u,onProductSelect:d})=>{switch(a.status){case`idle`:return I(Qa,{});case`loading`:return I(Qa,{});case`fail`:return I(Xa,{message:a.error.message});case`success`:return e.length===0?I(eo,{}):I(qa,{cartItems:e,checkedProductIds:t,orderPrice:n,deliveryFee:r,totalPrice:i,deleteCartItemAsyncState:o,updateCartItemCountAsyncState:s,onDeleteCartItem:c,onUpdateCartItemCount:l,onAllProductSelect:u,onProductSelect:d});default:return I(Xa,{message:`알 수 없는 에러가 발생했습니다.`})}},io=()=>I(ao,{type:`button`,onClick:async()=>{try{await ua(1,5,10),await ua(1,4,5),await ua(1,7,1)}finally{window.location.reload()}},children:`장바구니에 상품추가(임시)`}),ao=F.button`
+  margin-left: 12px;
+  padding: 4px 8px;
+  border: 1px solid black;
+  border-radius: 4px;
+  background-color: white;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+`,oo=({cartId:e})=>{let t=pt(),{cartItems:n,cartItemsAsyncState:r,deleteCartItemAsyncState:i,updateCartItemCountAsyncState:a,checkedProductIds:o,handleDeleteCartItem:s,handleUpdateCartItemCount:c,handleAllProductSelect:l,handleProductSelect:u}=ya({cartId:e}),d=aa(n,o),f=ia(d),p=oa(f),m=f+p,h=n.length===0||o.length===0;return L(so,{children:[I(co,{children:I($i,{actionIcon:I(`div`,{children:`SHOP`})})}),L(lo,{children:[L(z,{children:[`장바구니 `,I(io,{})]}),I(ro,{cartItems:n,checkedProductIds:o,orderPrice:f,deliveryFee:p,totalPrice:m,cartItemsAsyncState:r,deleteCartItemAsyncState:i,updateCartItemCountAsyncState:a,onDeleteCartItem:s,onUpdateCartItemCount:c,onAllProductSelect:l,onProductSelect:u})]}),I(uo,{children:I(ta,{disabled:h,onClick:()=>{t(`/cart/order-confirm`,{state:{productCount:d.length,productItemCount:sa(d),totalPrice:f+p}})},children:`주문 확인`})})]})},so=F.div`
   position: relative;
   width: 100%;
   min-height: 100vh;
   padding: 64px 0;
-`,ao=F.div`
+`,co=F.div`
   position: absolute;
   top: 0;
   right: 0;
   left: 0;
-`,oo=F.div`
+`,lo=F.div`
   padding: 24px;
-`,so=F.div`
+`,uo=F.div`
   position: fixed;
   bottom: 0;
   left: 50%;
   width: min(100vw, 400px);
   transform: translateX(-50%);
-`,co=F.div`
-  ${ba.titleLarge}
+`,z=F.div`
+  ${xa.titleLarge}
   margin-bottom: 12px;
-`,lo=`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAXCAYAAAD+4+QTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAANlJREFUeAHllFENwjAQhv8SBCBhEpAADnDAJOCAOWAOwMEkLChAwuZgEo6/cAmlS0ay3T3xJbeufbgv7V0L/EBESsaVsYEHTFwwBnnTxTlmsJoScGgZPjtQSSMfhrm7mBKc5ZsSlmihUypYkhU60sASFXSJYHY3TUncCr1WwZnDIVmvdb3AAkIIPTRRXmhLOsYm8POgaws/9kGPJIrSm93DhjuPrHz9UbTLtnmBB0xcZaIjPGDiWyKJbWxfq9gJMr6Q9q+wjJ+WFh78RSMUsCZrhBpeaCOcsIAnQ/G1/uG+kjsAAAAASUVORK5CYII=`,uo=()=>{let e=pt(),{productCount:t,productItemCount:n,totalPrice:r}=ut().state;return L(z,{children:[I($i,{actionIcon:I(fo,{type:`button`,onClick:()=>e(-1),children:I(po,{src:lo,alt:`뒤로가기`})})}),L(B,{children:[I(V,{children:`주문 확인`}),L(mo,{children:[`총 `,t,`종류의 상품 `,n,`개를 주문합니다.`,I(`br`,{}),`최종 결제 금액을 확인해 주세요.`]}),I(ho,{children:`총 결제 금액`}),L(go,{children:[ya(r),`원`]})]}),I(ta,{disabled:!0,children:`결제하기`})]})},z=F.div`
+`,fo=`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAXCAYAAAD+4+QTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAANlJREFUeAHllFENwjAQhv8SBCBhEpAADnDAJOCAOWAOwMEkLChAwuZgEo6/cAmlS0ay3T3xJbeufbgv7V0L/EBESsaVsYEHTFwwBnnTxTlmsJoScGgZPjtQSSMfhrm7mBKc5ZsSlmihUypYkhU60sASFXSJYHY3TUncCr1WwZnDIVmvdb3AAkIIPTRRXmhLOsYm8POgaws/9kGPJIrSm93DhjuPrHz9UbTLtnmBB0xcZaIjPGDiWyKJbWxfq9gJMr6Q9q+wjJ+WFh78RSMUsCZrhBpeaCOcsIAnQ/G1/uG+kjsAAAAASUVORK5CYII=`,po=()=>{let e=pt(),{productCount:t,productItemCount:n,totalPrice:r}=ut().state;return L(B,{children:[I($i,{actionIcon:I(V,{type:`button`,onClick:()=>e(-1),children:I(mo,{src:fo,alt:`뒤로가기`})})}),L(ho,{children:[I(go,{children:`주문 확인`}),L(_o,{children:[`총 `,t,`종류의 상품 `,n,`개를 주문합니다.`,I(`br`,{}),`최종 결제 금액을 확인해 주세요.`]}),I(vo,{children:`총 결제 금액`}),L(yo,{children:[ba(r),`원`]})]}),I(ta,{disabled:!0,children:`결제하기`})]})},B=F.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-`,fo=F.button`
+`,V=F.button`
   background: none;
   border: none;
   cursor: pointer;
-`,po=F.img`
+`,mo=F.img`
   width: 20px;
   height: 20px;
-`,B=F.main`
+`,ho=F.main`
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -223,16 +232,16 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
   align-items: center;
   padding: 24px;
   text-align: center;
-`,V=F.h1`
-  ${ba.titleLarge}
+`,go=F.h1`
+  ${xa.titleLarge}
   margin-bottom: 28px;
-`,mo=F.p`
-  ${ba.bodySmall}
+`,_o=F.p`
+  ${xa.bodySmall}
   margin-bottom: 32px;
   line-height: 1.5;
-`,ho=F.div`
-  ${ba.titleMedium}
+`,vo=F.div`
+  ${xa.titleMedium}
   margin-bottom: 12px;
-`,go=F.div`
-  ${ba.titleLarge}
-`;function _o(){return L(zt,{children:[I(Lt,{path:`cart`,element:I(ro,{cartId:1})}),I(Lt,{path:`cart/order-confirm`,element:I(uo,{})})]})}await(async()=>{})(),(0,v.createRoot)(document.getElementById(`root`)).render(I(_.StrictMode,{children:I(Dn,{children:I(_o,{})})}));
+`,yo=F.div`
+  ${xa.titleLarge}
+`;function bo(){return L(zt,{children:[I(Lt,{path:`cart`,element:I(oo,{cartId:1})}),I(Lt,{path:`cart/order-confirm`,element:I(po,{})})]})}await(async()=>{})(),(0,v.createRoot)(document.getElementById(`root`)).render(I(_.StrictMode,{children:I(Dn,{children:I(bo,{})})}));
