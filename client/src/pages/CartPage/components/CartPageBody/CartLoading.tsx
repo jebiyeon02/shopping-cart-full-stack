@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { typography } from "../../../../shared/styles/typography";
 
 const CartLoading = () => {
   return <FallbackLayout>로딩중...</FallbackLayout>;
@@ -11,7 +12,5 @@ const FallbackLayout = styled.div`
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  color: black;
-  font-weight: 500;
-  font-size: 14px;
+  ${typography.bodyMedium}
 `;

@@ -4,6 +4,7 @@ import ArrowBackIcon from "../../assets/arrow_back.png";
 import styled from "@emotion/styled";
 import { useLocation, useNavigate } from "react-router-dom";
 import { formatPrice } from "../../shared/utils";
+import { typography } from "../../shared/styles/typography";
 
 const OrderConfirmPage = () => {
   const navigate = useNavigate();
@@ -59,30 +60,25 @@ const OrderConfirmContent = styled.main`
   justify-content: center;
   align-items: center;
   padding: 24px;
-  color: black;
   text-align: center;
 `;
 
 const OrderConfirmTitle = styled.h1`
+  ${typography.titleLarge}
   margin-bottom: 28px;
-  font-weight: 700;
-  font-size: 24px;
 `;
 
 const OrderConfirmDescription = styled.p`
+  ${typography.bodySmall}
   margin-bottom: 32px;
-  font-weight: 500;
-  font-size: 12px;
   line-height: 1.5;
 `;
 
 const TotalPriceLabel = styled.div`
+  ${typography.titleMedium}
   margin-bottom: 12px;
-  font-weight: 700;
-  font-size: 16px;
 `;
 
 const TotalPrice = styled.div`
-  font-weight: 700;
-  font-size: 24px;
+  ${typography.titleLarge}
 `;

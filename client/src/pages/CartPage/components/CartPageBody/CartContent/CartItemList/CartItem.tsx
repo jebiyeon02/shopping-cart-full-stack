@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import type { CartItemModel } from "../../../../../../domain/cart/cart.api";
 import { formatPrice } from "../../../../../../shared/utils";
 import type { AsyncState } from "../../../../../../shared/useAsyncState";
+import { typography } from "../../../../../../shared/styles/typography";
 
 const CartItem = ({
   cartItem,
@@ -139,15 +140,11 @@ const CartItemInformation = styled.div`
 `;
 
 const ProductName = styled.div`
-  color: black;
-  font-weight: 500;
-  font-size: 12px;
+  ${typography.bodySmall}
 `;
 
 const ProductPrice = styled.div`
-  color: black;
-  font-weight: 700;
-  font-size: 24px;
+  ${typography.titleLarge}
 `;
 
 const CartItemCountStepper = styled.div`

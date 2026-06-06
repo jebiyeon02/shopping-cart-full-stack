@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { typography } from "../../../../shared/styles/typography";
 
 const CartEmpty = () => {
   return (
@@ -16,7 +17,6 @@ const CartEmptyLayout = styled.div`
   flex-direction: column;
   min-height: calc(100vh - 128px);
   padding: 36px 24px;
-  color: black;
 `;
 
 const CartEmptyText = styled.p`
@@ -25,6 +25,5 @@ const CartEmptyText = styled.p`
   justify-content: center;
   align-items: center;
   margin: 0;
-  font-weight: 500;
-  font-size: 14px;
+  ${typography.bodyMedium}
 `;

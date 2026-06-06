@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import { formatPrice } from "../../../../../shared/utils";
 import WarningIcon from "../../../../../assets/warning.png";
 import { DELIVERY } from "../../../../../domain/cart/cart.constants";
+import { typography } from "../../../../../shared/styles/typography";
 
 const CartPaymentSummary = ({
   orderPrice,
@@ -61,9 +62,7 @@ const WarningIconImage = styled.img`
 `;
 
 const CartPaymentSummarySpan = styled.span`
-  color: black;
-  font-weight: 500;
-  font-size: 12px;
+  ${typography.bodySmall}
 `;
 
 const SummaryTable = styled.table`
@@ -78,16 +77,12 @@ const SummaryTr = styled.tr<{ $hasDivider?: boolean }>`
 `;
 
 const SummaryTh = styled.th`
-  color: black;
-  font-weight: 700;
-  font-size: 16px;
+  ${typography.titleMedium}
   text-align: left;
 `;
 
 const SummaryTd = styled.td`
   padding: 12px;
-  color: black;
-  font-weight: 700;
-  font-size: 24px;
+  ${typography.titleLarge}
   text-align: right;
 `;

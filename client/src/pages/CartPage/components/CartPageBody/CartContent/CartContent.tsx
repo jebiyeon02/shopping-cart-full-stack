@@ -3,6 +3,7 @@ import type { AsyncState } from "../../../../../shared/useAsyncState";
 import CartItemList from "./CartItemList/CartItemList";
 import CartPaymentSummary from "./CartPaymentSummary";
 import styled from "@emotion/styled";
+import { typography } from "../../../../../shared/styles/typography";
 
 const CartContent = ({
   cartItems,
@@ -67,8 +68,6 @@ const CartContentLayout = styled.div`
 `;
 
 const CartContentText = styled.div`
-  color: black;
-  font-weight: 500;
-  font-size: 12px;
+  ${typography.bodySmall}
   margin-bottom: 30px;
 `;

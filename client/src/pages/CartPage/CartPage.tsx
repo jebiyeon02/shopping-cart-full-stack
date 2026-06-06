@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import useCartPage from "./useCartPage";
 import CartPageBody from "./components/CartPageBody/CartPageBody";
 import styled from "@emotion/styled";
+import { typography } from "../../shared/styles/typography";
 
 const CartPage = ({ cartId }: { cartId: number }) => {
   const navigate = useNavigate();
@@ -105,8 +106,6 @@ const BottomArea = styled.div`
 `;
 
 const CartContentTitle = styled.div`
-  color: black;
-  font-weight: 700;
-  font-size: 24px;
+  ${typography.titleLarge}
   margin-bottom: 12px;
 `;

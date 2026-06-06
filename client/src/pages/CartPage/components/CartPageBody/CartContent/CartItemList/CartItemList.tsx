@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import type { CartItemModel } from "../../../../../../domain/cart/cart.api";
 import CartItem from "./CartItem";
 import type { AsyncState } from "../../../../../../shared/useAsyncState";
+import { typography } from "../../../../../../shared/styles/typography";
 
 const CartItemList = ({
   cartItems,
@@ -62,9 +63,7 @@ const CheckBoxLabel = styled.label`
   justify-content: start;
   align-items: center;
   gap: 6px;
-  color: black;
-  font-weight: 500;
-  font-size: 12px;
+  ${typography.bodySmall}
 `;
 
 const CartItemListLayout = styled.div`
