@@ -23,7 +23,6 @@ const CartContent = ({
 }) => {
   return (
     <CartContentLayout>
-      <CartContentTitle>장바구니</CartContentTitle>
       <CartContentText>
         현재{cartItems.length}종류의 상품이 담겨있습니다.
       </CartContentText>
@@ -53,14 +52,6 @@ export default CartContent;
 const CartContentLayout = styled.div`
   width: 100%;
   height: 100%;
-  padding: 36px 24px;
-`;
-
-const CartContentTitle = styled.div`
-  color: black;
-  font-weight: 700;
-  font-size: 24px;
-  margin-bottom: 12px;
 `;
 
 const CartContentText = styled.div`

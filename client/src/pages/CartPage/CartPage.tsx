@@ -1,12 +1,11 @@
 import Header from "../../shared/components/Header";
-import CartContent from "./components/CartContent/CartContent/CartContent";
-import CartEmpty from "./components/CartEmpty";
 import BaseButton from "../../shared/components/BaseButton";
 import { getOrderPrice } from "../../domain/cart/cart.util";
 import { useNavigate } from "react-router-dom";
 import { DELIVERY } from "../../domain/cart/cart.constants";
-import styled from "@emotion/styled";
 import useCartPage from "./useCartPage";
+import CartPageBody from "./components/CartPageBody/CartPageBody";
+import styled from "@emotion/styled";
 
 const CartPage = ({ cartId }: { cartId: number }) => {
   const navigate = useNavigate();
@@ -24,17 +23,6 @@ const CartPage = ({ cartId }: { cartId: number }) => {
     checkedProductIds.includes(cartItem.id),
   );
 
-  if (
-    cartItemsAsyncState.status === "idle" ||
-    cartItemsAsyncState.status === "loading"
-  ) {
-    return <FallbackLayout>로딩중...</FallbackLayout>;
-  }
-
-  if (cartItemsAsyncState.status === "fail") {
-    return <FallbackLayout>{cartItemsAsyncState.error.message}</FallbackLayout>;
-  }
-
   const handleOrderConfirmButtonClick = () => {
     const orderPrice = getOrderPrice(filteredCartItem);
     navigate("/cart/order-confirm", {
@@ -49,38 +37,65 @@ const CartPage = ({ cartId }: { cartId: number }) => {
   };
 
   return (
-    <div>
-      <Header actionIcon={<div>SHOP</div>} />
-      {cartItems.length !== 0 && (
-        <CartContent
+    <CartPageLayout>
+      <HeaderArea>
+        <Header actionIcon={<div>SHOP</div>} />
+      </HeaderArea>
+      <CartPageBodyArea>
+        <CartContentTitle>장바구니</CartContentTitle>
+        <CartPageBody
           cartItems={cartItems}
           checkedProductIds={checkedProductIds}
           orderPrice={getOrderPrice(filteredCartItem)}
+          cartItemsAsyncState={cartItemsAsyncState}
           onDeleteCartItem={handleDeleteCartItem}
           onUpdateCartItemCount={handleUpdateCartItemCount}
           onAllProductSelect={handleAllProductSelect}
           onProductSelect={handleProductSelect}
         />
-      )}
-      {cartItems.length === 0 && <CartEmpty />}
-      <BaseButton
-        disabled={cartItems.length === 0 || checkedProductIds.length === 0}
-        onClick={handleOrderConfirmButtonClick}
-      >
-        주문 확인
-      </BaseButton>
-    </div>
+      </CartPageBodyArea>
+      <BottomArea>
+        <BaseButton
+          disabled={cartItems.length === 0 || checkedProductIds.length === 0}
+          onClick={handleOrderConfirmButtonClick}
+        >
+          주문 확인
+        </BaseButton>
+      </BottomArea>
+    </CartPageLayout>
   );
 };
 
 export default CartPage;
 
-const FallbackLayout = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+const CartPageLayout = styled.div`
+  position: relative;
+  width: 100%;
   min-height: 100vh;
+  padding: 64px 0;
+`;
+
+const HeaderArea = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+`;
+
+const CartPageBodyArea = styled.div`
+  padding: 24px;
+`;
+
+const BottomArea = styled.div`
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+`;
+
+const CartContentTitle = styled.div`
   color: black;
-  font-weight: 500;
-  font-size: 14px;
+  font-weight: 700;
+  font-size: 24px;
+  margin-bottom: 12px;
 `;
