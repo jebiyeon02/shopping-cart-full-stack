@@ -40,12 +40,19 @@ const CartPage = ({ cartId }: { cartId: number }) => {
 
   const handleDeleteCartItem = async (productId: number) => {
     if (deleteCartItemAsyncState.status === "loading") return;
+    if (deleteCartItemAsyncState.status === "fail") {
+      alert(deleteCartItemAsyncState.error.message);
+    }
+
     await requestDeleteCartItem(productId);
     checkedProductIdsDispatch({ type: "remove", productId: productId });
   };
 
   const handleUpdateCartItemCount = (productId: number, itemCount: number) => {
     if (updateCartItemCountAsyncState.status === "loading") return;
+    if (updateCartItemCountAsyncState.status === "fail") {
+      alert(updateCartItemCountAsyncState.error.message);
+    }
     requestUpdateCartItemCount(productId, itemCount);
   };
 
