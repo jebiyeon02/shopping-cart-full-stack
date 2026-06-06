@@ -46,6 +46,9 @@ const useCartItem = (cartId: number) => {
       deleteCartItemAsyncState.setSuccess(null);
     } catch (error) {
       deleteCartItemAsyncState.setFail(normalizeError(error));
+
+      // TODO: 리팩토링 필요
+      throw error;
     }
   };
 
@@ -65,6 +68,9 @@ const useCartItem = (cartId: number) => {
       updateCartItemCountAsyncState.setSuccess({ ...updatedInformation });
     } catch (error) {
       updateCartItemCountAsyncState.setFail(normalizeError(error));
+
+      // TODO: 리팩토링 필요
+      throw error;
     }
   };
 

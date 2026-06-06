@@ -1,3 +1,4 @@
+import ApiError from "../../error/ApiError";
 import useCartItem from "./useCartItem";
 import { useCheckedProductIds } from "./useCheckedProductIds";
 
@@ -17,12 +18,30 @@ const useCartPage = ({ cartId }: { cartId: number }) => {
     cartItemsAsyncState.status === "success" ? cartItemsAsyncState.data : [];
 
   const handleDeleteCartItem = async (productId: number) => {
-    await requestDeleteCartItem(productId);
-    checkedProductIdsDispatch({ type: "remove", productId: productId });
+    try {
+      await requestDeleteCartItem(productId);
+      checkedProductIdsDispatch({ type: "remove", productId: productId });
+    } catch (error) {
+      // TODO: 리팩토링 필요
+      if (error instanceof ApiError) {
+        alert(error.message);
+      } else {
+        alert("알 수 없는 에러가 발생했습니다.");
+      }
+    }
   };
 
   const handleUpdateCartItemCount = (productId: number, itemCount: number) => {
-    requestUpdateCartItemCount(productId, itemCount);
+    try {
+      requestUpdateCartItemCount(productId, itemCount);
+    } catch (error) {
+      // TODO: 리팩토링 필요
+      if (error instanceof ApiError) {
+        alert(error.message);
+      } else {
+        alert("알 수 없는 에러가 발생했습니다.");
+      }
+    }
   };
 
   const handleAllProductSelect = (nextChecked: boolean) => {
