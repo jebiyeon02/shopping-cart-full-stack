@@ -213,4 +213,4 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
 `,no=I.div`
   font-weight: 700;
   font-size: 24px;
-`;function ro(){return R(Rt,{children:[L(It,{path:`cart`,element:L(Wa,{cartId:1})}),L(It,{path:`cart/order-confirm`,element:L(Ja,{})})]})}(0,v.createRoot)(document.getElementById(`root`)).render(L(_.StrictMode,{children:L(En,{children:L(ro,{})})}));
+`;function ro(){return R(Rt,{children:[L(It,{path:`cart`,element:L(Wa,{cartId:1})}),L(It,{path:`cart/order-confirm`,element:L(Ja,{})})]})}await(async()=>{})(),(0,v.createRoot)(document.getElementById(`root`)).render(L(_.StrictMode,{children:L(En,{children:L(ro,{})})}));
