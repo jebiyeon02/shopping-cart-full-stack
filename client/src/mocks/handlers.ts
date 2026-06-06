@@ -1,4 +1,4 @@
-import { HttpResponse, delay, http } from "msw";
+import { HttpResponse, http } from "msw";
 export const API_BASE_URL =
   "https://shopping-cart-full-stack-production-0cf6.up.railway.app";
 
