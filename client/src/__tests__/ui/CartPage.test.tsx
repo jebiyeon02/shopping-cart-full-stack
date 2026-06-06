@@ -2,7 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { delay, http, HttpResponse } from "msw";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { API_BASE_URL } from "../../mocks/handlers";
 import { server } from "../../mocks/server";
 import CartPage from "../../pages/CartPage/CartPage";
@@ -262,9 +262,30 @@ describe("CartPage", () => {
     });
   });
 
-  test.todo(
-    "상품 현재 재고보다 많은 수량을 담을 시 alert 메시지를 띄운다",
-  );
+  test("상품 현재 재고보다 많은 수량을 담을 시 alert 메시지를 띄운다", async () => {
+    const user = userEvent.setup();
+    const alertSpy = vi.spyOn(window, "alert").mockImplementation(() => {});
+    mockCartItemsResponse([cartItems[0]]);
+    server.use(
+      http.patch(`${API_BASE_URL}/carts/:cartId/items/:productId`, () => {
+        return HttpResponse.json(
+          {
+            code: "PRODUCT_ORDER_COUNT_EXCEEDED",
+            message: "보유한 상품의 개수를 넘어섰습니다.",
+          },
+          { status: 400 },
+        );
+      }),
+    );
+    renderCartPage();
+
+    await screen.findByText("테스트 상품 1");
+    await user.click(screen.getByRole("button", { name: "+" }));
+
+    await waitFor(() => {
+      expect(alertSpy).toHaveBeenCalledWith("보유한 상품의 개수를 넘어섰습니다.");
+    });
+  });
 
   test("상품 삭제버튼을 눌러 성공하면 상품이 삭제되고 화면이 갱신된다", async () => {
     const user = userEvent.setup();
@@ -282,7 +303,32 @@ describe("CartPage", () => {
     ).toBeInTheDocument();
   });
 
-  test.todo("상품 삭제에 실패하면 alert 메시지를 띄운다");
+  test("상품 삭제에 실패하면 alert 메시지를 띄운다", async () => {
+    const user = userEvent.setup();
+    const alertSpy = vi.spyOn(window, "alert").mockImplementation(() => {});
+    mockCartItemsResponse([cartItems[0]]);
+    server.use(
+      http.delete(`${API_BASE_URL}/carts/:cartId/items/:productId`, () => {
+        return HttpResponse.json(
+          {
+            code: "PRODUCT_NOT_EXIST_IN_CART",
+            message: "해당 상품이 장바구니에 존재하지 않습니다.",
+          },
+          { status: 404 },
+        );
+      }),
+    );
+    renderCartPage();
+
+    await screen.findByText("테스트 상품 1");
+    await user.click(screen.getByRole("button", { name: "삭제" }));
+
+    await waitFor(() => {
+      expect(alertSpy).toHaveBeenCalledWith(
+        "해당 상품이 장바구니에 존재하지 않습니다.",
+      );
+    });
+  });
 
   test("체크된 상품 수량만큼 현재 주문 금액에 추가된다", async () => {
     const user = userEvent.setup();

@@ -31,9 +31,12 @@ const useCartPage = ({ cartId }: { cartId: number }) => {
     }
   };
 
-  const handleUpdateCartItemCount = (productId: number, itemCount: number) => {
+  const handleUpdateCartItemCount = async (
+    productId: number,
+    itemCount: number,
+  ) => {
     try {
-      requestUpdateCartItemCount(productId, itemCount);
+      await requestUpdateCartItemCount(productId, itemCount);
     } catch (error) {
       // TODO: 리팩토링 필요
       if (error instanceof ApiError) {
