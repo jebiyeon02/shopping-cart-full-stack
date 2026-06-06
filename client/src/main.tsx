@@ -4,6 +4,20 @@ import "./index.css";
 import App from "./App.tsx";
 import { HashRouter } from "react-router-dom";
 
+const enableMocking = async () => {
+  if (!import.meta.env.DEV) {
+    return;
+  }
+
+  const { worker } = await import("./mocks/browser");
+
+  return worker.start({
+    onUnhandledRequest: "bypass",
+  });
+};
+
+await enableMocking();
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <HashRouter>
