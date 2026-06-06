@@ -9,6 +9,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import useCartPage from "./useCartPage";
 import CartPageBody from "./components/CartPageBody/CartPageBody";
+import 임시추가버튼 from "./components/임시추가버튼";
 import styled from "@emotion/styled";
 import { typography } from "../../shared/styles/typography";
 
@@ -49,7 +50,7 @@ const CartPage = ({ cartId }: { cartId: number }) => {
         <Header actionIcon={<div>SHOP</div>} />
       </HeaderArea>
       <CartPageBodyArea>
-        <CartContentTitle>장바구니</CartContentTitle>
+        <CartContentTitle>장바구니 <임시추가버튼 /></CartContentTitle>
         <CartPageBody
           cartItems={cartItems}
           checkedProductIds={checkedProductIds}
