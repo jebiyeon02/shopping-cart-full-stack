@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import type { CartItemResponse } from "../../../../../../domain/cart/cart.api";
+import type { CartItemModel } from "../../../../../../domain/cart/cart.api";
 import CartItem from "./CartItem";
 
 const CartItemList = ({
@@ -11,7 +11,7 @@ const CartItemList = ({
   isSelectAllProduct,
   onUpdateCartItemCount,
 }: {
-  cartItems: CartItemResponse[];
+  cartItems: CartItemModel[];
   onDeleteCartItem: (productId: number) => void;
   onAllProductSelect: (isChecked: boolean) => void;
   onProductSelect: (productId: number, isChecked: boolean) => void;

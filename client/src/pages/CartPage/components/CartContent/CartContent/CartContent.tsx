@@ -1,4 +1,4 @@
-import type { CartItemResponse } from "../../../../../domain/cart/cart.api";
+import type { CartItemModel } from "../../../../../domain/cart/cart.api";
 import { DELIVERY } from "../../../../../domain/cart/cart.constants";
 import CartItemList from "./CartItemList/CartItemList";
 import CartPaymentSummary from "./CartPaymentSummary";
@@ -13,7 +13,7 @@ const CartContent = ({
   onAllProductSelect,
   onProductSelect,
 }: {
-  cartItems: CartItemResponse[];
+  cartItems: CartItemModel[];
   checkedProductIds: number[];
   orderPrice: number;
   onDeleteCartItem: (productId: number) => void;

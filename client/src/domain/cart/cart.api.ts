@@ -7,7 +7,7 @@ import type {
 const BASE_URL =
   "https://shopping-cart-full-stack-production-0cf6.up.railway.app";
 
-export type CartItemResponse = {
+export type CartItemModel = {
   id: number;
   name: string;
   price: number;
@@ -17,7 +17,7 @@ export type CartItemResponse = {
 
 export const getCartItems = async (
   cartId: number,
-): Promise<CartItemResponse[]> => {
+): Promise<CartItemModel[]> => {
   const response = await fetch(`${BASE_URL}/carts/${cartId}/items`, {
     headers: {
       "Content-Type": "application/json",
@@ -29,7 +29,7 @@ export const getCartItems = async (
     throw new ApiError(errorData.code, errorData.message);
   }
 
-  const data: ApiResponse<{ cartItems: CartItemResponse[] }> =
+  const data: ApiResponse<{ cartItems: CartItemModel[] }> =
     await response.json();
   const cartItems = data.result.cartItems;
 

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import type { CartItemResponse } from "../../../../../../domain/cart/cart.api";
+import type { CartItemModel } from "../../../../../../domain/cart/cart.api";
 import { formatPrice } from "../../../../../../shared/utils";
 
 const CartItem = ({
@@ -9,7 +9,7 @@ const CartItem = ({
   onUpdateCartItemCount,
   isChecked,
 }: {
-  cartItem: CartItemResponse;
+  cartItem: CartItemModel;
   onDeleteCartItem: (productId: number) => void;
   onProductSelect: (productId: number, isChecked: boolean) => void;
   onUpdateCartItemCount: (productId: number, itemCount: number) => void;
