@@ -25,19 +25,21 @@ export const useCheckedProductIds = (
 
     if (!savedCheckedProductIds) {
       const allProductIds = cartItems.map((cartItem) => cartItem.id);
+
       checkedProductIdsDispatch({
         type: "insertAll",
         productIds: allProductIds,
       });
-      return;
+    } else {
+      const parsedCheckedProductIds = JSON.parse(
+        savedCheckedProductIds,
+      ) as number[];
+
+      checkedProductIdsDispatch({
+        type: "insertAll",
+        productIds: parsedCheckedProductIds,
+      });
     }
-
-    const parsedCheckedProductIds = JSON.parse(savedCheckedProductIds);
-
-    checkedProductIdsDispatch({
-      type: "insert",
-      productId: parsedCheckedProductIds,
-    });
 
     setIsInitialized(true);
   }, [cartItemsAsyncState.status, isInitialized]);
