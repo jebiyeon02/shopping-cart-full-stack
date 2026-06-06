@@ -60,8 +60,8 @@ const CartPage = ({ cartId }: { cartId: number }) => {
     if (nextChecked) {
       const allProductIds = cartItems.map((cartItem) => cartItem.id);
       checkedProductIdsDispatch({
-        type: "insert",
-        productId: allProductIds,
+        type: "insertAll",
+        productIds: allProductIds,
       });
       return;
     }

@@ -1,5 +1,4 @@
 import { useEffect, useReducer, useState } from "react";
-import { checkedproductIdsReducer } from "./checkedProductsIdReducer";
 import type { AsyncState } from "../../shared/useAsyncState";
 import type { CartItemResponse } from "../../domain/cart/cart.api";
 
@@ -8,7 +7,7 @@ export const useCheckedProductIds = (
   cartItemsAsyncState: AsyncState<CartItemResponse[]>,
 ) => {
   const [checkedProductIds, checkedProductIdsDispatch] = useReducer(
-    checkedproductIdsReducer,
+    checkedProductIdsReducer,
     [],
   );
   // 최초 렌더링 시 상품 전체선택으로 1번 바뀌었다는 것을 나타내는 flag
@@ -26,7 +25,10 @@ export const useCheckedProductIds = (
 
     if (!savedCheckedProductIds) {
       const allProductIds = cartItems.map((cartItem) => cartItem.id);
-      checkedProductIdsDispatch({ type: "insert", productId: allProductIds });
+      checkedProductIdsDispatch({
+        type: "insertAll",
+        productIds: allProductIds,
+      });
       return;
     }
 
@@ -50,4 +52,34 @@ export const useCheckedProductIds = (
   }, [checkedProductIds, isInitialized]);
 
   return { checkedProductIds, checkedProductIdsDispatch };
+};
+
+type CheckedProductIdsReducerAction =
+  | { type: "init" }
+  | { type: "insert"; productId: number }
+  | { type: "insertAll"; productIds: number[] }
+  | { type: "remove"; productId: number };
+
+const checkedProductIdsReducer = (
+  productIds: number[],
+  action: CheckedProductIdsReducerAction,
+) => {
+  switch (action.type) {
+    case "init": {
+      return [];
+    }
+    case "insert": {
+      return Array.from(new Set([...productIds, action.productId]));
+    }
+
+    case "insertAll": {
+      return Array.from(new Set([...productIds, ...action.productIds]));
+    }
+    case "remove": {
+      return productIds.filter((id) => id !== action.productId);
+    }
+    default: {
+      return productIds;
+    }
+  }
 };
