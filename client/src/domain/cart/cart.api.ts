@@ -11,7 +11,7 @@ export type CartItemResponse = {
   id: number;
   name: string;
   price: number;
-  imgUrl: string | undefined; // TODO: 서버에서 처리를 잘 못해주는 것 같음
+  imgUrl?: string;
   itemCount: number;
 };
 
