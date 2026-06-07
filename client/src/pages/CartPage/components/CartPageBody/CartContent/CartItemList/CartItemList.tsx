@@ -6,22 +6,22 @@ import { useCheckedProductContext } from "../../../../CheckedProductContext";
 
 const CartItemList = () => {
   const { cartItems } = useCartContext();
-  const { checkedProductIds, checkedProductIdsDispatch } =
-    useCheckedProductContext();
+  const {
+    checkedProductIds,
+    insertAllCheckedProductIds,
+    initCheckedProductIds,
+  } = useCheckedProductContext();
 
   const isCartItemSelected = cartItems.length === checkedProductIds.length;
 
   const handleAllProductSelect = (nextChecked: boolean) => {
     if (nextChecked) {
       const allProductIds = cartItems.map((cartItem) => cartItem.id);
-      checkedProductIdsDispatch({
-        type: "insertAll",
-        productIds: allProductIds,
-      });
+      insertAllCheckedProductIds(allProductIds);
       return;
     }
 
-    checkedProductIdsDispatch({ type: "init" });
+    initCheckedProductIds();
   };
 
   return (

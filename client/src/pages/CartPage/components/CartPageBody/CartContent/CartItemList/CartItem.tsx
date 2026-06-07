@@ -20,14 +20,15 @@ const CartItem = ({
     deleteCartItemAsyncState,
   } = useCartContext();
 
-  const { checkedProductIdsDispatch } = useCheckedProductContext();
+  const { removeCheckedProductId, insertCheckedProductId } =
+    useCheckedProductContext();
 
   const { id, name, price, itemCount, imgUrl } = cartItem;
 
   const handleDeleteCartItem = async (productId: number) => {
     try {
       await requestDeleteCartItem(productId);
-      checkedProductIdsDispatch({ type: "remove", productId: productId });
+      removeCheckedProductId(productId);
     } catch (error) {
       // TODO: 리팩토링 필요
       if (error instanceof ApiError) {
@@ -56,17 +57,11 @@ const CartItem = ({
 
   const handleProductSelect = (productId: number, nextChecked: boolean) => {
     if (nextChecked) {
-      checkedProductIdsDispatch({
-        type: "insert",
-        productId: productId,
-      });
+      insertCheckedProductId(productId);
       return;
     }
 
-    checkedProductIdsDispatch({
-      type: "remove",
-      productId: productId,
-    });
+    removeCheckedProductId(productId);
   };
 
   return (

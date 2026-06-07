@@ -53,7 +53,38 @@ export const useCheckedProductIds = (
     );
   }, [checkedProductIds, isInitialized]);
 
-  return { checkedProductIds, checkedProductIdsDispatch };
+  const initCheckedProductIds = () => {
+    checkedProductIdsDispatch({ type: "init" });
+  };
+
+  const insertCheckedProductId = (productId: number) => {
+    checkedProductIdsDispatch({
+      type: "insert",
+      productId,
+    });
+  };
+
+  const insertAllCheckedProductIds = (productIds: number[]) => {
+    checkedProductIdsDispatch({
+      type: "insertAll",
+      productIds,
+    });
+  };
+
+  const removeCheckedProductId = (productId: number) => {
+    checkedProductIdsDispatch({
+      type: "remove",
+      productId,
+    });
+  };
+
+  return {
+    checkedProductIds,
+    initCheckedProductIds,
+    insertCheckedProductId,
+    insertAllCheckedProductIds,
+    removeCheckedProductId,
+  };
 };
 
 export type CheckedProductIdsReducerAction =
