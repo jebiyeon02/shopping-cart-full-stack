@@ -14,7 +14,7 @@ import { typography } from "../../shared/styles/typography";
 import { useCartContext } from "./CartContext";
 import { useCheckedProductContext } from "./CheckedProductContext";
 
-const CartPage = ({ cartId }: { cartId: number }) => {
+const CartPage = () => {
   const navigate = useNavigate();
 
   const { cartItems } = useCartContext();

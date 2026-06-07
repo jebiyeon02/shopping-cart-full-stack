@@ -13,7 +13,7 @@ function App() {
         element={
           <CartProvider cartId={1}>
             <CheckedProductProvider>
-              <CartPage cartId={1} />
+              <CartPage />
             </CheckedProductProvider>
           </CartProvider>
         }

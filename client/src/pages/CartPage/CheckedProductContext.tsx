@@ -1,8 +1,9 @@
-import { createContext, useContext, useReducer, type ReactNode } from "react";
+import { createContext, useContext, type ReactNode } from "react";
 import {
-  checkedProductIdsReducer,
+  useCheckedProductIds,
   type CheckedProductIdsReducerAction,
 } from "./useCheckedProductIds";
+import { useCartContext } from "./CartContext";
 
 // 일단 primitive 함수 내려주고 나중에 추상화 시키자
 type CheckedProductContextValue = {
@@ -21,10 +22,11 @@ export const CheckedProductProvider = ({
 }: {
   children: ReactNode;
 }) => {
-  const [checkedProductIds, checkedProductIdsDispatch] = useReducer(
-    checkedProductIdsReducer,
-    [],
-  );
+  // cartContext에 의존하고 있는데 이래도 괜찮을까?
+  const { cartItemsAsyncState } = useCartContext();
+  const checkedProductController = useCheckedProductIds(cartItemsAsyncState);
+  const { checkedProductIds, checkedProductIdsDispatch } =
+    checkedProductController;
 
   return (
     <CheckedProductContext.Provider
