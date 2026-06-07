@@ -1,41 +1,37 @@
 import styled from "@emotion/styled";
-import type { CartItemModel } from "../../../../../../domain/cart/cart.api";
 import CartItem from "./CartItem";
-import type { AsyncState } from "../../../../../../shared/useAsyncState";
 import { typography } from "../../../../../../shared/styles/typography";
+import { useCartContext } from "../../../../CartContext";
+import { useCheckedProductContext } from "../../../../CheckedProductContext";
 
-const CartItemList = ({
-  cartItems,
-  deleteCartItemAsyncState,
-  updateCartItemCountAsyncState,
-  onDeleteCartItem,
-  onAllProductSelect,
-  onProductSelect,
-  checkedProductIds,
-  isSelectAllProduct,
-  onUpdateCartItemCount,
-}: {
-  cartItems: CartItemModel[];
-  deleteCartItemAsyncState: AsyncState<null>;
-  updateCartItemCountAsyncState: AsyncState<{
-    id: number;
-    itemCount: number;
-  }>;
-  onDeleteCartItem: (productId: number) => void;
-  onAllProductSelect: (isChecked: boolean) => void;
-  onProductSelect: (productId: number, isChecked: boolean) => void;
-  checkedProductIds: number[];
-  isSelectAllProduct: boolean;
-  onUpdateCartItemCount: (productId: number, itemCount: number) => void;
-}) => {
+const CartItemList = () => {
+  const { cartItems } = useCartContext();
+  const { checkedProductIds, checkedProductIdsDispatch } =
+    useCheckedProductContext();
+
+  const isCartItemSelected = cartItems.length === checkedProductIds.length;
+
+  const handleAllProductSelect = (nextChecked: boolean) => {
+    if (nextChecked) {
+      const allProductIds = cartItems.map((cartItem) => cartItem.id);
+      checkedProductIdsDispatch({
+        type: "insertAll",
+        productIds: allProductIds,
+      });
+      return;
+    }
+
+    checkedProductIdsDispatch({ type: "init" });
+  };
+
   return (
     <CartItemListLayout>
       <CheckBoxLabel>
         <input
           type="checkbox"
-          checked={isSelectAllProduct}
+          checked={isCartItemSelected}
           onChange={(event) => {
-            onAllProductSelect(event.target.checked);
+            handleAllProductSelect(event.target.checked);
           }}
         />
         전체선택
@@ -44,11 +40,6 @@ const CartItemList = ({
         <CartItem
           key={cartItem.id}
           cartItem={cartItem}
-          deleteCartItemAsyncState={deleteCartItemAsyncState}
-          updateCartItemCountAsyncState={updateCartItemCountAsyncState}
-          onProductSelect={onProductSelect}
-          onDeleteCartItem={onDeleteCartItem}
-          onUpdateCartItemCount={onUpdateCartItemCount}
           isChecked={checkedProductIds.includes(cartItem.id)}
         />
       ))}

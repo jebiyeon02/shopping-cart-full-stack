@@ -1,30 +1,74 @@
 import styled from "@emotion/styled";
 import type { CartItemModel } from "../../../../../../domain/cart/cart.api";
 import { formatPrice } from "../../../../../../shared/utils";
-import type { AsyncState } from "../../../../../../shared/useAsyncState";
 import { typography } from "../../../../../../shared/styles/typography";
+import { useCartContext } from "../../../../CartContext";
+import ApiError from "../../../../../../error/ApiError";
+import { useCheckedProductContext } from "../../../../CheckedProductContext";
 
 const CartItem = ({
   cartItem,
-  deleteCartItemAsyncState,
-  updateCartItemCountAsyncState,
-  onDeleteCartItem,
-  onProductSelect,
-  onUpdateCartItemCount,
   isChecked,
 }: {
   cartItem: CartItemModel;
-  deleteCartItemAsyncState: AsyncState<null>;
-  updateCartItemCountAsyncState: AsyncState<{
-    id: number;
-    itemCount: number;
-  }>;
-  onDeleteCartItem: (productId: number) => void;
-  onProductSelect: (productId: number, isChecked: boolean) => void;
-  onUpdateCartItemCount: (productId: number, itemCount: number) => void;
   isChecked: boolean;
 }) => {
+  const {
+    requestUpdateCartItemCount,
+    updateCartItemCountAsyncState,
+    requestDeleteCartItem,
+    deleteCartItemAsyncState,
+  } = useCartContext();
+
+  const { checkedProductIdsDispatch } = useCheckedProductContext();
+
   const { id, name, price, itemCount, imgUrl } = cartItem;
+
+  const handleDeleteCartItem = async (productId: number) => {
+    try {
+      await requestDeleteCartItem(productId);
+      checkedProductIdsDispatch({ type: "remove", productId: productId });
+    } catch (error) {
+      // TODO: 리팩토링 필요
+      if (error instanceof ApiError) {
+        alert(error.message);
+      } else {
+        alert("알 수 없는 에러가 발생했습니다.");
+      }
+    }
+  };
+
+  const handleUpdateCartItemCount = async (
+    productId: number,
+    itemCount: number,
+  ) => {
+    try {
+      await requestUpdateCartItemCount(productId, itemCount);
+    } catch (error) {
+      // TODO: 리팩토링 필요
+      if (error instanceof ApiError) {
+        alert(error.message);
+      } else {
+        alert("알 수 없는 에러가 발생했습니다.");
+      }
+    }
+  };
+
+  const handleProductSelect = (productId: number, nextChecked: boolean) => {
+    if (nextChecked) {
+      checkedProductIdsDispatch({
+        type: "insert",
+        productId: productId,
+      });
+      return;
+    }
+
+    checkedProductIdsDispatch({
+      type: "remove",
+      productId: productId,
+    });
+  };
+
   return (
     <CartItemLayout>
       <Divider />
@@ -34,12 +78,12 @@ const CartItem = ({
           type="checkbox"
           checked={isChecked}
           onChange={(event) => {
-            onProductSelect(id, event.target.checked);
+            handleProductSelect(id, event.target.checked);
           }}
         />
         <DeleteButton
           type="button"
-          onClick={() => onDeleteCartItem(id)}
+          onClick={() => handleDeleteCartItem(id)}
           disabled={deleteCartItemAsyncState.status === "loading"}
         >
           삭제
@@ -54,7 +98,7 @@ const CartItem = ({
           <CartItemCountStepper>
             <StepperButton
               type="button"
-              onClick={() => onUpdateCartItemCount(id, itemCount - 1)}
+              onClick={() => handleUpdateCartItemCount(id, itemCount - 1)}
               disabled={
                 itemCount <= 1 ||
                 deleteCartItemAsyncState.status === "loading" ||
@@ -66,7 +110,7 @@ const CartItem = ({
             {itemCount}
             <StepperButton
               type="button"
-              onClick={() => onUpdateCartItemCount(id, itemCount + 1)}
+              onClick={() => handleUpdateCartItemCount(id, itemCount + 1)}
               disabled={
                 deleteCartItemAsyncState.status === "loading" ||
                 updateCartItemCountAsyncState.status === "loading"

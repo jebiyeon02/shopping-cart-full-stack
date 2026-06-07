@@ -1,40 +1,21 @@
 import CartContent from "./CartContent/CartContent";
-import type { CartItemModel } from "../../../../domain/cart/cart.api";
-import type { AsyncState } from "../../../../shared/useAsyncState";
+
 import CartFail from "./CartFail";
 import CartLoading from "./CartLoading";
 import CartEmpty from "./CartEmpty";
+import { useCartContext } from "../../CartContext";
 
 const CartPageBody = ({
-  cartItems,
-  checkedProductIds,
   orderPrice,
   deliveryFee,
   totalPrice,
-  cartItemsAsyncState,
-  deleteCartItemAsyncState,
-  updateCartItemCountAsyncState,
-  onDeleteCartItem,
-  onUpdateCartItemCount,
-  onAllProductSelect,
-  onProductSelect,
 }: {
-  cartItems: CartItemModel[];
-  checkedProductIds: number[];
   orderPrice: number;
   deliveryFee: number;
   totalPrice: number;
-  cartItemsAsyncState: AsyncState<CartItemModel[]>;
-  deleteCartItemAsyncState: AsyncState<null>;
-  updateCartItemCountAsyncState: AsyncState<{
-    id: number;
-    itemCount: number;
-  }>;
-  onDeleteCartItem: (productId: number) => void;
-  onUpdateCartItemCount: (productId: number, itemCount: number) => void;
-  onAllProductSelect: (nextChecked: boolean) => void;
-  onProductSelect: (productId: number, nextChecked: boolean) => void;
 }) => {
+  const { cartItems, cartItemsAsyncState } = useCartContext();
+
   switch (cartItemsAsyncState.status) {
     case "idle": {
       return <CartLoading />;
@@ -50,17 +31,9 @@ const CartPageBody = ({
         <CartEmpty />
       ) : (
         <CartContent
-          cartItems={cartItems}
-          checkedProductIds={checkedProductIds}
           orderPrice={orderPrice}
           deliveryFee={deliveryFee}
           totalPrice={totalPrice}
-          deleteCartItemAsyncState={deleteCartItemAsyncState}
-          updateCartItemCountAsyncState={updateCartItemCountAsyncState}
-          onDeleteCartItem={onDeleteCartItem}
-          onUpdateCartItemCount={onUpdateCartItemCount}
-          onAllProductSelect={onAllProductSelect}
-          onProductSelect={onProductSelect}
         />
       );
     }

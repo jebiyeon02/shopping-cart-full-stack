@@ -7,25 +7,18 @@ import {
   getProductAllItemCount,
 } from "../../domain/cart/cart.util";
 import { useNavigate } from "react-router-dom";
-import useCartPage from "./useCartPage";
 import CartPageBody from "./components/CartPageBody/CartPageBody";
 import 임시추가버튼 from "./components/임시추가버튼";
 import styled from "@emotion/styled";
 import { typography } from "../../shared/styles/typography";
+import { useCartContext } from "./CartContext";
+import { useCheckedProductContext } from "./CheckedProductContext";
 
 const CartPage = ({ cartId }: { cartId: number }) => {
   const navigate = useNavigate();
-  const {
-    cartItems,
-    cartItemsAsyncState,
-    deleteCartItemAsyncState,
-    updateCartItemCountAsyncState,
-    checkedProductIds,
-    handleDeleteCartItem,
-    handleUpdateCartItemCount,
-    handleAllProductSelect,
-    handleProductSelect,
-  } = useCartPage({ cartId });
+
+  const { cartItems } = useCartContext();
+  const { checkedProductIds } = useCheckedProductContext();
 
   const filteredCartItem = getFilteredCartItem(cartItems, checkedProductIds);
   const orderPrice = getOrderPrice(filteredCartItem);
@@ -50,20 +43,14 @@ const CartPage = ({ cartId }: { cartId: number }) => {
         <Header actionIcon={<div>SHOP</div>} />
       </HeaderArea>
       <CartPageBodyArea>
-        <CartContentTitle>장바구니 <임시추가버튼 /></CartContentTitle>
+        <CartContentTitle>
+          장바구니 <임시추가버튼 />
+        </CartContentTitle>
+
         <CartPageBody
-          cartItems={cartItems}
-          checkedProductIds={checkedProductIds}
           orderPrice={orderPrice}
           deliveryFee={deliveryFee}
           totalPrice={totalPrice}
-          cartItemsAsyncState={cartItemsAsyncState}
-          deleteCartItemAsyncState={deleteCartItemAsyncState}
-          updateCartItemCountAsyncState={updateCartItemCountAsyncState}
-          onDeleteCartItem={handleDeleteCartItem}
-          onUpdateCartItemCount={handleUpdateCartItemCount}
-          onAllProductSelect={handleAllProductSelect}
-          onProductSelect={handleProductSelect}
         />
       </CartPageBodyArea>
       <BottomArea>
