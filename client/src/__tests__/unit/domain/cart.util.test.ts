@@ -4,6 +4,7 @@ import {
   getFilteredCartItem,
   getOrderPrice,
   getProductAllItemCount,
+  getTotalPrice,
 } from "../../../domain/cart/cart.util";
 import type { CartItemModel } from "../../../domain/cart/cart.api";
 
@@ -51,5 +52,11 @@ describe("getDeliveryFee", () => {
 describe("getProductAllItemCount", () => {
   test("장바구니 상품 수량의 합계를 반환한다", () => {
     expect(getProductAllItemCount(cartItems)).toBe(5);
+  });
+});
+
+describe("getTotalPrice", () => {
+  test("주문 금액과 배송비의 합계를 반환한다", () => {
+    expect(getTotalPrice(29000, 3000)).toBe(32000);
   });
 });
