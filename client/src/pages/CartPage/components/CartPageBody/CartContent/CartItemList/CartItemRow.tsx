@@ -6,7 +6,7 @@ import { useCartContext } from "../../../../CartContext";
 import ApiError from "../../../../../../error/ApiError";
 import { useCheckedProductContext } from "../../../../CheckedProductContext";
 
-const CartItem = ({
+const CartItemRow = ({
   cartItem,
   isChecked,
 }: {
@@ -120,7 +120,7 @@ const CartItem = ({
   );
 };
 
-export default CartItem;
+export default CartItemRow;
 
 const CartItemLayout = styled.div`
   display: flex;

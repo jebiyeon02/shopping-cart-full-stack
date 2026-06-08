@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
-import CartItem from "./CartItem";
 import { typography } from "../../../../../../shared/styles/typography";
 import { useCartContext } from "../../../../CartContext";
 import { useCheckedProductContext } from "../../../../CheckedProductContext";
+import CartItemRow from "./CartItemRow";
 
 const CartItemList = () => {
   const { cartItems } = useCartContext();
@@ -37,7 +37,7 @@ const CartItemList = () => {
         전체선택
       </CheckBoxLabel>
       {cartItems.map((cartItem) => (
-        <CartItem
+        <CartItemRow
           key={cartItem.id}
           cartItem={cartItem}
           isChecked={checkedProductIds.includes(cartItem.id)}
