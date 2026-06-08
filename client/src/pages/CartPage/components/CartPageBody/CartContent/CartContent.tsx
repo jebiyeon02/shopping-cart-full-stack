@@ -4,15 +4,7 @@ import styled from "@emotion/styled";
 import { typography } from "../../../../../shared/styles/typography";
 import { useCartContext } from "../../../CartContext";
 
-const CartContent = ({
-  orderPrice,
-  deliveryFee,
-  totalPrice,
-}: {
-  orderPrice: number;
-  deliveryFee: number;
-  totalPrice: number;
-}) => {
+const CartContent = () => {
   const { cartItems } = useCartContext();
   return (
     <CartContentLayout>
@@ -22,11 +14,7 @@ const CartContent = ({
 
       <CartItemList />
 
-      <CartPaymentSummary
-        orderPrice={orderPrice}
-        deliveryFee={deliveryFee}
-        totalPrice={totalPrice}
-      />
+      <CartPaymentSummary />
     </CartContentLayout>
   );
 };

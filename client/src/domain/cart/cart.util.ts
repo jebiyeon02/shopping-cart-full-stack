@@ -24,3 +24,7 @@ export const getDeliveryFee = (orderPrice: number) => {
 export const getProductAllItemCount = (filteredCartItem: CartItemModel[]) => {
   return filteredCartItem.reduce((acc, item) => acc + item.itemCount, 0);
 };
+
+export const getTotalPrice = (orderPrice: number, deliveryFee: number) => {
+  return orderPrice + deliveryFee;
+};

@@ -5,6 +5,7 @@ import {
   getFilteredCartItem,
   getOrderPrice,
   getProductAllItemCount,
+  getTotalPrice,
 } from "../../domain/cart/cart.util";
 import { useNavigate } from "react-router-dom";
 import CartPageBody from "./components/CartPageBody/CartPageBody";
@@ -23,7 +24,6 @@ const CartPage = () => {
   const filteredCartItem = getFilteredCartItem(cartItems, checkedProductIds);
   const orderPrice = getOrderPrice(filteredCartItem);
   const deliveryFee = getDeliveryFee(orderPrice);
-  const totalPrice = orderPrice + deliveryFee;
   const isOrderConfirm =
     cartItems.length === 0 || checkedProductIds.length === 0;
 
@@ -32,7 +32,7 @@ const CartPage = () => {
       state: {
         productCount: filteredCartItem.length,
         productItemCount: getProductAllItemCount(filteredCartItem),
-        totalPrice: orderPrice + deliveryFee,
+        totalPrice: getTotalPrice(orderPrice, deliveryFee),
       },
     });
   };
@@ -47,11 +47,7 @@ const CartPage = () => {
           장바구니 <임시추가버튼 />
         </CartContentTitle>
 
-        <CartPageBody
-          orderPrice={orderPrice}
-          deliveryFee={deliveryFee}
-          totalPrice={totalPrice}
-        />
+        <CartPageBody />
       </CartPageBodyArea>
       <BottomArea>
         <BaseButton

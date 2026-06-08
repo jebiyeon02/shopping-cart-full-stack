@@ -3,16 +3,23 @@ import { formatPrice } from "../../../../../shared/utils";
 import WarningIcon from "../../../../../assets/warning.png";
 import { DELIVERY } from "../../../../../domain/cart/cart.constants";
 import { typography } from "../../../../../shared/styles/typography";
+import { useCartContext } from "../../../CartContext";
+import { useCheckedProductContext } from "../../../CheckedProductContext";
+import {
+  getDeliveryFee,
+  getFilteredCartItem,
+  getOrderPrice,
+  getTotalPrice,
+} from "../../../../../domain/cart/cart.util";
 
-const CartPaymentSummary = ({
-  orderPrice,
-  deliveryFee,
-  totalPrice,
-}: {
-  orderPrice: number;
-  deliveryFee: number;
-  totalPrice: number;
-}) => {
+const CartPaymentSummary = () => {
+  const { cartItems } = useCartContext();
+  const { checkedProductIds } = useCheckedProductContext();
+  const filteredCartItem = getFilteredCartItem(cartItems, checkedProductIds);
+  const orderPrice = getOrderPrice(filteredCartItem);
+  const deliveryFee = getDeliveryFee(orderPrice);
+  const totalPrice = getTotalPrice(orderPrice, deliveryFee);
+
   return (
     <CartPaymentSummaryLayout>
       <WarningSection>
