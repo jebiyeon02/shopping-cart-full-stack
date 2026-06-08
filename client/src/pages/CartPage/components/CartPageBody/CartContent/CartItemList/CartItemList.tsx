@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { typography } from "../../../../../../shared/styles/typography";
 import { useCartContext } from "../../../../CartContext";
-import { useCheckedProductContext } from "../../../../CheckedProductContext";
+import { useCartSelectionContext } from "../../../../CartSelectionContext";
 import CartItemRow from "./CartItemRow";
 
 const CartItemList = () => {
@@ -10,7 +10,7 @@ const CartItemList = () => {
     checkedProductIds,
     insertAllCheckedProductIds,
     initCheckedProductIds,
-  } = useCheckedProductContext();
+  } = useCartSelectionContext();
 
   const isCartItemSelected = cartItems.length === checkedProductIds.length;
 

@@ -13,13 +13,13 @@ import 임시추가버튼 from "./components/임시추가버튼";
 import styled from "@emotion/styled";
 import { typography } from "../../shared/styles/typography";
 import { useCartContext } from "./CartContext";
-import { useCheckedProductContext } from "./CheckedProductContext";
+import { useCartSelectionContext } from "./CartSelectionContext";
 
 const CartPage = () => {
   const navigate = useNavigate();
 
   const { cartItems } = useCartContext();
-  const { checkedProductIds } = useCheckedProductContext();
+  const { checkedProductIds } = useCartSelectionContext();
 
   const filteredCartItem = getFilteredCartItem(cartItems, checkedProductIds);
   const orderPrice = getOrderPrice(filteredCartItem);

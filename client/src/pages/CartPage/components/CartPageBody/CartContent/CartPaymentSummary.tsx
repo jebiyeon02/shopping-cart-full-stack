@@ -4,7 +4,7 @@ import WarningIcon from "../../../../../assets/warning.png";
 import { DELIVERY } from "../../../../../domain/cart/cart.constants";
 import { typography } from "../../../../../shared/styles/typography";
 import { useCartContext } from "../../../CartContext";
-import { useCheckedProductContext } from "../../../CheckedProductContext";
+import { useCartSelectionContext } from "../../../CartSelectionContext";
 import {
   getDeliveryFee,
   getFilteredCartItem,
@@ -14,7 +14,7 @@ import {
 
 const CartPaymentSummary = () => {
   const { cartItems } = useCartContext();
-  const { checkedProductIds } = useCheckedProductContext();
+  const { checkedProductIds } = useCartSelectionContext();
   const filteredCartItem = getFilteredCartItem(cartItems, checkedProductIds);
   const orderPrice = getOrderPrice(filteredCartItem);
   const deliveryFee = getDeliveryFee(orderPrice);

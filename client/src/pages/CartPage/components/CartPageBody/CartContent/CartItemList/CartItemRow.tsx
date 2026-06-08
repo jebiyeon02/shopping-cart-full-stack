@@ -4,7 +4,7 @@ import { formatPrice } from "../../../../../../shared/utils";
 import { typography } from "../../../../../../shared/styles/typography";
 import { useCartContext } from "../../../../CartContext";
 import ApiError from "../../../../../../error/ApiError";
-import { useCheckedProductContext } from "../../../../CheckedProductContext";
+import { useCartSelectionContext } from "../../../../CartSelectionContext";
 
 const CartItemRow = ({
   cartItem,
@@ -21,7 +21,7 @@ const CartItemRow = ({
   } = useCartContext();
 
   const { removeCheckedProductId, insertCheckedProductId } =
-    useCheckedProductContext();
+    useCartSelectionContext();
 
   const { id, name, price, itemCount, imgUrl } = cartItem;
 
