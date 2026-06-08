@@ -14,8 +14,8 @@ import {
 
 const CartPaymentSummary = () => {
   const { cartItems } = useCartContext();
-  const { checkedProductIds } = useCartSelectionContext();
-  const filteredCartItem = getFilteredCartItem(cartItems, checkedProductIds);
+  const { selectedProductIds } = useCartSelectionContext();
+  const filteredCartItem = getFilteredCartItem(cartItems, selectedProductIds);
   const orderPrice = getOrderPrice(filteredCartItem);
   const deliveryFee = getDeliveryFee(orderPrice);
   const totalPrice = getTotalPrice(orderPrice, deliveryFee);

@@ -10,10 +10,10 @@ export const getOrderPrice = (filteredCartItem: CartItemModel[]) => {
 
 export const getFilteredCartItem = (
   cartItems: CartItemModel[],
-  checkedProductIds: number[],
+  selectedProductIds: number[],
 ) => {
   return cartItems.filter((cartItem) =>
-    checkedProductIds.includes(cartItem.id),
+    selectedProductIds.includes(cartItem.id),
   );
 };
 

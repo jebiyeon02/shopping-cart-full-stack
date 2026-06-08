@@ -7,21 +7,21 @@ import CartItemRow from "./CartItemRow";
 const CartItemList = () => {
   const { cartItems } = useCartContext();
   const {
-    checkedProductIds,
-    insertAllCheckedProductIds,
-    initCheckedProductIds,
+    selectedProductIds,
+    selectAllCartItems,
+    clearCartItemSelection,
   } = useCartSelectionContext();
 
-  const isCartItemSelected = cartItems.length === checkedProductIds.length;
+  const isCartItemSelected = cartItems.length === selectedProductIds.length;
 
   const handleAllProductSelect = (nextChecked: boolean) => {
     if (nextChecked) {
       const allProductIds = cartItems.map((cartItem) => cartItem.id);
-      insertAllCheckedProductIds(allProductIds);
+      selectAllCartItems(allProductIds);
       return;
     }
 
-    initCheckedProductIds();
+    clearCartItemSelection();
   };
 
   return (
@@ -40,7 +40,7 @@ const CartItemList = () => {
         <CartItemRow
           key={cartItem.id}
           cartItem={cartItem}
-          isChecked={checkedProductIds.includes(cartItem.id)}
+          isChecked={selectedProductIds.includes(cartItem.id)}
         />
       ))}
     </CartItemListLayout>

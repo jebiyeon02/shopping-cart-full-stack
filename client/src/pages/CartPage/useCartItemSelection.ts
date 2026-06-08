@@ -2,12 +2,12 @@ import { useEffect, useReducer, useState } from "react";
 import type { AsyncState } from "../../shared/useAsyncState";
 import type { CartItemModel } from "../../domain/cart/cart.api";
 
-// localStorage, 클라이언트 상태 총 2곳에서 관리되는 checkedProductIds를 동기화하고 관리하는 훅
-export const useCheckedProductIds = (
+// localStorage, 클라이언트 상태 총 2곳에서 관리되는 selectedProductIds를 동기화하고 관리하는 훅
+export const useCartItemSelection = (
   cartItemsAsyncState: AsyncState<CartItemModel[]>,
 ) => {
-  const [checkedProductIds, checkedProductIdsDispatch] = useReducer(
-    checkedProductIdsReducer,
+  const [selectedProductIds, selectedProductIdsDispatch] = useReducer(
+    selectedProductIdsReducer,
     [],
   );
   // 최초 렌더링 시 상품 전체선택으로 1번 바뀌었다는 것을 나타내는 flag
@@ -19,25 +19,25 @@ export const useCheckedProductIds = (
     }
     const cartItems = cartItemsAsyncState.data;
 
-    const savedCheckedProductIds = localStorage.getItem(
-      "cart-checked-product-ids",
+    const savedCartItemSelection = localStorage.getItem(
+      "cart-selected-product-ids",
     );
 
-    if (!savedCheckedProductIds) {
+    if (!savedCartItemSelection) {
       const allProductIds = cartItems.map((cartItem) => cartItem.id);
 
-      checkedProductIdsDispatch({
+      selectedProductIdsDispatch({
         type: "insertAll",
         productIds: allProductIds,
       });
     } else {
-      const parsedCheckedProductIds = JSON.parse(
-        savedCheckedProductIds,
+      const parsedCartItemSelection = JSON.parse(
+        savedCartItemSelection,
       ) as number[];
 
-      checkedProductIdsDispatch({
+      selectedProductIdsDispatch({
         type: "insertAll",
-        productIds: parsedCheckedProductIds,
+        productIds: parsedCartItemSelection,
       });
     }
 
@@ -48,54 +48,54 @@ export const useCheckedProductIds = (
     if (!isInitialized) return;
 
     localStorage.setItem(
-      "cart-checked-product-ids",
-      JSON.stringify(checkedProductIds),
+      "cart-selected-product-ids",
+      JSON.stringify(selectedProductIds),
     );
-  }, [checkedProductIds, isInitialized]);
+  }, [selectedProductIds, isInitialized]);
 
-  const initCheckedProductIds = () => {
-    checkedProductIdsDispatch({ type: "init" });
+  const clearCartItemSelection = () => {
+    selectedProductIdsDispatch({ type: "init" });
   };
 
-  const insertCheckedProductId = (productId: number) => {
-    checkedProductIdsDispatch({
+  const selectCartItem = (productId: number) => {
+    selectedProductIdsDispatch({
       type: "insert",
       productId,
     });
   };
 
-  const insertAllCheckedProductIds = (productIds: number[]) => {
-    checkedProductIdsDispatch({
+  const selectAllCartItems = (productIds: number[]) => {
+    selectedProductIdsDispatch({
       type: "insertAll",
       productIds,
     });
   };
 
-  const removeCheckedProductId = (productId: number) => {
-    checkedProductIdsDispatch({
+  const unselectCartItem = (productId: number) => {
+    selectedProductIdsDispatch({
       type: "remove",
       productId,
     });
   };
 
   return {
-    checkedProductIds,
-    initCheckedProductIds,
-    insertCheckedProductId,
-    insertAllCheckedProductIds,
-    removeCheckedProductId,
+    selectedProductIds,
+    clearCartItemSelection,
+    selectCartItem,
+    selectAllCartItems,
+    unselectCartItem,
   };
 };
 
-export type CheckedProductIdsReducerAction =
+export type CartItemSelectionReducerAction =
   | { type: "init" }
   | { type: "insert"; productId: number }
   | { type: "insertAll"; productIds: number[] }
   | { type: "remove"; productId: number };
 
-export const checkedProductIdsReducer = (
+export const selectedProductIdsReducer = (
   productIds: number[],
-  action: CheckedProductIdsReducerAction,
+  action: CartItemSelectionReducerAction,
 ) => {
   switch (action.type) {
     case "init": {

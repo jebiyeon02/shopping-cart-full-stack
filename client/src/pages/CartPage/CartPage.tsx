@@ -19,13 +19,13 @@ const CartPage = () => {
   const navigate = useNavigate();
 
   const { cartItems } = useCartContext();
-  const { checkedProductIds } = useCartSelectionContext();
+  const { selectedProductIds } = useCartSelectionContext();
 
-  const filteredCartItem = getFilteredCartItem(cartItems, checkedProductIds);
+  const filteredCartItem = getFilteredCartItem(cartItems, selectedProductIds);
   const orderPrice = getOrderPrice(filteredCartItem);
   const deliveryFee = getDeliveryFee(orderPrice);
   const isOrderConfirm =
-    cartItems.length === 0 || checkedProductIds.length === 0;
+    cartItems.length === 0 || selectedProductIds.length === 0;
 
   const handleOrderConfirmButtonClick = () => {
     navigate("/cart/order-confirm", {

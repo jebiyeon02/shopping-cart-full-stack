@@ -20,7 +20,7 @@ const CartItemRow = ({
     deleteCartItemAsyncState,
   } = useCartContext();
 
-  const { removeCheckedProductId, insertCheckedProductId } =
+  const { unselectCartItem, selectCartItem } =
     useCartSelectionContext();
 
   const { id, name, price, itemCount, imgUrl } = cartItem;
@@ -28,7 +28,7 @@ const CartItemRow = ({
   const handleDeleteCartItem = async (productId: number) => {
     try {
       await requestDeleteCartItem(productId);
-      removeCheckedProductId(productId);
+      unselectCartItem(productId);
     } catch (error) {
       // TODO: 리팩토링 필요
       if (error instanceof ApiError) {
@@ -57,11 +57,11 @@ const CartItemRow = ({
 
   const handleProductSelect = (productId: number, nextChecked: boolean) => {
     if (nextChecked) {
-      insertCheckedProductId(productId);
+      selectCartItem(productId);
       return;
     }
 
-    removeCheckedProductId(productId);
+    unselectCartItem(productId);
   };
 
   return (

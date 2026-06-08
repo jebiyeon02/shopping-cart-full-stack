@@ -5,7 +5,9 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { describe, expect, test, vi } from "vitest";
 import { API_BASE_URL } from "../../mocks/handlers";
 import { server } from "../../mocks/server";
+import { CartProvider } from "../../pages/CartPage/CartContext";
 import CartPage from "../../pages/CartPage/CartPage";
+import { CartSelectionProvider } from "../../pages/CartPage/CartSelectionContext";
 import OrderConfirmPage from "../../pages/OrderConfirmPage/OrderConfirmPage";
 
 const cartItems = [
@@ -28,7 +30,11 @@ const cartItems = [
 const renderCartPage = () => {
   return render(
     <MemoryRouter>
-      <CartPage cartId={1} />
+      <CartProvider cartId={1}>
+        <CartSelectionProvider>
+          <CartPage />
+        </CartSelectionProvider>
+      </CartProvider>
     </MemoryRouter>,
   );
 };
@@ -37,7 +43,16 @@ const renderCartFlow = () => {
   return render(
     <MemoryRouter initialEntries={["/cart"]}>
       <Routes>
-        <Route path="/cart" element={<CartPage cartId={1} />} />
+        <Route
+          path="/cart"
+          element={
+            <CartProvider cartId={1}>
+              <CartSelectionProvider>
+                <CartPage />
+              </CartSelectionProvider>
+            </CartProvider>
+          }
+        />
         <Route path="/cart/order-confirm" element={<OrderConfirmPage />} />
       </Routes>
     </MemoryRouter>,
