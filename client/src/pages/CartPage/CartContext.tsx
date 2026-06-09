@@ -3,12 +3,10 @@ import type { CartItemModel } from "../../domain/cart/cart.api";
 import type {
   AsyncState,
   ExecuteAsyncFunctionProps,
-} from "../../shared/useAsyncState";
+} from "../../shared/useAsyncTask";
 import useCartItem from "./useCartItem";
 
-// 아마 각 AsyncState를 공유해줘야되는 문제는 나중에 asyncState개편때 해결 될 것이라고 생각함
 type CartContextValue = {
-  cartItems: CartItemModel[];
   getCartItemsAsyncState: AsyncState<CartItemModel[]>;
   deleteCartItemAsyncState: AsyncState<void>;
   updateCartItemCountAsyncState: AsyncState<{
@@ -47,15 +45,9 @@ export const CartProvider = ({ cartId, children }: CartProviderProps) => {
     updateCartItemCountAsyncState,
   } = useCartItem(cartId);
 
-  const cartItems =
-    getCartItemsAsyncState.status === "success"
-      ? getCartItemsAsyncState.data
-      : [];
-
   return (
     <CartContext.Provider
       value={{
-        cartItems,
         getCartItemsAsyncState,
         deleteCartItemAsyncState,
         updateCartItemCountAsyncState,

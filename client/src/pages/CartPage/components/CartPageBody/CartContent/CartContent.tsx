@@ -2,17 +2,16 @@ import CartItemList from "./CartItemList/CartItemList";
 import CartPaymentSummary from "./CartPaymentSummary";
 import styled from "@emotion/styled";
 import { typography } from "../../../../../shared/styles/typography";
-import { useCartContext } from "../../../CartContext";
+import type { CartItemModel } from "../../../../../domain/cart/cart.api";
 
-const CartContent = () => {
-  const { cartItems } = useCartContext();
+const CartContent = ({ cartItems }: { cartItems: CartItemModel[] }) => {
   return (
     <CartContentLayout>
       <CartContentText>
         현재{cartItems.length}종류의 상품이 담겨있습니다.
       </CartContentText>
 
-      <CartItemList />
+      <CartItemList cartItems={cartItems} />
 
       <CartPaymentSummary />
     </CartContentLayout>
