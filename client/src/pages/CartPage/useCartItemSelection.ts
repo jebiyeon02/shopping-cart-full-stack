@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useState } from "react";
-import type { AsyncState } from "../../shared/useAsyncState";
+import type { AsyncState } from "../../shared/useAsyncTask";
 import type { CartItemModel } from "../../domain/cart/cart.api";
 
 // localStorage, 클라이언트 상태 총 2곳에서 관리되는 selectedProductIds를 동기화하고 관리하는 훅

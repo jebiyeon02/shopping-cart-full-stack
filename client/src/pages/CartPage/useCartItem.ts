@@ -7,7 +7,7 @@ import {
 } from "../../domain/cart/cart.api";
 import useAsyncTask, {
   type ExecuteAsyncFunctionProps,
-} from "../../shared/useAsyncState";
+} from "../../shared/useAsyncTask";
 
 // 서버상태인 cartItem을 관리하는 Custom Hook
 const useCartItem = (cartId: number) => {
