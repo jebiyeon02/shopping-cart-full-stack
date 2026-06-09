@@ -21,8 +21,8 @@ export const CartSelectionProvider = ({
   children: ReactNode;
 }) => {
   // cartContext에 의존하고 있는데 이래도 괜찮을까?
-  const { cartItemsAsyncState } = useCartContext();
-  const cartItemSelection = useCartItemSelection(cartItemsAsyncState);
+  const { getCartItemsAsyncState } = useCartContext();
+  const cartItemSelection = useCartItemSelection(getCartItemsAsyncState);
   const {
     selectedProductIds,
     clearCartItemSelection,

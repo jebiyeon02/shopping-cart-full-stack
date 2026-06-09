@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { AsyncError } from "../error/normalizeError";
+import { normalizeError, type AsyncError } from "../error/normalizeError";
 
 export type AsyncState<T> =
   | { status: "idle"; data: null; error: null }
@@ -7,7 +7,15 @@ export type AsyncState<T> =
   | { status: "success"; data: T; error: null }
   | { status: "fail"; data: null; error: AsyncError };
 
-const useAsyncState = <T>() => {
+export type ExecuteAsyncFunctionProps<T> = {
+  asyncFunction: () => Promise<T>;
+  options?: {
+    onSuccess?: () => void;
+    onFail?: (error: AsyncError) => void;
+  };
+};
+
+const useAsyncTask = <T>() => {
   const [asyncState, setAsyncState] = useState<AsyncState<T>>({
     status: "idle",
     data: null,
@@ -38,12 +46,26 @@ const useAsyncState = <T>() => {
     });
   };
 
+  const executeAsyncFunction = async ({
+    asyncFunction,
+    options,
+  }: ExecuteAsyncFunctionProps<T>): Promise<void> => {
+    setLoading();
+    try {
+      const data = await asyncFunction();
+      setSuccess(data);
+      options?.onSuccess?.();
+    } catch (error) {
+      const normalizedError = normalizeError(error);
+      setFail(normalizedError);
+      options?.onFail?.(normalizedError);
+    }
+  };
+
   return {
     asyncState,
-    setLoading,
-    setSuccess,
-    setFail,
+    executeAsyncFunction,
   };
 };
 
-export default useAsyncState;
+export default useAsyncTask;

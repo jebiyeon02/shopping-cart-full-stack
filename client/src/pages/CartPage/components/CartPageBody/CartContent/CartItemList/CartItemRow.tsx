@@ -3,8 +3,8 @@ import type { CartItemModel } from "../../../../../../domain/cart/cart.api";
 import { formatPrice } from "../../../../../../shared/utils";
 import { typography } from "../../../../../../shared/styles/typography";
 import { useCartContext } from "../../../../CartContext";
-import ApiError from "../../../../../../error/ApiError";
 import { useCartSelectionContext } from "../../../../CartSelectionContext";
+import type { AsyncError } from "../../../../../../../src/error/normalizeError";
 
 const CartItemRow = ({
   cartItem,
@@ -14,45 +14,39 @@ const CartItemRow = ({
   isChecked: boolean;
 }) => {
   const {
+    requestGetCartItems,
     requestUpdateCartItemCount,
     updateCartItemCountAsyncState,
     requestDeleteCartItem,
     deleteCartItemAsyncState,
   } = useCartContext();
 
-  const { unselectCartItem, selectCartItem } =
-    useCartSelectionContext();
+  const { unselectCartItem, selectCartItem } = useCartSelectionContext();
 
   const { id, name, price, itemCount, imgUrl } = cartItem;
 
   const handleDeleteCartItem = async (productId: number) => {
-    try {
-      await requestDeleteCartItem(productId);
-      unselectCartItem(productId);
-    } catch (error) {
-      // TODO: 리팩토링 필요
-      if (error instanceof ApiError) {
-        alert(error.message);
-      } else {
-        alert("알 수 없는 에러가 발생했습니다.");
-      }
-    }
+    await requestDeleteCartItem(productId, {
+      options: {
+        onSuccess: () => {
+          unselectCartItem(productId);
+          requestGetCartItems();
+        },
+        onFail: (error: AsyncError) => alert(error.message),
+      },
+    });
   };
 
   const handleUpdateCartItemCount = async (
     productId: number,
     itemCount: number,
   ) => {
-    try {
-      await requestUpdateCartItemCount(productId, itemCount);
-    } catch (error) {
-      // TODO: 리팩토링 필요
-      if (error instanceof ApiError) {
-        alert(error.message);
-      } else {
-        alert("알 수 없는 에러가 발생했습니다.");
-      }
-    }
+    await requestUpdateCartItemCount(productId, itemCount, {
+      options: {
+        onSuccess: () => requestGetCartItems(),
+        onFail: (error: AsyncError) => alert(error.message),
+      },
+    });
   };
 
   const handleProductSelect = (productId: number, nextChecked: boolean) => {

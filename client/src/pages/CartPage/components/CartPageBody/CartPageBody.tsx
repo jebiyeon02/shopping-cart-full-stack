@@ -6,9 +6,9 @@ import CartEmpty from "./CartEmpty";
 import { useCartContext } from "../../CartContext";
 
 const CartPageBody = () => {
-  const { cartItems, cartItemsAsyncState } = useCartContext();
+  const { cartItems, getCartItemsAsyncState } = useCartContext();
 
-  switch (cartItemsAsyncState.status) {
+  switch (getCartItemsAsyncState.status) {
     case "idle": {
       return <CartLoading />;
     }
@@ -16,7 +16,7 @@ const CartPageBody = () => {
       return <CartLoading />;
     }
     case "fail": {
-      return <CartFail message={cartItemsAsyncState.error.message} />;
+      return <CartFail message={getCartItemsAsyncState.error.message} />;
     }
     case "success": {
       return cartItems.length === 0 ? <CartEmpty /> : <CartContent />;
