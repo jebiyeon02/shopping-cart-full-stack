@@ -46,10 +46,12 @@ const CartItemRow = ({
     productId: number,
     itemCount: number,
   ) => {
+    onAsyncTaskStart(productId);
     await requestUpdateCartItemCount(productId, itemCount, {
       onSuccess: () => requestGetCartItems({ showLoading: false }),
       onFail: (error: AsyncError) => alert(error.message),
     });
+    onAsyncTaskEnd(productId);
   };
 
   const handleProductSelect = (productId: number, nextChecked: boolean) => {
