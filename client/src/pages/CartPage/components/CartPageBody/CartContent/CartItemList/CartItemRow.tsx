@@ -9,29 +9,23 @@ import type { AsyncError } from "../../../../../../../src/error/normalizeError";
 const CartItemRow = ({
   cartItem,
   isChecked,
-  pendingProductIds,
-  onAsyncTaskStart,
-  onAsyncTaskEnd,
 }: {
   cartItem: CartItemModel;
   isChecked: boolean;
-  pendingProductIds: number[];
-  onAsyncTaskStart: (productId: number) => void;
-  onAsyncTaskEnd: (productId: number) => void;
 }) => {
   const {
     requestGetCartItems,
     requestUpdateCartItemCount,
+    updateCartItemCountAsyncState,
     requestDeleteCartItem,
+    deleteCartItemAsyncState,
   } = useCartContext();
 
   const { unselectCartItem, selectCartItem } = useCartSelectionContext();
 
   const { id, name, price, itemCount, imgUrl } = cartItem;
-  const isActionDisabled = pendingProductIds.includes(id);
 
   const handleDeleteCartItem = async (productId: number) => {
-    onAsyncTaskStart(productId);
     await requestDeleteCartItem(productId, {
       onSuccess: () => {
         unselectCartItem(productId);
@@ -39,19 +33,16 @@ const CartItemRow = ({
       },
       onFail: (error: AsyncError) => alert(error.message),
     });
-    onAsyncTaskEnd(productId);
   };
 
   const handleUpdateCartItemCount = async (
     productId: number,
     itemCount: number,
   ) => {
-    onAsyncTaskStart(productId);
     await requestUpdateCartItemCount(productId, itemCount, {
       onSuccess: () => requestGetCartItems({ showLoading: false }),
       onFail: (error: AsyncError) => alert(error.message),
     });
-    onAsyncTaskEnd(productId);
   };
 
   const handleProductSelect = (productId: number, nextChecked: boolean) => {
@@ -78,7 +69,7 @@ const CartItemRow = ({
         <DeleteButton
           type="button"
           onClick={() => handleDeleteCartItem(id)}
-          disabled={isActionDisabled}
+          disabled={deleteCartItemAsyncState.status === "loading"}
         >
           삭제
         </DeleteButton>
@@ -93,7 +84,11 @@ const CartItemRow = ({
             <StepperButton
               type="button"
               onClick={() => handleUpdateCartItemCount(id, itemCount - 1)}
-              disabled={isActionDisabled || itemCount <= 1}
+              disabled={
+                itemCount <= 1 ||
+                deleteCartItemAsyncState.status === "loading" ||
+                updateCartItemCountAsyncState.status === "loading"
+              }
             >
               -
             </StepperButton>
@@ -101,7 +96,10 @@ const CartItemRow = ({
             <StepperButton
               type="button"
               onClick={() => handleUpdateCartItemCount(id, itemCount + 1)}
-              disabled={isActionDisabled}
+              disabled={
+                deleteCartItemAsyncState.status === "loading" ||
+                updateCartItemCountAsyncState.status === "loading"
+              }
             >
               +
             </StepperButton>

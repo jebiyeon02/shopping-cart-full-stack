@@ -3,14 +3,10 @@ import { typography } from "../../../../../../shared/styles/typography";
 import { useCartSelectionContext } from "../../../../CartSelectionContext";
 import CartItemRow from "./CartItemRow";
 import type { CartItemModel } from "../../../../../../domain/cart/cart.api";
-import useCartItemPending from "./useCartItemPending";
 
 const CartItemList = ({ cartItems }: { cartItems: CartItemModel[] }) => {
   const { selectedProductIds, selectAllCartItems, clearCartItemSelection } =
     useCartSelectionContext();
-
-  const { pendingProductIds, addToPendingList, deleteFromPendingList } =
-    useCartItemPending();
 
   const isCartItemSelected = cartItems.length === selectedProductIds.length;
 
@@ -41,9 +37,6 @@ const CartItemList = ({ cartItems }: { cartItems: CartItemModel[] }) => {
           key={cartItem.id}
           cartItem={cartItem}
           isChecked={selectedProductIds.includes(cartItem.id)}
-          pendingProductIds={pendingProductIds}
-          onAsyncTaskStart={addToPendingList}
-          onAsyncTaskEnd={deleteFromPendingList}
         />
       ))}
     </CartItemListLayout>
