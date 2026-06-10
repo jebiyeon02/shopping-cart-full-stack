@@ -16,15 +16,15 @@ type CartContextValue = {
   requestGetCartItems: () => Promise<void>;
   requestDeleteCartItem: (
     productId: number,
-    options: Pick<ExecuteAsyncFunctionProps<void>, "options">,
+    options: ExecuteAsyncFunctionProps<void>["options"],
   ) => Promise<void>;
   requestUpdateCartItemCount: (
     productId: number,
     itemCount: number,
-    options: Pick<
-      ExecuteAsyncFunctionProps<{ id: number; itemCount: number }>,
-      "options"
-    >,
+    options: ExecuteAsyncFunctionProps<{
+      id: number;
+      itemCount: number;
+    }>["options"],
   ) => Promise<void>;
 };
 

@@ -31,25 +31,25 @@ const useCartItem = (cartId: number) => {
 
   const requestDeleteCartItem = async (
     productId: number,
-    options: Pick<ExecuteAsyncFunctionProps<void>, "options">,
+    options: ExecuteAsyncFunctionProps<void>["options"],
   ) => {
     deleteCartItemAsyncTask.executeAsyncFunction({
       asyncFunction: () => deleteCartItem(cartId, productId),
-      options: options.options,
+      options,
     });
   };
 
   const requestUpdateCartItemCount = async (
     productId: number,
     itemCount: number,
-    options: Pick<
-      ExecuteAsyncFunctionProps<{ id: number; itemCount: number }>,
-      "options"
-    >,
+    options: ExecuteAsyncFunctionProps<{
+      id: number;
+      itemCount: number;
+    }>["options"],
   ) => {
     updateCartItemCountAsyncTask.executeAsyncFunction({
       asyncFunction: () => updateCartItemCount(cartId, productId, itemCount),
-      options: options.options,
+      options,
     });
   };
 
