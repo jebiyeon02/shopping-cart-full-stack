@@ -12,6 +12,7 @@ export type ExecuteAsyncFunctionProps<T> = {
   options?: {
     onSuccess?: () => void;
     onFail?: (error: AsyncError) => void;
+    showLoading?: boolean;
   };
 };
 
@@ -50,7 +51,7 @@ const useAsyncTask = <T>() => {
     asyncFunction,
     options,
   }: ExecuteAsyncFunctionProps<T>): Promise<void> => {
-    setLoading();
+    if (options?.showLoading) setLoading();
     try {
       const data = await asyncFunction();
       setSuccess(data);

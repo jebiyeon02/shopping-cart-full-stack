@@ -27,13 +27,11 @@ const CartItemRow = ({
 
   const handleDeleteCartItem = async (productId: number) => {
     await requestDeleteCartItem(productId, {
-      options: {
-        onSuccess: () => {
-          unselectCartItem(productId);
-          requestGetCartItems();
-        },
-        onFail: (error: AsyncError) => alert(error.message),
+      onSuccess: () => {
+        unselectCartItem(productId);
+        requestGetCartItems({ showLoading: false });
       },
+      onFail: (error: AsyncError) => alert(error.message),
     });
   };
 
@@ -42,10 +40,8 @@ const CartItemRow = ({
     itemCount: number,
   ) => {
     await requestUpdateCartItemCount(productId, itemCount, {
-      options: {
-        onSuccess: () => requestGetCartItems(),
-        onFail: (error: AsyncError) => alert(error.message),
-      },
+      onSuccess: () => requestGetCartItems({ showLoading: false }),
+      onFail: (error: AsyncError) => alert(error.message),
     });
   };
 

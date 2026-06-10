@@ -18,9 +18,12 @@ const useCartItem = (cartId: number) => {
     itemCount: number;
   }>();
 
-  const requestGetCartItems = () =>
+  const requestGetCartItems = (
+    options?: ExecuteAsyncFunctionProps<CartItemModel[]>["options"],
+  ) =>
     getCartItemsAsyncTask.executeAsyncFunction({
       asyncFunction: () => getCartItems(cartId),
+      options,
     });
 
   useEffect(() => {

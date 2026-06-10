@@ -13,7 +13,9 @@ type CartContextValue = {
     id: number;
     itemCount: number;
   }>;
-  requestGetCartItems: () => Promise<void>;
+  requestGetCartItems: (
+    options?: ExecuteAsyncFunctionProps<CartItemModel[]>["options"],
+  ) => Promise<void>;
   requestDeleteCartItem: (
     productId: number,
     options: ExecuteAsyncFunctionProps<void>["options"],
