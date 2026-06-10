@@ -11,9 +11,9 @@ import {
   getOrderPrice,
   getTotalPrice,
 } from "../../../../../domain/cart/cart.util";
+import type { CartItemModel } from "../../../../../domain/cart/cart.api";
 
-const CartPaymentSummary = () => {
-  const { cartItems } = useCartContext();
+const CartPaymentSummary = ({ cartItems }: { cartItems: CartItemModel[] }) => {
   const { selectedProductIds } = useCartSelectionContext();
   const filteredCartItem = getFilteredCartItem(cartItems, selectedProductIds);
   const orderPrice = getOrderPrice(filteredCartItem);

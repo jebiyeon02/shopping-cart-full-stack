@@ -13,7 +13,7 @@ const CartContent = ({ cartItems }: { cartItems: CartItemModel[] }) => {
 
       <CartItemList cartItems={cartItems} />
 
-      <CartPaymentSummary />
+      <CartPaymentSummary cartItems={cartItems} />
     </CartContentLayout>
   );
 };

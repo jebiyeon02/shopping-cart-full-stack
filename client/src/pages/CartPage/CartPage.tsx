@@ -1,42 +1,10 @@
 import Header from "../../shared/components/Header";
-import BaseButton from "../../shared/components/BaseButton";
-import {
-  getDeliveryFee,
-  getFilteredCartItem,
-  getOrderPrice,
-  getProductAllItemCount,
-  getTotalPrice,
-} from "../../domain/cart/cart.util";
-import { useNavigate } from "react-router-dom";
 import CartPageBody from "./components/CartPageBody/CartPageBody";
 import 임시추가버튼 from "./components/임시추가버튼";
 import styled from "@emotion/styled";
 import { typography } from "../../shared/styles/typography";
-import { useCartContext } from "./CartContext";
-import { useCartSelectionContext } from "./CartSelectionContext";
 
 const CartPage = () => {
-  const navigate = useNavigate();
-
-  const { cartItems } = useCartContext();
-  const { selectedProductIds } = useCartSelectionContext();
-
-  const filteredCartItem = getFilteredCartItem(cartItems, selectedProductIds);
-  const orderPrice = getOrderPrice(filteredCartItem);
-  const deliveryFee = getDeliveryFee(orderPrice);
-  const isOrderConfirm =
-    cartItems.length === 0 || selectedProductIds.length === 0;
-
-  const handleOrderConfirmButtonClick = () => {
-    navigate("/cart/order-confirm", {
-      state: {
-        productCount: filteredCartItem.length,
-        productItemCount: getProductAllItemCount(filteredCartItem),
-        totalPrice: getTotalPrice(orderPrice, deliveryFee),
-      },
-    });
-  };
-
   return (
     <CartPageLayout>
       <HeaderArea>
@@ -46,17 +14,8 @@ const CartPage = () => {
         <CartContentTitle>
           장바구니 <임시추가버튼 />
         </CartContentTitle>
-
         <CartPageBody />
       </CartPageBodyArea>
-      <BottomArea>
-        <BaseButton
-          disabled={isOrderConfirm}
-          onClick={handleOrderConfirmButtonClick}
-        >
-          주문 확인
-        </BaseButton>
-      </BottomArea>
     </CartPageLayout>
   );
 };
@@ -79,14 +38,6 @@ const HeaderArea = styled.div`
 
 const CartPageBodyArea = styled.div`
   padding: 24px;
-`;
-
-const BottomArea = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  width: min(100vw, 400px);
-  transform: translateX(-50%);
 `;
 
 const CartContentTitle = styled.div`
