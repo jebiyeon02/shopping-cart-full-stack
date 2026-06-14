@@ -41,8 +41,9 @@ export const useCartItemSelection = (
       });
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsInitialized(true);
-  }, [cartItemsAsyncState.status, isInitialized]);
+  }, [cartItemsAsyncState, isInitialized]);
 
   useEffect(() => {
     if (!isInitialized) return;
