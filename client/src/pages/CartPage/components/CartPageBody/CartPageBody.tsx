@@ -15,11 +15,10 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useCartSelectionContext } from "../../CartSelectionContext";
 import styled from "@emotion/styled";
+import type { CartItemModel } from "../../../../domain/cart/cart.api";
 
 const CartPageBody = () => {
   const { getCartItemsAsyncState } = useCartContext();
-  const navigate = useNavigate();
-  const { selectedProductIds } = useCartSelectionContext();
 
   switch (getCartItemsAsyncState.status) {
     case "idle": {
@@ -33,24 +32,6 @@ const CartPageBody = () => {
     }
     case "success": {
       const cartItems = getCartItemsAsyncState.data;
-      const filteredCartItem = getFilteredCartItem(
-        cartItems,
-        selectedProductIds,
-      );
-      const orderPrice = getOrderPrice(filteredCartItem);
-      const deliveryFee = getDeliveryFee(orderPrice);
-      const isOrderConfirm =
-        cartItems.length === 0 || selectedProductIds.length === 0;
-
-      const handleOrderConfirmButtonClick = () => {
-        navigate("/cart/order-confirm", {
-          state: {
-            productCount: filteredCartItem.length,
-            productItemCount: getProductAllItemCount(filteredCartItem),
-            totalPrice: getTotalPrice(orderPrice, deliveryFee),
-          },
-        });
-      };
       return (
         <>
           {cartItems.length === 0 ? (
@@ -59,12 +40,7 @@ const CartPageBody = () => {
             <CartContent cartItems={cartItems} />
           )}
           <BottomArea>
-            <BaseButton
-              disabled={isOrderConfirm}
-              onClick={handleOrderConfirmButtonClick}
-            >
-              주문 확인
-            </BaseButton>
+            <OrderConfirmButton cartItems={cartItems} />
           </BottomArea>
         </>
       );
@@ -84,3 +60,34 @@ const BottomArea = styled.div`
   width: min(100vw, 400px);
   transform: translateX(-50%);
 `;
+
+// 이런 식으로 로직 분리를 위해서 "특수화"? 라는 개념을 적용해봤다..!
+const OrderConfirmButton = ({ cartItems }: { cartItems: CartItemModel[] }) => {
+  const navigate = useNavigate();
+  const { selectedProductIds } = useCartSelectionContext();
+
+  const filteredCartItem = getFilteredCartItem(cartItems, selectedProductIds);
+  const orderPrice = getOrderPrice(filteredCartItem);
+  const deliveryFee = getDeliveryFee(orderPrice);
+  const isOrderConfirm =
+    cartItems.length === 0 || selectedProductIds.length === 0;
+
+  const handleOrderConfirmButtonClick = () => {
+    navigate("/cart/order-confirm", {
+      state: {
+        productCount: filteredCartItem.length,
+        productItemCount: getProductAllItemCount(filteredCartItem),
+        totalPrice: getTotalPrice(orderPrice, deliveryFee),
+      },
+    });
+  };
+
+  return (
+    <BaseButton
+      disabled={isOrderConfirm}
+      onClick={handleOrderConfirmButtonClick}
+    >
+      주문 확인
+    </BaseButton>
+  );
+};
