@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import {
   deleteCartItem,
   getCartItems,
@@ -18,19 +18,20 @@ const useCartItem = (cartId: number) => {
     itemCount: number;
   }>();
 
-  const requestGetCartItems = (
-    options?: ExecuteAsyncFunctionProps<CartItemModel[]>["options"],
-  ) =>
-    getCartItemsAsyncTask.executeAsyncFunction({
-      asyncFunction: () => getCartItems(cartId),
-      options,
-    });
+  const requestGetCartItems = useCallback(
+    (options?: ExecuteAsyncFunctionProps<CartItemModel[]>["options"]) =>
+      getCartItemsAsyncTask.executeAsyncFunction({
+        asyncFunction: () => getCartItems(cartId),
+        options,
+      }),
+    [getCartItemsAsyncTask, cartId],
+  );
 
   useEffect(() => {
     void requestGetCartItems();
 
     // TODO: cleanup 해보기
-  }, [cartId]);
+  }, [requestGetCartItems]);
 
   const requestDeleteCartItem = async (
     productId: number,
