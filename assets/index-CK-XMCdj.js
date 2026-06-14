@@ -183,13 +183,13 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
     opacity: 1;
     cursor: not-allowed;
   }
-`,uo=()=>{let{getCartItemsAsyncState:e}=ga(),t=pt(),{selectedProductIds:n}=ya();switch(e.status){case`idle`:return I(ro,{});case`loading`:return I(ro,{});case`fail`:return I(to,{message:e.error.message});case`success`:{let r=e.data,i=za(r,n),a=Ra(i),o=Ba(a),s=r.length===0||n.length===0;return L($i,{children:[r.length===0?I(ao,{}):I(Qa,{cartItems:r}),I(z,{children:I(co,{disabled:s,onClick:()=>{t(`/cart/order-confirm`,{state:{productCount:i.length,productItemCount:Va(i),totalPrice:Ha(a,o)}})},children:`주문 확인`})})]})}default:return I(to,{message:`알 수 없는 에러가 발생했습니다.`})}},z=F.div`
+`,uo=()=>{let{getCartItemsAsyncState:e}=ga();switch(e.status){case`idle`:return I(ro,{});case`loading`:return I(ro,{});case`fail`:return I(to,{message:e.error.message});case`success`:{let t=e.data;return L($i,{children:[t.length===0?I(ao,{}):I(Qa,{cartItems:t}),I(z,{children:I(fo,{cartItems:t})})]})}default:return I(to,{message:`알 수 없는 에러가 발생했습니다.`})}},z=F.div`
   position: fixed;
   bottom: 0;
   left: 50%;
   width: min(100vw, 400px);
   transform: translateX(-50%);
-`,fo=()=>I(po,{type:`button`,onClick:async()=>{try{await sa(1,5,10),await sa(1,4,5),await sa(1,7,1)}finally{window.location.reload()}},children:`장바구니에 상품추가(임시)`}),po=F.button`
+`,fo=({cartItems:e})=>{let t=pt(),{selectedProductIds:n}=ya(),r=za(e,n),i=Ra(r),a=Ba(i);return I(co,{disabled:e.length===0||n.length===0,onClick:()=>{t(`/cart/order-confirm`,{state:{productCount:r.length,productItemCount:Va(r),totalPrice:Ha(i,a)}})},children:`주문 확인`})},po=()=>I(B,{type:`button`,onClick:async()=>{try{await sa(1,5,10),await sa(1,4,5),await sa(1,7,1)}finally{window.location.reload()}},children:`장바구니에 상품추가(임시)`}),B=F.button`
   margin-left: 12px;
   padding: 4px 8px;
   border: 1px solid black;
@@ -198,33 +198,33 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
   font-weight: 700;
   font-size: 12px;
   cursor: pointer;
-`,B=()=>L(V,{children:[I(mo,{children:I(ea,{actionIcon:I(`div`,{children:`SHOP`})})}),L(ho,{children:[L(go,{children:[`장바구니 `,I(fo,{})]}),I(uo,{})]})]}),V=F.div`
+`,V=()=>L(mo,{children:[I(ho,{children:I(ea,{actionIcon:I(`div`,{children:`SHOP`})})}),L(go,{children:[L(_o,{children:[`장바구니 `,I(po,{})]}),I(uo,{})]})]}),mo=F.div`
   position: relative;
   width: 100%;
   min-height: 100vh;
   padding: 64px 0;
-`,mo=F.div`
+`,ho=F.div`
   position: absolute;
   top: 0;
   right: 0;
   left: 0;
-`,ho=F.div`
-  padding: 24px;
 `,go=F.div`
+  padding: 24px;
+`,_o=F.div`
   ${R.titleLarge}
   margin-bottom: 12px;
-`,_o=`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAXCAYAAAD+4+QTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAANlJREFUeAHllFENwjAQhv8SBCBhEpAADnDAJOCAOWAOwMEkLChAwuZgEo6/cAmlS0ay3T3xJbeufbgv7V0L/EBESsaVsYEHTFwwBnnTxTlmsJoScGgZPjtQSSMfhrm7mBKc5ZsSlmihUypYkhU60sASFXSJYHY3TUncCr1WwZnDIVmvdb3AAkIIPTRRXmhLOsYm8POgaws/9kGPJIrSm93DhjuPrHz9UbTLtnmBB0xcZaIjPGDiWyKJbWxfq9gJMr6Q9q+wjJ+WFh78RSMUsCZrhBpeaCOcsIAnQ/G1/uG+kjsAAAAASUVORK5CYII=`,vo=()=>{let e=pt(),{productCount:t,productItemCount:n,totalPrice:r}=ut().state;return L(yo,{children:[I(ea,{actionIcon:I(bo,{type:`button`,onClick:()=>e(-1),children:I(xo,{src:_o,alt:`뒤로가기`})})}),L(H,{children:[I(So,{children:`주문 확인`}),L(Co,{children:[`총 `,t,`종류의 상품 `,n,`개를 주문합니다.`,I(`br`,{}),`최종 결제 금액을 확인해 주세요.`]}),I(wo,{children:`총 결제 금액`}),L(To,{children:[ba(r),`원`]})]}),I(co,{disabled:!0,children:`결제하기`})]})},yo=F.div`
+`,vo=`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAXCAYAAAD+4+QTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAANlJREFUeAHllFENwjAQhv8SBCBhEpAADnDAJOCAOWAOwMEkLChAwuZgEo6/cAmlS0ay3T3xJbeufbgv7V0L/EBESsaVsYEHTFwwBnnTxTlmsJoScGgZPjtQSSMfhrm7mBKc5ZsSlmihUypYkhU60sASFXSJYHY3TUncCr1WwZnDIVmvdb3AAkIIPTRRXmhLOsYm8POgaws/9kGPJIrSm93DhjuPrHz9UbTLtnmBB0xcZaIjPGDiWyKJbWxfq9gJMr6Q9q+wjJ+WFh78RSMUsCZrhBpeaCOcsIAnQ/G1/uG+kjsAAAAASUVORK5CYII=`,yo=()=>{let e=pt(),{productCount:t,productItemCount:n,totalPrice:r}=ut().state;return L(bo,{children:[I(ea,{actionIcon:I(xo,{type:`button`,onClick:()=>e(-1),children:I(H,{src:vo,alt:`뒤로가기`})})}),L(So,{children:[I(Co,{children:`주문 확인`}),L(wo,{children:[`총 `,t,`종류의 상품 `,n,`개를 주문합니다.`,I(`br`,{}),`최종 결제 금액을 확인해 주세요.`]}),I(To,{children:`총 결제 금액`}),L(Eo,{children:[ba(r),`원`]})]}),I(co,{disabled:!0,children:`결제하기`})]})},bo=F.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-`,bo=F.button`
+`,xo=F.button`
   background: none;
   border: none;
   cursor: pointer;
-`,xo=F.img`
+`,H=F.img`
   width: 20px;
   height: 20px;
-`,H=F.main`
+`,So=F.main`
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -232,16 +232,16 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
   align-items: center;
   padding: 24px;
   text-align: center;
-`,So=F.h1`
+`,Co=F.h1`
   ${R.titleLarge}
   margin-bottom: 28px;
-`,Co=F.p`
+`,wo=F.p`
   ${R.bodySmall}
   margin-bottom: 32px;
   line-height: 1.5;
-`,wo=F.div`
+`,To=F.div`
   ${R.titleMedium}
   margin-bottom: 12px;
-`,To=F.div`
+`,Eo=F.div`
   ${R.titleLarge}
-`;function Eo(){return L(zt,{children:[I(Lt,{path:`cart`,element:I(ha,{cartId:1,children:I(va,{children:I(B,{})})})}),I(Lt,{path:`cart/order-confirm`,element:I(vo,{})})]})}await(async()=>{})(),(0,v.createRoot)(document.getElementById(`root`)).render(I(_.StrictMode,{children:I(Dn,{children:I(Eo,{})})}));
+`;function Do(){return L(zt,{children:[I(Lt,{path:`cart`,element:I(ha,{cartId:1,children:I(va,{children:I(V,{})})})}),I(Lt,{path:`cart/order-confirm`,element:I(yo,{})})]})}await(async()=>{})(),(0,v.createRoot)(document.getElementById(`root`)).render(I(_.StrictMode,{children:I(Dn,{children:I(Do,{})})}));
