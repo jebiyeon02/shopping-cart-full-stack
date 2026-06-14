@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { normalizeError, type AsyncError } from "../error/normalizeError";
 
 export type AsyncState<T> =
@@ -23,45 +23,48 @@ const useAsyncTask = <T>() => {
     error: null,
   });
 
-  const setLoading = () => {
+  const setLoading = useCallback(() => {
     setAsyncState({
       status: "loading",
       data: null,
       error: null,
     });
-  };
+  }, []);
 
-  const setSuccess = (data: T) => {
+  const setSuccess = useCallback((data: T) => {
     setAsyncState({
       status: "success",
       data,
       error: null,
     });
-  };
+  }, []);
 
-  const setFail = (error: AsyncError) => {
+  const setFail = useCallback((error: AsyncError) => {
     setAsyncState({
       status: "fail",
       data: null,
       error,
     });
-  };
+  }, []);
 
-  const executeAsyncFunction = async ({
-    asyncFunction,
-    options,
-  }: ExecuteAsyncFunctionProps<T>): Promise<void> => {
-    if (options?.showLoading) setLoading();
-    try {
-      const data = await asyncFunction();
-      setSuccess(data);
-      options?.onSuccess?.();
-    } catch (error) {
-      const normalizedError = normalizeError(error);
-      setFail(normalizedError);
-      options?.onFail?.(normalizedError);
-    }
-  };
+  const executeAsyncFunction = useCallback(
+    async ({
+      asyncFunction,
+      options,
+    }: ExecuteAsyncFunctionProps<T>): Promise<void> => {
+      if (options?.showLoading) setLoading();
+      try {
+        const data = await asyncFunction();
+        setSuccess(data);
+        options?.onSuccess?.();
+      } catch (error) {
+        const normalizedError = normalizeError(error);
+        setFail(normalizedError);
+        options?.onFail?.(normalizedError);
+      }
+    },
+    [setLoading, setSuccess, setFail],
+  );
 
   return {
     asyncState,

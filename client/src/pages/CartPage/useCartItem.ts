@@ -11,7 +11,10 @@ import useAsyncTask, {
 
 // 서버상태인 cartItem을 관리하는 Custom Hook
 const useCartItem = (cartId: number) => {
-  const getCartItemsAsyncTask = useAsyncTask<CartItemModel[]>();
+  const {
+    asyncState: getCartItemsAsyncState,
+    executeAsyncFunction: executeGetCartItems,
+  } = useAsyncTask<CartItemModel[]>();
   const deleteCartItemAsyncTask = useAsyncTask<void>();
   const updateCartItemCountAsyncTask = useAsyncTask<{
     id: number;
@@ -20,11 +23,11 @@ const useCartItem = (cartId: number) => {
 
   const requestGetCartItems = useCallback(
     (options?: ExecuteAsyncFunctionProps<CartItemModel[]>["options"]) =>
-      getCartItemsAsyncTask.executeAsyncFunction({
+      executeGetCartItems({
         asyncFunction: () => getCartItems(cartId),
         options,
       }),
-    [getCartItemsAsyncTask, cartId],
+    [executeGetCartItems, cartId],
   );
 
   useEffect(() => {
@@ -61,7 +64,7 @@ const useCartItem = (cartId: number) => {
     requestGetCartItems,
     requestDeleteCartItem,
     requestUpdateCartItemCount,
-    getCartItemsAsyncState: getCartItemsAsyncTask.asyncState,
+    getCartItemsAsyncState,
     deleteCartItemAsyncState: deleteCartItemAsyncTask.asyncState,
     updateCartItemCountAsyncState: updateCartItemCountAsyncTask.asyncState,
   };
