@@ -32,6 +32,7 @@ const CartItemRow = ({
         requestGetCartItems({ showLoading: false });
       },
       onFail: (error: AsyncError) => alert(error.message),
+      showLoading: true,
     });
   };
 
@@ -42,6 +43,7 @@ const CartItemRow = ({
     await requestUpdateCartItemCount(productId, itemCount, {
       onSuccess: () => requestGetCartItems({ showLoading: false }),
       onFail: (error: AsyncError) => alert(error.message),
+      showLoading: true,
     });
   };
 
