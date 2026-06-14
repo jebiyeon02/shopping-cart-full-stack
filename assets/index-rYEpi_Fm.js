@@ -35,140 +35,32 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
     color: black;
     font-weight: 700;
     font-size: 24px;
-  `},na=e=>{let[t,n]=(0,_.useReducer)(ra,[]),[r,i]=(0,_.useState)(!1);return(0,_.useEffect)(()=>{if(e.status!==`success`||r)return;let t=e.data,a=localStorage.getItem(`cart-selected-product-ids`);n(a?{type:`insertAll`,productIds:JSON.parse(a)}:{type:`insertAll`,productIds:t.map(e=>e.id)}),i(!0)},[e.status,r]),(0,_.useEffect)(()=>{r&&localStorage.setItem(`cart-selected-product-ids`,JSON.stringify(t))},[t,r]),{selectedProductIds:t,clearCartItemSelection:()=>{n({type:`init`})},selectCartItem:e=>{n({type:`insert`,productId:e})},selectAllCartItems:e=>{n({type:`insertAll`,productIds:e})},unselectCartItem:e=>{n({type:`remove`,productId:e})}}},ra=(e,t)=>{switch(t.type){case`init`:return[];case`insert`:return Array.from(new Set([...e,t.productId]));case`insertAll`:return Array.from(new Set([...e,...t.productIds]));case`remove`:return e.filter(e=>e!==t.productId);default:return e}},ia=class extends Error{code;constructor(e,t){super(t),this.code=e,super.name=t}},aa=`https://shopping-cart-full-stack-production-0cf6.up.railway.app`,oa=async e=>{let t=await fetch(`${aa}/carts/${e}/items`,{headers:{"Content-Type":`application/json`}});return t.ok||await ua(t),(await t.json()).result.cartItems},sa=async(e,t,n)=>{let r=await fetch(`${aa}/carts/${e}/items`,{method:`POST`,headers:{"Content-Type":`application/json`},body:JSON.stringify({productId:t,itemCount:n})});return r.ok||await ua(r),(await r.json()).result.productId},ca=async(e,t)=>{let n=await fetch(`${aa}/carts/${e}/items/${t}`,{method:`DELETE`});n.ok||await ua(n)},la=async(e,t,n)=>{let r=await fetch(`${aa}/carts/${e}/items/${t}`,{method:`PATCH`,headers:{"Content-Type":`application/json`},body:JSON.stringify({itemCount:n})});return r.ok||await ua(r),(await r.json()).result},ua=async e=>{let t=await e.json();throw new ia(t.code,t.message)},da=e=>e instanceof ia?{code:e.code,message:e.message}:{message:`알 수 없는 에러가 발생했습니다.`},fa=()=>{let[e,t]=(0,_.useState)({status:`idle`,data:null,error:null}),n=()=>{t({status:`loading`,data:null,error:null})},r=e=>{t({status:`success`,data:e,error:null})},i=e=>{t({status:`fail`,data:null,error:e})};return{asyncState:e,executeAsyncFunction:async({asyncFunction:e,options:t})=>{t?.showLoading&&n();try{r(await e()),t?.onSuccess?.()}catch(e){let n=da(e);i(n),t?.onFail?.(n)}}}},pa=e=>{let t=fa(),n=fa(),r=fa(),i=n=>t.executeAsyncFunction({asyncFunction:()=>oa(e),options:n});return(0,_.useEffect)(()=>{i()},[e]),{requestGetCartItems:i,requestDeleteCartItem:async(t,r)=>{n.executeAsyncFunction({asyncFunction:()=>ca(e,t),options:r})},requestUpdateCartItemCount:async(t,n,i)=>{r.executeAsyncFunction({asyncFunction:()=>la(e,t,n),options:i})},getCartItemsAsyncState:t.asyncState,deleteCartItemAsyncState:n.asyncState,updateCartItemCountAsyncState:r.asyncState}},ma=(0,_.createContext)(null),ha=({cartId:e,children:t})=>{let{requestGetCartItems:n,getCartItemsAsyncState:r,requestDeleteCartItem:i,deleteCartItemAsyncState:a,requestUpdateCartItemCount:o,updateCartItemCountAsyncState:s}=pa(e);return I(ma.Provider,{value:{getCartItemsAsyncState:r,deleteCartItemAsyncState:a,updateCartItemCountAsyncState:s,requestGetCartItems:n,requestDeleteCartItem:i,requestUpdateCartItemCount:o},children:t})},ga=()=>{let e=(0,_.useContext)(ma);if(e===null)throw Error(`useCartContext는 CartProvider 내부에서만 사용할 수 있습니다.`);return e},_a=(0,_.createContext)(null),va=({children:e})=>{let{getCartItemsAsyncState:t}=ga(),{selectedProductIds:n,clearCartItemSelection:r,selectCartItem:i,selectAllCartItems:a,unselectCartItem:o}=na(t);return I(_a.Provider,{value:{selectedProductIds:n,clearCartItemSelection:r,selectCartItem:i,selectAllCartItems:a,unselectCartItem:o},children:e})},ya=()=>{let e=(0,_.useContext)(_a);if(!e)throw Error(`useCartSelectionContext는 CartSelectionProvider 내부에서만 사용할 수 있습니다.`);return e},ba=e=>e.toLocaleString(),xa=({cartItem:e,isChecked:t})=>{let{requestGetCartItems:n,requestUpdateCartItemCount:r,updateCartItemCountAsyncState:i,requestDeleteCartItem:a,deleteCartItemAsyncState:o}=ga(),{unselectCartItem:s,selectCartItem:c}=ya(),{id:l,name:u,price:d,itemCount:f,imgUrl:p}=e,m=async e=>{await a(e,{onSuccess:()=>{s(e),n({showLoading:!1})},onFail:e=>alert(e.message)})},h=async(e,t)=>{await r(e,t,{onSuccess:()=>n({showLoading:!1}),onFail:e=>alert(e.message)})},g=(e,t)=>{if(t){c(e);return}s(e)};return L(Sa,{children:[I(Ca,{}),L(wa,{children:[I(`input`,{type:`checkbox`,checked:t,onChange:e=>{g(l,e.target.checked)}}),I(Ta,{type:`button`,onClick:()=>m(l),disabled:o.status===`loading`,children:`삭제`})]}),L(Ea,{children:[I(Da,{src:p,alt:`상품 이미지-${u}`}),L(Oa,{children:[I(ka,{children:u}),L(Aa,{children:[ba(d*f),`원`]}),L(ja,{children:[I(Ma,{type:`button`,onClick:()=>h(l,f-1),disabled:f<=1||o.status===`loading`||i.status===`loading`,children:`-`}),f,I(Ma,{type:`button`,onClick:()=>h(l,f+1),disabled:o.status===`loading`||i.status===`loading`,children:`+`})]})]})]})]})},Sa=F.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-`,Ca=F.div`
-  width: 100%;
-  height: 1px;
-  background-color: #0000001a;
-  margin-bottom: 12px;
-`,wa=F.div`
-  display: flex;
-  justify-content: space-between;
-`,Ta=F.button`
-  width: 40px;
-  height: 24px;
-  border: 1px solid #0000001a;
-  border-radius: 8px;
-  background-color: white;
-  color: black;
-  font-size: 12px;
-  cursor: pointer;
-
-  &:disabled {
-    border-color: #e5e5e5;
-    color: #bebebe;
-    cursor: not-allowed;
-  }
-`,Ea=F.div`
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  gap: 24px;
-`,Da=F.img`
-  width: 112px;
-  height: 112px;
-  border-radius: 8px;
-`,Oa=F.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: start;
-  gap: 4px;
-`,ka=F.div`
-  ${R.bodySmall}
-`,Aa=F.div`
-  ${R.titleLarge}
-`,ja=F.div`
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  gap: 8px;
-  margin-top: 12px;
-`,Ma=F.button`
-  width: 24px;
-  height: 24px;
-  border: 1px solid #0000001a;
-  border-radius: 8px;
-  background-color: white;
-  color: black;
-  cursor: pointer;
-
-  &:disabled {
-    border-color: #e5e5e5;
-    color: #bebebe;
-    cursor: not-allowed;
-  }
-`,Na=({cartItems:e})=>{let{selectedProductIds:t,selectAllCartItems:n,clearCartItemSelection:r}=ya(),i=e.length===t.length,a=t=>{if(t){n(e.map(e=>e.id));return}r()};return L(Fa,{children:[L(Pa,{children:[I(`input`,{type:`checkbox`,checked:i,onChange:e=>{a(e.target.checked)}}),`전체선택`]}),e.map(e=>I(xa,{cartItem:e,isChecked:t.includes(e.id)},e.id))]})},Pa=F.label`
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  gap: 6px;
-  ${R.bodySmall}
-`,Fa=F.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`,Ia=`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAANBJREFUeAGtUoENgzAMM1zQD9YPtg/WU3rCTtgn8AEvcMJ2AeMCTugSLYgqS8ukYclSmwQnNAb+RFOIB+KFeJb7TOyJL+zAEQdiIi5yZk4S64i+9LGXwkkm0IhZ3lkCnSR9FgtKbG0yWN2TdMnRizCUaIKa8i7Kv4Lf58aHNpvgaRRGfE/FGCEbalFHIF5rBavAY69QgT0yawEHe30aEZ9f7nViNYzPYgH2GjsYcNiMEo18yPIeBXgZLWEzDHOR2ADlwqYiFIknufOK+Z1GHI039AkyBuz4ZwoAAAAASUVORK5CYII=`,La={FREE_PRICE_BOUNDARY:1e5,FEE:3e3},Ra=e=>e.reduce((e,t)=>e+t.price*t.itemCount,0),za=(e,t)=>e.filter(e=>t.includes(e.id)),Ba=e=>e>=La.FREE_PRICE_BOUNDARY?0:La.FEE,Va=e=>e.reduce((e,t)=>e+t.itemCount,0),Ha=(e,t)=>e+t,Ua=({cartItems:e})=>{let{selectedProductIds:t}=ya(),n=Ra(za(e,t)),r=Ba(n),i=Ha(n,r);return L(Wa,{children:[L(Ga,{children:[I(Ka,{src:Ia}),L(qa,{children:[`총 주문 금액이 `,ba(La.FREE_PRICE_BOUNDARY),`원 이상일 경우 무료 배송됩니다.`]})]}),I(Ja,{children:L(`tbody`,{children:[L(Ya,{children:[I(Xa,{scope:`row`,children:`주문 금액`}),L(Za,{children:[ba(n),`원`]})]}),L(Ya,{$hasDivider:!0,children:[I(Xa,{scope:`row`,children:`배송비`}),L(Za,{children:[ba(r),`원`]})]}),L(Ya,{children:[I(Xa,{scope:`row`,children:`총 결제 금액`}),L(Za,{children:[ba(i),`원`]})]})]})})]})},Wa=F.div`
-  margin-top: 32px;
-`,Ga=F.div`
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  gap: 4px;
-  margin-bottom: 12px;
-`,Ka=F.img`
-  width: 16px;
-  height: 16px;
-`,qa=F.span`
-  ${R.bodySmall}
-`,Ja=F.table`
-  width: 100%;
-  border-collapse: collapse;
-  border-top: 1px solid #0000001a;
-`,Ya=F.tr`
-  border-bottom: ${({$hasDivider:e})=>e?`1px solid #0000001a`:`none`};
-`,Xa=F.th`
-  ${R.titleMedium}
-  text-align: left;
-`,Za=F.td`
-  padding: 12px;
-  ${R.titleLarge}
-  text-align: right;
-`,Qa=({cartItems:e})=>L($a,{children:[L(eo,{children:[`현재`,e.length,`종류의 상품이 담겨있습니다.`]}),I(Na,{cartItems:e}),I(Ua,{cartItems:e})]}),$a=F.div`
-  width: 100%;
-  height: 100%;
-`,eo=F.div`
-  ${R.bodySmall}
-  margin-bottom: 30px;
-`,to=({message:e})=>I(no,{children:e}),no=F.div`
+  `},na=({message:e})=>I(ra,{children:e}),ra=F.div`
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   ${R.bodyMedium}
-`,ro=()=>I(io,{children:`로딩중...`}),io=F.div`
+`,ia=()=>I(aa,{children:`로딩중...`}),aa=F.div`
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   ${R.bodyMedium}
-`,ao=()=>I(oo,{children:I(so,{children:`장바구니에 담은 상품이 없습니다.`})}),oo=F.div`
+`,oa=class extends Error{code;constructor(e,t){super(t),this.code=e,super.name=t}},sa=`https://shopping-cart-full-stack-production-0cf6.up.railway.app`,ca=async e=>{let t=await fetch(`${sa}/carts/${e}/items`,{headers:{"Content-Type":`application/json`}});return t.ok||await fa(t),(await t.json()).result.cartItems},la=async(e,t,n)=>{let r=await fetch(`${sa}/carts/${e}/items`,{method:`POST`,headers:{"Content-Type":`application/json`},body:JSON.stringify({productId:t,itemCount:n})});return r.ok||await fa(r),(await r.json()).result.productId},ua=async(e,t)=>{let n=await fetch(`${sa}/carts/${e}/items/${t}`,{method:`DELETE`});n.ok||await fa(n)},da=async(e,t,n)=>{let r=await fetch(`${sa}/carts/${e}/items/${t}`,{method:`PATCH`,headers:{"Content-Type":`application/json`},body:JSON.stringify({itemCount:n})});return r.ok||await fa(r),(await r.json()).result},fa=async e=>{let t=await e.json();throw new oa(t.code,t.message)},pa=e=>e instanceof oa?{code:e.code,message:e.message}:{message:`알 수 없는 에러가 발생했습니다.`},ma=()=>{let[e,t]=(0,_.useState)({status:`idle`,data:null,error:null}),n=()=>{t({status:`loading`,data:null,error:null})},r=e=>{t({status:`success`,data:e,error:null})},i=e=>{t({status:`fail`,data:null,error:e})};return{asyncState:e,executeAsyncFunction:async({asyncFunction:e,options:t})=>{t?.showLoading&&n();try{r(await e()),t?.onSuccess?.()}catch(e){let n=pa(e);i(n),t?.onFail?.(n)}}}},ha=e=>{let t=ma(),n=ma(),r=ma(),i=(0,_.useCallback)(n=>t.executeAsyncFunction({asyncFunction:()=>ca(e),options:n}),[t,e]);return(0,_.useEffect)(()=>{i()},[i]),{requestGetCartItems:i,requestDeleteCartItem:async(t,r)=>{n.executeAsyncFunction({asyncFunction:()=>ua(e,t),options:r})},requestUpdateCartItemCount:async(t,n,i)=>{r.executeAsyncFunction({asyncFunction:()=>da(e,t,n),options:i})},getCartItemsAsyncState:t.asyncState,deleteCartItemAsyncState:n.asyncState,updateCartItemCountAsyncState:r.asyncState}},ga=(0,_.createContext)(null),_a=({cartId:e,children:t})=>{let{requestGetCartItems:n,getCartItemsAsyncState:r,requestDeleteCartItem:i,deleteCartItemAsyncState:a,requestUpdateCartItemCount:o,updateCartItemCountAsyncState:s}=ha(e);return I(ga.Provider,{value:{getCartItemsAsyncState:r,deleteCartItemAsyncState:a,updateCartItemCountAsyncState:s,requestGetCartItems:n,requestDeleteCartItem:i,requestUpdateCartItemCount:o},children:t})},va=()=>{let e=(0,_.useContext)(ga);if(e===null)throw Error(`useCartContext는 CartProvider 내부에서만 사용할 수 있습니다.`);return e},ya=()=>I(ba,{children:I(xa,{children:`장바구니에 담은 상품이 없습니다.`})}),ba=F.div`
   display: flex;
   flex: 1;
   flex-direction: column;
   min-height: calc(100vh - 128px);
   padding: 36px 24px;
-`,so=F.p`
+`,xa=F.p`
   display: flex;
   flex: 1;
   justify-content: center;
   align-items: center;
   margin: 0;
   ${R.bodyMedium}
-`,co=({children:e,type:t=`button`,disabled:n=!1,onClick:r})=>I(lo,{type:t,disabled:n,onClick:r,children:e}),lo=F.button`
+`,Sa=e=>{let[t,n]=(0,_.useReducer)(Ca,[]),[r,i]=(0,_.useState)(!1);return(0,_.useEffect)(()=>{if(e.status!==`success`||r)return;let t=e.data,a=localStorage.getItem(`cart-selected-product-ids`);n(a?{type:`insertAll`,productIds:JSON.parse(a)}:{type:`insertAll`,productIds:t.map(e=>e.id)}),i(!0)},[e,r]),(0,_.useEffect)(()=>{r&&localStorage.setItem(`cart-selected-product-ids`,JSON.stringify(t))},[t,r]),{selectedProductIds:t,clearCartItemSelection:()=>{n({type:`init`})},selectCartItem:e=>{n({type:`insert`,productId:e})},selectAllCartItems:e=>{n({type:`insertAll`,productIds:e})},unselectCartItem:e=>{n({type:`remove`,productId:e})}}},Ca=(e,t)=>{switch(t.type){case`init`:return[];case`insert`:return Array.from(new Set([...e,t.productId]));case`insertAll`:return Array.from(new Set([...e,...t.productIds]));case`remove`:return e.filter(e=>e!==t.productId);default:return e}},wa=(0,_.createContext)(null),Ta=({children:e})=>{let{getCartItemsAsyncState:t}=va(),{selectedProductIds:n,clearCartItemSelection:r,selectCartItem:i,selectAllCartItems:a,unselectCartItem:o}=Sa(t);return I(wa.Provider,{value:{selectedProductIds:n,clearCartItemSelection:r,selectCartItem:i,selectAllCartItems:a,unselectCartItem:o},children:e})},Ea=()=>{let e=(0,_.useContext)(wa);if(!e)throw Error(`useCartSelectionContext는 CartSelectionProvider 내부에서만 사용할 수 있습니다.`);return e},Da={FREE_PRICE_BOUNDARY:1e5,FEE:3e3},Oa=e=>e.reduce((e,t)=>e+t.price*t.itemCount,0),ka=(e,t)=>e.filter(e=>t.includes(e.id)),Aa=e=>e>=Da.FREE_PRICE_BOUNDARY?0:Da.FEE,ja=e=>e.reduce((e,t)=>e+t.itemCount,0),Ma=(e,t)=>e+t,Na=({children:e,type:t=`button`,disabled:n=!1,onClick:r})=>I(Pa,{type:t,disabled:n,onClick:r,children:e}),Pa=F.button`
   width: 100%;
   height: 64px;
   border: none;
@@ -183,13 +75,121 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
     opacity: 1;
     cursor: not-allowed;
   }
-`,uo=()=>{let{getCartItemsAsyncState:e}=ga();switch(e.status){case`idle`:return I(ro,{});case`loading`:return I(ro,{});case`fail`:return I(to,{message:e.error.message});case`success`:{let t=e.data;return L($i,{children:[t.length===0?I(ao,{}):I(Qa,{cartItems:t}),I(z,{children:I(fo,{cartItems:t})})]})}default:return I(to,{message:`알 수 없는 에러가 발생했습니다.`})}},z=F.div`
+`,Fa=e=>e.toLocaleString(),Ia=({cartItem:e,isChecked:t})=>{let{requestGetCartItems:n,requestUpdateCartItemCount:r,updateCartItemCountAsyncState:i,requestDeleteCartItem:a,deleteCartItemAsyncState:o}=va(),{unselectCartItem:s,selectCartItem:c}=Ea(),{id:l,name:u,price:d,itemCount:f,imgUrl:p}=e,m=async e=>{await a(e,{onSuccess:()=>{s(e),n({showLoading:!1})},onFail:e=>alert(e.message)})},h=async(e,t)=>{await r(e,t,{onSuccess:()=>n({showLoading:!1}),onFail:e=>alert(e.message)})},g=(e,t)=>{if(t){c(e);return}s(e)};return L(La,{children:[I(Ra,{}),L(za,{children:[I(`input`,{type:`checkbox`,checked:t,onChange:e=>{g(l,e.target.checked)}}),I(Ba,{type:`button`,onClick:()=>m(l),disabled:o.status===`loading`,children:`삭제`})]}),L(Va,{children:[I(Ha,{src:p,alt:`상품 이미지-${u}`}),L(Ua,{children:[I(Wa,{children:u}),L(Ga,{children:[Fa(d*f),`원`]}),L(Ka,{children:[I(qa,{type:`button`,onClick:()=>h(l,f-1),disabled:f<=1||o.status===`loading`||i.status===`loading`,children:`-`}),f,I(qa,{type:`button`,onClick:()=>h(l,f+1),disabled:o.status===`loading`||i.status===`loading`,children:`+`})]})]})]})]})},La=F.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+`,Ra=F.div`
+  width: 100%;
+  height: 1px;
+  background-color: #0000001a;
+  margin-bottom: 12px;
+`,za=F.div`
+  display: flex;
+  justify-content: space-between;
+`,Ba=F.button`
+  width: 40px;
+  height: 24px;
+  border: 1px solid #0000001a;
+  border-radius: 8px;
+  background-color: white;
+  color: black;
+  font-size: 12px;
+  cursor: pointer;
+
+  &:disabled {
+    border-color: #e5e5e5;
+    color: #bebebe;
+    cursor: not-allowed;
+  }
+`,Va=F.div`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 24px;
+`,Ha=F.img`
+  width: 112px;
+  height: 112px;
+  border-radius: 8px;
+`,Ua=F.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  gap: 4px;
+`,Wa=F.div`
+  ${R.bodySmall}
+`,Ga=F.div`
+  ${R.titleLarge}
+`,Ka=F.div`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+`,qa=F.button`
+  width: 24px;
+  height: 24px;
+  border: 1px solid #0000001a;
+  border-radius: 8px;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+
+  &:disabled {
+    border-color: #e5e5e5;
+    color: #bebebe;
+    cursor: not-allowed;
+  }
+`,Ja=({cartItems:e})=>{let{selectedProductIds:t,selectAllCartItems:n,clearCartItemSelection:r}=Ea(),i=e.length===t.length,a=t=>{if(t){n(e.map(e=>e.id));return}r()};return L(Xa,{children:[L(Ya,{children:[I(`input`,{type:`checkbox`,checked:i,onChange:e=>{a(e.target.checked)}}),`전체선택`]}),e.map(e=>I(Ia,{cartItem:e,isChecked:t.includes(e.id)},e.id))]})},Ya=F.label`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 6px;
+  ${R.bodySmall}
+`,Xa=F.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`,Za=`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAANBJREFUeAGtUoENgzAMM1zQD9YPtg/WU3rCTtgn8AEvcMJ2AeMCTugSLYgqS8ukYclSmwQnNAb+RFOIB+KFeJb7TOyJL+zAEQdiIi5yZk4S64i+9LGXwkkm0IhZ3lkCnSR9FgtKbG0yWN2TdMnRizCUaIKa8i7Kv4Lf58aHNpvgaRRGfE/FGCEbalFHIF5rBavAY69QgT0yawEHe30aEZ9f7nViNYzPYgH2GjsYcNiMEo18yPIeBXgZLWEzDHOR2ADlwqYiFIknufOK+Z1GHI039AkyBuz4ZwoAAAAASUVORK5CYII=`,Qa=({cartItems:e})=>{let{selectedProductIds:t}=Ea(),n=Oa(ka(e,t)),r=Aa(n),i=Ma(n,r);return L($a,{children:[L(eo,{children:[I(to,{src:Za}),L(no,{children:[`총 주문 금액이 `,Fa(Da.FREE_PRICE_BOUNDARY),`원 이상일 경우 무료 배송됩니다.`]})]}),I(ro,{children:L(`tbody`,{children:[L(io,{children:[I(ao,{scope:`row`,children:`주문 금액`}),L(oo,{children:[Fa(n),`원`]})]}),L(io,{$hasDivider:!0,children:[I(ao,{scope:`row`,children:`배송비`}),L(oo,{children:[Fa(r),`원`]})]}),L(io,{children:[I(ao,{scope:`row`,children:`총 결제 금액`}),L(oo,{children:[Fa(i),`원`]})]})]})})]})},$a=F.div`
+  margin-top: 32px;
+`,eo=F.div`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+`,to=F.img`
+  width: 16px;
+  height: 16px;
+`,no=F.span`
+  ${R.bodySmall}
+`,ro=F.table`
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 1px solid #0000001a;
+`,io=F.tr`
+  border-bottom: ${({$hasDivider:e})=>e?`1px solid #0000001a`:`none`};
+`,ao=F.th`
+  ${R.titleMedium}
+  text-align: left;
+`,oo=F.td`
+  padding: 12px;
+  ${R.titleLarge}
+  text-align: right;
+`,so=({cartItems:e})=>L(co,{children:[L(lo,{children:[`현재`,e.length,`종류의 상품이 담겨있습니다.`]}),I(Ja,{cartItems:e}),I(Qa,{cartItems:e})]}),co=F.div`
+  width: 100%;
+  height: 100%;
+`,lo=F.div`
+  ${R.bodySmall}
+  margin-bottom: 30px;
+`,uo=({cartItems:e})=>L($i,{children:[e.length===0?I(ya,{}):I(so,{cartItems:e}),I(z,{children:I(fo,{cartItems:e})})]}),z=F.div`
   position: fixed;
   bottom: 0;
   left: 50%;
   width: min(100vw, 400px);
   transform: translateX(-50%);
-`,fo=({cartItems:e})=>{let t=pt(),{selectedProductIds:n}=ya(),r=za(e,n),i=Ra(r),a=Ba(i);return I(co,{disabled:e.length===0||n.length===0,onClick:()=>{t(`/cart/order-confirm`,{state:{productCount:r.length,productItemCount:Va(r),totalPrice:Ha(i,a)}})},children:`주문 확인`})},po=()=>I(B,{type:`button`,onClick:async()=>{try{await sa(1,5,10),await sa(1,4,5),await sa(1,7,1)}finally{window.location.reload()}},children:`장바구니에 상품추가(임시)`}),B=F.button`
+`,fo=({cartItems:e})=>{let t=pt(),{selectedProductIds:n}=Ea(),r=ka(e,n),i=Oa(r),a=Aa(i);return I(Na,{disabled:e.length===0||n.length===0,onClick:()=>{t(`/cart/order-confirm`,{state:{productCount:r.length,productItemCount:ja(r),totalPrice:Ma(i,a)}})},children:`주문 확인`})},po=()=>{let{getCartItemsAsyncState:e}=va();switch(e.status){case`idle`:return I(ia,{});case`loading`:return I(ia,{});case`fail`:return I(na,{message:e.error.message});case`success`:{let t=e.data;return I(uo,{cartItems:t})}default:return I(na,{message:`알 수 없는 에러가 발생했습니다.`})}},B=()=>I(V,{type:`button`,onClick:async()=>{try{await la(1,5,10),await la(1,4,5),await la(1,7,1)}finally{window.location.reload()}},children:`장바구니에 상품추가(임시)`}),V=F.button`
   margin-left: 12px;
   padding: 4px 8px;
   border: 1px solid black;
@@ -198,33 +198,33 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
   font-weight: 700;
   font-size: 12px;
   cursor: pointer;
-`,V=()=>L(mo,{children:[I(ho,{children:I(ea,{actionIcon:I(`div`,{children:`SHOP`})})}),L(go,{children:[L(_o,{children:[`장바구니 `,I(po,{})]}),I(uo,{})]})]}),mo=F.div`
+`,mo=()=>L(ho,{children:[I(go,{children:I(ea,{actionIcon:I(`div`,{children:`SHOP`})})}),L(_o,{children:[L(vo,{children:[`장바구니 `,I(B,{})]}),I(po,{})]})]}),ho=F.div`
   position: relative;
   width: 100%;
   min-height: 100vh;
   padding: 64px 0;
-`,ho=F.div`
+`,go=F.div`
   position: absolute;
   top: 0;
   right: 0;
   left: 0;
-`,go=F.div`
-  padding: 24px;
 `,_o=F.div`
+  padding: 24px;
+`,vo=F.div`
   ${R.titleLarge}
   margin-bottom: 12px;
-`,vo=`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAXCAYAAAD+4+QTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAANlJREFUeAHllFENwjAQhv8SBCBhEpAADnDAJOCAOWAOwMEkLChAwuZgEo6/cAmlS0ay3T3xJbeufbgv7V0L/EBESsaVsYEHTFwwBnnTxTlmsJoScGgZPjtQSSMfhrm7mBKc5ZsSlmihUypYkhU60sASFXSJYHY3TUncCr1WwZnDIVmvdb3AAkIIPTRRXmhLOsYm8POgaws/9kGPJIrSm93DhjuPrHz9UbTLtnmBB0xcZaIjPGDiWyKJbWxfq9gJMr6Q9q+wjJ+WFh78RSMUsCZrhBpeaCOcsIAnQ/G1/uG+kjsAAAAASUVORK5CYII=`,yo=()=>{let e=pt(),{productCount:t,productItemCount:n,totalPrice:r}=ut().state;return L(bo,{children:[I(ea,{actionIcon:I(xo,{type:`button`,onClick:()=>e(-1),children:I(H,{src:vo,alt:`뒤로가기`})})}),L(So,{children:[I(Co,{children:`주문 확인`}),L(wo,{children:[`총 `,t,`종류의 상품 `,n,`개를 주문합니다.`,I(`br`,{}),`최종 결제 금액을 확인해 주세요.`]}),I(To,{children:`총 결제 금액`}),L(Eo,{children:[ba(r),`원`]})]}),I(co,{disabled:!0,children:`결제하기`})]})},bo=F.div`
+`,yo=`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAXCAYAAAD+4+QTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAANlJREFUeAHllFENwjAQhv8SBCBhEpAADnDAJOCAOWAOwMEkLChAwuZgEo6/cAmlS0ay3T3xJbeufbgv7V0L/EBESsaVsYEHTFwwBnnTxTlmsJoScGgZPjtQSSMfhrm7mBKc5ZsSlmihUypYkhU60sASFXSJYHY3TUncCr1WwZnDIVmvdb3AAkIIPTRRXmhLOsYm8POgaws/9kGPJIrSm93DhjuPrHz9UbTLtnmBB0xcZaIjPGDiWyKJbWxfq9gJMr6Q9q+wjJ+WFh78RSMUsCZrhBpeaCOcsIAnQ/G1/uG+kjsAAAAASUVORK5CYII=`,bo=()=>{let e=pt(),{productCount:t,productItemCount:n,totalPrice:r}=ut().state;return L(xo,{children:[I(ea,{actionIcon:I(H,{type:`button`,onClick:()=>e(-1),children:I(So,{src:yo,alt:`뒤로가기`})})}),L(Co,{children:[I(wo,{children:`주문 확인`}),L(To,{children:[`총 `,t,`종류의 상품 `,n,`개를 주문합니다.`,I(`br`,{}),`최종 결제 금액을 확인해 주세요.`]}),I(Eo,{children:`총 결제 금액`}),L(Do,{children:[Fa(r),`원`]})]}),I(Na,{disabled:!0,children:`결제하기`})]})},xo=F.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-`,xo=F.button`
+`,H=F.button`
   background: none;
   border: none;
   cursor: pointer;
-`,H=F.img`
+`,So=F.img`
   width: 20px;
   height: 20px;
-`,So=F.main`
+`,Co=F.main`
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -232,16 +232,16 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
   align-items: center;
   padding: 24px;
   text-align: center;
-`,Co=F.h1`
+`,wo=F.h1`
   ${R.titleLarge}
   margin-bottom: 28px;
-`,wo=F.p`
+`,To=F.p`
   ${R.bodySmall}
   margin-bottom: 32px;
   line-height: 1.5;
-`,To=F.div`
+`,Eo=F.div`
   ${R.titleMedium}
   margin-bottom: 12px;
-`,Eo=F.div`
+`,Do=F.div`
   ${R.titleLarge}
-`;function Do(){return L(zt,{children:[I(Lt,{path:`cart`,element:I(ha,{cartId:1,children:I(va,{children:I(V,{})})})}),I(Lt,{path:`cart/order-confirm`,element:I(yo,{})})]})}await(async()=>{})(),(0,v.createRoot)(document.getElementById(`root`)).render(I(_.StrictMode,{children:I(Dn,{children:I(Do,{})})}));
+`;function Oo(){return L(zt,{children:[I(Lt,{path:`cart`,element:I(_a,{cartId:1,children:I(Ta,{children:I(mo,{})})})}),I(Lt,{path:`cart/order-confirm`,element:I(bo,{})})]})}await(async()=>{})(),(0,v.createRoot)(document.getElementById(`root`)).render(I(_.StrictMode,{children:I(Dn,{children:I(Oo,{})})}));
