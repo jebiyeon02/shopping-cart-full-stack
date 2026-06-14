@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
-import { typography } from "../../../../../../shared/styles/typography";
-import { useCartSelectionContext } from "../../../../CartSelectionContext";
+import { typography } from "../../../../../../../shared/styles/typography";
+import { useCartSelectionContext } from "../../../../../CartSelectionContext";
 import CartItemRow from "./CartItemRow";
-import type { CartItemModel } from "../../../../../../domain/cart/cart.api";
+import type { CartItemModel } from "../../../../../../../domain/cart/cart.api";
 
 const CartItemList = ({ cartItems }: { cartItems: CartItemModel[] }) => {
   const { selectedProductIds, selectAllCartItems, clearCartItemSelection } =

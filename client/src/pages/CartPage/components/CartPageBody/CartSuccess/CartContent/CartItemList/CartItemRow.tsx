@@ -1,10 +1,10 @@
 import styled from "@emotion/styled";
-import type { CartItemModel } from "../../../../../../domain/cart/cart.api";
-import { formatPrice } from "../../../../../../shared/utils";
-import { typography } from "../../../../../../shared/styles/typography";
-import { useCartContext } from "../../../../CartContext";
-import { useCartSelectionContext } from "../../../../CartSelectionContext";
-import type { AsyncError } from "../../../../../../../src/error/normalizeError";
+import type { CartItemModel } from "../../../../../../../domain/cart/cart.api";
+import { formatPrice } from "../../../../../../../shared/utils";
+import { typography } from "../../../../../../../shared/styles/typography";
+import { useCartContext } from "../../../../../CartContext";
+import { useCartSelectionContext } from "../../../../../CartSelectionContext";
+import type { AsyncError } from "../../../../../../../../src/error/normalizeError";
 
 const CartItemRow = ({
   cartItem,
