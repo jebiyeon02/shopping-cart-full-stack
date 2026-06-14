@@ -1,4 +1,4 @@
-import { HttpResponse, http } from "msw";
+import { HttpResponse, delay, http } from "msw";
 export const API_BASE_URL =
   "https://shopping-cart-full-stack-production-0cf6.up.railway.app";
 
@@ -155,6 +155,7 @@ export const handlers = [
       const { itemCount } = (await request.json()) as { itemCount: number };
       const cartItem = mockCartItems.find(({ id }) => id === productId);
 
+      await delay(2000);
       if (!cartItem) {
         return HttpResponse.json(
           {
@@ -180,6 +181,7 @@ export const handlers = [
       const productId = Number(params.productId);
       mockCartItems = mockCartItems.filter(({ id }) => id !== productId);
 
+      await delay(2000);
       return new HttpResponse(null, { status: 204 });
     },
   ),
