@@ -1,11 +1,8 @@
 import CartItem, { CartItemType } from "../cart/CartItem.js";
 import { ProductType } from "../product/Product.js";
 
-export type CheckOutItem = Pick<
-  ProductType,
-  "id" | "imgUrl" | "name" | "price"
-> &
-  Pick<CartItemType, "itemCount">;
+export type CheckoutItem = Pick<ProductType, "imgUrl" | "name" | "price"> &
+  CartItemType;
 
 class Checkout {
   #remoteArea: boolean;
@@ -13,7 +10,7 @@ class Checkout {
   #deliveryFee: number;
   constructor(
     private id: number,
-    private checkoutItems: CheckOutItem[],
+    private checkoutItems: CheckoutItem[],
   ) {
     this.#remoteArea = false;
     this.#couponDiscountPrice = 0;
@@ -32,6 +29,17 @@ class Checkout {
 
   isSameId(checkoutId: number) {
     return checkoutId === this.id;
+  }
+
+  getOrderPrice() {
+    return this.checkoutItems.reduce(
+      (total, item) => total + item.itemCount * item.price,
+      0,
+    );
+  }
+
+  getTotalPrice() {
+    return this.getOrderPrice() + this.#deliveryFee - this.#couponDiscountPrice;
   }
 }
 

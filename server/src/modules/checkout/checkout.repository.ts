@@ -1,7 +1,7 @@
-import Checkout, { CheckOutItem } from "./Checkout.js";
+import Checkout, { CheckoutItem } from "./Checkout.js";
 
 export interface CheckoutRepository {
-  create(checkoutItems: CheckOutItem[]): Checkout;
+  create(checkoutItems: CheckoutItem[]): Checkout;
   findById(checkoutId: number): Checkout | undefined;
 }
 
@@ -9,7 +9,7 @@ export class InMemoryCheckoutRepository implements CheckoutRepository {
   private checkouts: Array<Checkout> = [];
   private id = 1;
 
-  create(checkoutItems: CheckOutItem[]) {
+  create(checkoutItems: CheckoutItem[]) {
     const checkout = new Checkout(this.id, checkoutItems);
 
     this.checkouts.push(checkout);
