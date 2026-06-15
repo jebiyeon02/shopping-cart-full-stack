@@ -32,6 +32,9 @@ describe("임시 영수증 서비스 테스트", () => {
     productService = new ProductService(productRepository, cartRepository);
     cartService = new CartService(cartRepository, productRepository);
     checkoutService = new CheckoutService(checkoutRepository, cartService);
+
+    productService.addProduct(mockProduct);
+    cartService.addCart();
   });
 
   test("임시 영수증을 생성하면 생성된 영수증 id를 반환한다.", () => {

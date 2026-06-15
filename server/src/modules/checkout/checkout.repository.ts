@@ -1,7 +1,7 @@
-import Checkout from "./Checkout.js";
+import Checkout, { CheckOutItem } from "./Checkout.js";
 
 export interface CheckoutRepository {
-  create(cartId: number, selectedProductIds: number[]): Checkout;
+  create(checkoutItems: CheckOutItem[]): Checkout;
   findById(checkoutId: number): Checkout | undefined;
 }
 
@@ -9,8 +9,8 @@ export class InMemoryCheckoutRepository implements CheckoutRepository {
   private checkouts: Array<Checkout> = [];
   private id = 1;
 
-  create(cartId: number, selectedProductIds: number[]) {
-    const checkout = new Checkout(this.id, cartId, selectedProductIds);
+  create(checkoutItems: CheckOutItem[]) {
+    const checkout = new Checkout(this.id, checkoutItems);
 
     this.checkouts.push(checkout);
     this.id++;

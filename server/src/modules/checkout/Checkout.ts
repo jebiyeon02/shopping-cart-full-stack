@@ -1,11 +1,19 @@
+import CartItem, { CartItemType } from "../cart/CartItem.js";
+import { ProductType } from "../product/Product.js";
+
+export type CheckOutItem = Pick<
+  ProductType,
+  "id" | "imgUrl" | "name" | "price"
+> &
+  Pick<CartItemType, "itemCount">;
+
 class Checkout {
   #remoteArea: boolean;
   #couponDiscountPrice: number;
   #deliveryFee: number;
   constructor(
     private id: number,
-    private cartId: number,
-    private selectedProductIds: number[],
+    private checkoutItems: CheckOutItem[],
   ) {
     this.#remoteArea = false;
     this.#couponDiscountPrice = 0;
@@ -15,8 +23,7 @@ class Checkout {
   toJson() {
     return {
       id: this.id,
-      cartId: this.cartId,
-      checkoutProductIds: this.selectedProductIds,
+      checkoutItems: this.checkoutItems,
       remoteArea: this.#remoteArea,
       couponDiscountPrice: this.#couponDiscountPrice,
       deliveryFee: this.#deliveryFee,
