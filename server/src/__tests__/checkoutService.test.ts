@@ -60,7 +60,7 @@ describe("임시 영수증 서비스 테스트", () => {
     expect(newCheckoutId).toBe(2);
   });
 
-  test("존재하는 영수증의 정보를 반환한다.", () => {
+  test("유효한 영수증의 정보를 반환한다.", () => {
     // when
     const checkoutContent = checkoutService.getCheckoutContent(checkoutId);
 
@@ -82,5 +82,19 @@ describe("임시 영수증 서비스 테스트", () => {
       deliveryFee: 3000,
       totalPrice: 68000,
     });
+  });
+
+  test("유효한 영수증의 도서산간 여부를 변경하고, 변경된 값을 반환한다.", () => {
+    // given
+    const nextRemoteArea = true;
+
+    // when
+    const updatedRemoteArea = checkoutService.updateRemoteArea(
+      checkoutId,
+      nextRemoteArea,
+    );
+
+    // then
+    expect(updatedRemoteArea).toBe(true);
   });
 });

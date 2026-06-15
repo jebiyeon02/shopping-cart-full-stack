@@ -17,6 +17,14 @@ class Checkout {
     this.#deliveryFee = 3000;
   }
 
+  updateRemoteArea(nextRemoteArea: boolean) {
+    this.#remoteArea = nextRemoteArea;
+  }
+
+  updateCouponDiscountPrice(nextDiscountPrice: number) {
+    this.#couponDiscountPrice = nextDiscountPrice;
+  }
+
   toJson() {
     return {
       id: this.id,
