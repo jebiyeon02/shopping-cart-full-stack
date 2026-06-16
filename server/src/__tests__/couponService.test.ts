@@ -55,8 +55,12 @@ describe("쿠폰 테스트", () => {
 
     productService = new ProductService(productRepository, cartRepository);
     cartService = new CartService(cartRepository, productRepository);
-    checkoutService = new CheckoutService(checkoutRepository, cartService);
     couponService = new CouponService(couponRepository, checkoutService);
+    checkoutService = new CheckoutService(
+      checkoutRepository,
+      cartService,
+      couponService,
+    );
 
     // 상품 생성, 해당 상품을 장바구니에 추가, 임시 영수증 생성, 쿠폰 생성
     productId = productService.addProduct(mockProduct);

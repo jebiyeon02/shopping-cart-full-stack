@@ -49,6 +49,14 @@ export abstract class Coupon {
     return this.id === couponId;
   }
 
+  getDiscountType() {
+    if (this.discountPolicy.fixedDiscountRate) {
+      return "ratio";
+    }
+
+    return "fixed";
+  }
+
   toJson() {
     return {
       id: this.id,
