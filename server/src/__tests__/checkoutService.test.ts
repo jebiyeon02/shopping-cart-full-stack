@@ -8,6 +8,8 @@ import {
   InMemoryCheckoutRepository,
 } from "../modules/checkout/checkout.repository.js";
 import CheckoutService from "../modules/checkout/checkout.service.js";
+import { InMemoryCouponRepository } from "../modules/coupon/coupon.repository.js";
+import CouponService from "../modules/coupon/coupon.service.js";
 
 const mockProduct = {
   name: "아디다스 양말",
@@ -19,10 +21,12 @@ const mockProduct = {
 describe("임시 영수증 서비스 테스트", () => {
   let productRepository: InMemoryProductRepository;
   let cartRepository: InMemoryCartRepository;
+  let couponRepository: InMemoryCouponRepository;
   let checkoutRepository: CheckoutRepository;
 
   let productService: ProductService;
   let cartService: CartService;
+  let couponService: CouponService;
   let checkoutService: CheckoutService;
 
   let productId: number;
@@ -32,11 +36,17 @@ describe("임시 영수증 서비스 테스트", () => {
   beforeEach(() => {
     productRepository = new InMemoryProductRepository();
     cartRepository = new InMemoryCartRepository();
+    couponRepository = new InMemoryCouponRepository();
     checkoutRepository = new InMemoryCheckoutRepository();
 
     productService = new ProductService(productRepository, cartRepository);
     cartService = new CartService(cartRepository, productRepository);
-    checkoutService = new CheckoutService(checkoutRepository, cartService);
+    couponService = new CouponService(couponRepository, checkoutService);
+    checkoutService = new CheckoutService(
+      checkoutRepository,
+      cartService,
+      couponService,
+    );
 
     // 상품 생성, 해당 상품을 장바구니에 추가, 임시 영수증 생성
     productId = productService.addProduct(mockProduct);
@@ -78,6 +88,7 @@ describe("임시 영수증 서비스 테스트", () => {
           itemCount: 5,
         },
       ],
+      appliedCouponIds: [],
       remoteArea: false,
       orderPrice: 65000,
       couponDiscountPrice: 0,

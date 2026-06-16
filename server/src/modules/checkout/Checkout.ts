@@ -6,14 +6,14 @@ export type CheckoutItem = Pick<ProductType, "imgUrl" | "name" | "price"> &
 
 class Checkout {
   #remoteArea: boolean;
-  #couponDiscountPrice: number;
+  #appliedCouponIds: [number?, number?];
   #deliveryFee: number;
   constructor(
     private id: number,
     private checkoutItems: CheckoutItem[],
   ) {
     this.#remoteArea = false;
-    this.#couponDiscountPrice = 0;
+    this.#appliedCouponIds = [];
     this.#deliveryFee = 3000;
   }
 
@@ -21,8 +21,8 @@ class Checkout {
     this.#remoteArea = nextRemoteArea;
   }
 
-  updateCouponDiscountPrice(nextDiscountPrice: number) {
-    this.#couponDiscountPrice = nextDiscountPrice;
+  updateAppliedCoupons(nextCouponIds: [number?, number?]) {
+    this.#appliedCouponIds = nextCouponIds;
   }
 
   toJson() {
@@ -30,7 +30,7 @@ class Checkout {
       id: this.id,
       checkoutItems: this.checkoutItems,
       remoteArea: this.#remoteArea,
-      couponDiscountPrice: this.#couponDiscountPrice,
+      appliedCouponIds: this.#appliedCouponIds,
       deliveryFee: this.#deliveryFee,
     };
   }
@@ -44,10 +44,6 @@ class Checkout {
       (total, item) => total + item.itemCount * item.price,
       0,
     );
-  }
-
-  getTotalPrice() {
-    return this.getOrderPrice() + this.#deliveryFee - this.#couponDiscountPrice;
   }
 }
 

@@ -103,6 +103,7 @@
         "itemCount": 1
       }
     ],
+    "appliedCouponIds": [],
     "remoteArea": false,
     "orderPrice": 55000,
     "couponDiscountPrice": 0,

@@ -1,11 +1,13 @@
 import AppError from "../../errors/AppError.js";
 import CartService from "../cart/cart.service.js";
+import CouponService from "../coupon/coupon.service.js";
 import { CheckoutRepository } from "./checkout.repository.js";
 
 class CheckoutService {
   constructor(
     private checkoutRepository: CheckoutRepository,
     private cartService: CartService,
+    private couponService: CouponService,
   ) {}
 
   createCheckout(cartId: number, selectedProductIds: number[]) {
@@ -24,14 +26,21 @@ class CheckoutService {
       throw new AppError("CHECKOUT_NOT_FOUND");
     }
 
-    const { id, checkoutItems, remoteArea, couponDiscountPrice, deliveryFee } =
+    const { id, checkoutItems, remoteArea, appliedCouponIds, deliveryFee } =
       checkout.toJson();
     const orderPrice = checkout.getOrderPrice();
-    const totalPrice = checkout.getTotalPrice();
+    const couponDiscountPrice = this.couponService.getTotalDiscountPrice(
+      appliedCouponIds,
+      orderPrice,
+      checkoutItems,
+      deliveryFee,
+    );
+    const totalPrice = orderPrice + deliveryFee - couponDiscountPrice;
 
     return {
       checkoutId: id,
       checkoutItems,
+      appliedCouponIds,
       remoteArea,
       orderPrice,
       couponDiscountPrice,
