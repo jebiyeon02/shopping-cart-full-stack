@@ -14,6 +14,7 @@ export interface CouponRepository {
     condition,
   }: Omit<CouponItem, "id">): Coupon;
   findById(CouponId: number): Coupon | undefined;
+  getCouponList(): Coupon[];
 }
 
 export class InMemoryCouponRepository implements CouponRepository {
@@ -72,5 +73,9 @@ export class InMemoryCouponRepository implements CouponRepository {
 
   findById(couponId: number) {
     return this.coupons.find((coupon) => coupon.isSameId(couponId));
+  }
+
+  getCouponList() {
+    return [...this.coupons];
   }
 }

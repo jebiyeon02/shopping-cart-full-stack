@@ -1,5 +1,5 @@
 import { CheckoutItem } from "../checkout/Checkout.js";
-import { stringToHoursAndMinutes } from "./coupon.util.js";
+import { getFormatDate, stringToHoursAndMinutes } from "./coupon.util.js";
 
 export type CouponItem = {
   id: number;
@@ -24,7 +24,6 @@ export type CouponCondition = {
 };
 
 export type CouponAvailabilityContext = {
-  targetPrice: number;
   checkoutItems: CheckoutItem[];
   requestedAt: Date;
 };
@@ -54,6 +53,7 @@ export abstract class Coupon {
     return {
       id: this.id,
       ...this.baseInformation,
+      expiryDate: getFormatDate(this.baseInformation.expiryDate),
       ...this.discountPolicy,
       ...this.condition,
     };
@@ -70,14 +70,18 @@ export class FixedCoupon extends Coupon {
     super(id, baseInformation, discountPolicy, condition);
   }
 
-  isAvailable({ targetPrice, requestedAt }: CouponAvailabilityContext) {
+  isAvailable({ checkoutItems, requestedAt }: CouponAvailabilityContext) {
+    const orderPrice = checkoutItems.reduce(
+      (sum, item) => sum + item.price * item.itemCount,
+      0,
+    );
     if (this.condition.minAmount === null) {
       throw new Error("최소 주문 금액이 설정되지 않았습니다.");
     }
     if (requestedAt > this.baseInformation.expiryDate) {
       return false;
     }
-    if (targetPrice < this.condition.minAmount) {
+    if (orderPrice < this.condition.minAmount) {
       return false;
     }
 
@@ -134,14 +138,18 @@ export class FreeShippingCoupon extends Coupon {
     super(id, baseInformation, discountPolicy, condition);
   }
 
-  isAvailable({ targetPrice, requestedAt }: CouponAvailabilityContext) {
+  isAvailable({ checkoutItems, requestedAt }: CouponAvailabilityContext) {
+    const orderPrice = checkoutItems.reduce(
+      (sum, item) => sum + item.price * item.itemCount,
+      0,
+    );
     if (this.condition.minAmount === null) {
       throw new Error("최소 주문 금액이 설정되지 않았습니다.");
     }
     if (requestedAt > this.baseInformation.expiryDate) {
       return false;
     }
-    if (targetPrice < this.condition.minAmount) {
+    if (orderPrice < this.condition.minAmount) {
       return false;
     }
 

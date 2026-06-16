@@ -1,4 +1,3 @@
-import AppError from "../../errors/AppError.js";
 import CheckoutService from "../checkout/checkout.service.js";
 import { CouponItem } from "./Coupon.js";
 import { mockCouponData } from "./coupon.mock.js";
@@ -22,6 +21,20 @@ class CouponService {
     });
 
     return newCoupon.toJson().id;
+  }
+
+  getCoupons(checkoutId: number, requestedAt: Date) {
+    const checkoutItems =
+      this.checkoutService.getCheckoutContent(checkoutId).checkoutItems;
+    const coupons = this.couponRepository.getCouponList();
+
+    return coupons.map((coupon) => {
+      const isAvailable = coupon.isAvailable({ checkoutItems, requestedAt });
+      return {
+        ...coupon.toJson(),
+        isAvailable,
+      };
+    });
   }
 
   createBaseCoupon() {
