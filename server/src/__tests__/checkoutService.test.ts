@@ -20,9 +20,11 @@ describe("임시 영수증 서비스 테스트", () => {
   let productRepository: InMemoryProductRepository;
   let cartRepository: InMemoryCartRepository;
   let checkoutRepository: CheckoutRepository;
+
   let productService: ProductService;
   let cartService: CartService;
   let checkoutService: CheckoutService;
+
   let productId: number;
   let cartId: number;
   let checkoutId: number;

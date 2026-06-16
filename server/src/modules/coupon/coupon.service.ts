@@ -1,18 +1,14 @@
 import AppError from "../../errors/AppError.js";
+import CheckoutService from "../checkout/checkout.service.js";
 import { CouponItem } from "./Coupon.js";
 import { mockCouponData } from "./coupon.mock.js";
 import { CouponRepository } from "./coupon.repository.js";
 
-class CheckoutService {
+class CouponService {
   constructor(
     private couponRepository: CouponRepository,
     private checkoutService: CheckoutService,
-  ) {
-    // 초기 쿠폰 생성
-    mockCouponData.forEach((couponData) =>
-      this.createCoupon({ ...couponData }),
-    );
-  }
+  ) {}
 
   createCoupon({
     baseInformation,
@@ -27,6 +23,13 @@ class CheckoutService {
 
     return newCoupon.toJson().id;
   }
+
+  createBaseCoupon() {
+    // 초기 쿠폰 생성 (하드코딩)
+    mockCouponData.forEach((couponData) =>
+      this.createCoupon({ ...couponData }),
+    );
+  }
 }
 
-export default CheckoutService;
+export default CouponService;
