@@ -55,7 +55,7 @@ describe("쿠폰 테스트", () => {
 
     productService = new ProductService(productRepository, cartRepository);
     cartService = new CartService(cartRepository, productRepository);
-    couponService = new CouponService(couponRepository, checkoutService);
+    couponService = new CouponService(couponRepository);
     checkoutService = new CheckoutService(
       checkoutRepository,
       cartService,
@@ -83,9 +83,11 @@ describe("쿠폰 테스트", () => {
   test("올바른 쿠폰 목록을 조회한다.", () => {
     // given
     const requestedAt = new Date("2026-06-10");
+    const checkoutItems =
+      checkoutService.getCheckoutContent(checkoutId).checkoutItems;
 
     // when
-    const coupons = couponService.getCoupons(checkoutId, requestedAt);
+    const coupons = couponService.getCoupons(checkoutItems, requestedAt);
 
     // then
     expect(coupons).toEqual([

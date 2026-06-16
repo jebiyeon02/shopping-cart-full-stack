@@ -13,6 +13,7 @@
 
 ```json
 {
+  "cartId": 1,
   "selectedProductIds": [1, 2, 3, 4]
 }
 ```

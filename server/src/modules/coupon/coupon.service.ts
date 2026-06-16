@@ -5,10 +5,7 @@ import { mockCouponData } from "./coupon.mock.js";
 import { CouponRepository } from "./coupon.repository.js";
 
 class CouponService {
-  constructor(
-    private couponRepository: CouponRepository,
-    private checkoutService: CheckoutService,
-  ) {}
+  constructor(private couponRepository: CouponRepository) {}
 
   createCoupon({
     baseInformation,
@@ -24,9 +21,7 @@ class CouponService {
     return newCoupon.toJson().id;
   }
 
-  getCoupons(checkoutId: number, requestedAt: Date) {
-    const checkoutItems =
-      this.checkoutService.getCheckoutContent(checkoutId).checkoutItems;
+  getCoupons(checkoutItems: CheckoutItem[], requestedAt: Date) {
     const coupons = this.couponRepository.getCouponList();
 
     return coupons.map((coupon) => {

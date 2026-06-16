@@ -60,6 +60,29 @@ class CheckoutService {
 
     return checkout.toJson().remoteArea;
   }
+
+  getCheckoutCoupons(checkoutId: number, requestedAt: Date) {
+    const checkout = this.checkoutRepository.findById(checkoutId);
+
+    if (!checkout) {
+      throw new Error("임시 영수증이 존재하지 않습니다.");
+    }
+
+    const { checkoutItems } = checkout.toJson();
+
+    return this.couponService.getCoupons(checkoutItems, requestedAt);
+  }
+
+  applyCoupon(checkoutId: number, couponIds: [number?, number?]) {
+    const checkout = this.checkoutRepository.findById(checkoutId);
+    if (!checkout) {
+      throw new AppError("CHECKOUT_NOT_FOUND");
+    }
+
+    checkout.updateAppliedCoupons(couponIds);
+
+    return checkout.toJson().appliedCouponIds;
+  }
 }
 
 export default CheckoutService;
