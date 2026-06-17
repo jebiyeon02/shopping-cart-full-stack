@@ -40,6 +40,44 @@ class CheckoutController {
       next(error);
     }
   };
+
+  getCheckoutCoupons = (req: Request, res: Response, next: NextFunction) => {
+    const { checkoutId } = req.params;
+
+    const requestedAt = new Date(); // 백엔드한테 요청이 온 시간 기준
+    try {
+      const checkoutCoupons = this.checkoutService.getCheckoutCoupons(
+        Number(checkoutId),
+        requestedAt,
+      );
+
+      res.status(201).json({
+        code: 200,
+        message: "요청에 성공했습니다.",
+        result: { coupons: checkoutCoupons },
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  updateRemoteArea = (req: Request, res: Response, next: NextFunction) => {
+    const { checkoutId } = req.params;
+
+    try {
+      const newCheckoutId = this.checkoutService.getCheckoutContent(
+        Number(checkoutId),
+      );
+
+      res.status(201).json({
+        code: 201,
+        message: "성공적으로 생성되었습니다.",
+        result: { ...newCheckoutId },
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 export default CheckoutController;

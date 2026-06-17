@@ -6,6 +6,10 @@ const createCheckoutRouter = (checkoutController: CheckoutController) => {
 
   checkoutRouter.post("/", checkoutController.addCheckout);
   checkoutRouter.get("/:checkoutId", checkoutController.getCheckout);
+  checkoutRouter.get(
+    "/:checkoutId/coupons",
+    checkoutController.getCheckoutCoupons,
+  );
 
   return checkoutRouter;
 };

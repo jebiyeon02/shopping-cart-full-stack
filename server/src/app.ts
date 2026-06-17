@@ -53,6 +53,7 @@ const createApp = (): Express => {
   const cartRouter = createCartRouter(cartController);
   const checkoutRouter = createCheckoutRouter(checkoutController);
 
+  couponService.createBaseCoupon(); // 기본 쿠폰 4개 생성
   const app = express();
 
   app.use((req, res, next) => {

@@ -1,5 +1,4 @@
 import { CheckoutItem } from "../checkout/Checkout.js";
-import CheckoutService from "../checkout/checkout.service.js";
 import { CouponItem } from "./Coupon.js";
 import { mockCouponData } from "./coupon.mock.js";
 import { CouponRepository } from "./coupon.repository.js";
