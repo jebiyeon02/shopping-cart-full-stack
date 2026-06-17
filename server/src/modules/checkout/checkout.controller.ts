@@ -93,16 +93,24 @@ class CheckoutController {
 
   updateRemoteArea = (req: Request, res: Response, next: NextFunction) => {
     const { checkoutId } = req.params;
+    const { remoteArea } = req.body;
 
     try {
-      const newCheckoutId = this.checkoutService.getCheckoutContent(
+      this.checkoutService.updateRemoteArea(Number(checkoutId), remoteArea);
+
+      const checkoutContent = this.checkoutService.getCheckoutContent(
         Number(checkoutId),
       );
 
-      res.status(201).json({
-        code: 201,
-        message: "성공적으로 생성되었습니다.",
-        result: { ...newCheckoutId },
+      res.status(200).json({
+        code: 200,
+        message: "요청에 성공했습니다.",
+        result: {
+          remoteArea: checkoutContent.remoteArea,
+          couponDiscountPrice: checkoutContent.couponDiscountPrice,
+          deliveryFee: checkoutContent.deliveryFee,
+          totalPrice: checkoutContent.totalPrice,
+        },
       });
     } catch (error) {
       next(error);

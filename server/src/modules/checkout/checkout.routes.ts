@@ -14,6 +14,10 @@ const createCheckoutRouter = (checkoutController: CheckoutController) => {
     "/:checkoutId/coupons",
     checkoutController.applyCheckoutCoupons,
   );
+  checkoutRouter.patch(
+    "/:checkoutId/remote-area",
+    checkoutController.updateRemoteArea,
+  );
 
   return checkoutRouter;
 };

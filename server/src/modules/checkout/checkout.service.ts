@@ -57,6 +57,11 @@ class CheckoutService {
 
     // TODO: 상세 에러처리 필요
     checkout.updateRemoteArea(nextRemoteArea);
+    if (nextRemoteArea) {
+      checkout.updateDeliveryFee(6000);
+    } else {
+      checkout.updateDeliveryFee(3000);
+    }
 
     return checkout.toJson().remoteArea;
   }
@@ -82,14 +87,20 @@ class CheckoutService {
     if (!checkout) {
       throw new AppError("CHECKOUT_NOT_FOUND");
     }
-    const availableCoupons = this.couponService
+    if (couponIds.length >= 2) {
+      // TODO: 커스텀 에러 처리 필요
+      throw new Error("쿠폰은 2개까지 사용하실 수 있습니다.");
+    }
+    const unavailableCoupons = this.couponService
       .getCoupons(checkout.toJson().checkoutItems, requestedAt)
-      .filter((coupon) => coupon.isAvailable);
+      .filter((coupon) => !coupon.isAvailable);
 
-    if (!availableCoupons.every((coupon) => couponIds.includes(coupon.id))) {
+    if (unavailableCoupons.some((coupon) => couponIds.includes(coupon.id))) {
       // TODO: 커스텀 에러 처리 필요
       throw new Error("사용 불가능한 쿠폰이 존재합니다.");
     }
+
+    checkout.updateAppliedCoupons(couponIds);
 
     return checkout.toJson().appliedCouponIds;
   }

@@ -25,6 +25,10 @@ class Checkout {
     this.#appliedCouponIds = nextCouponIds;
   }
 
+  updateDeliveryFee(nextDeliveryFee: number) {
+    this.#deliveryFee = nextDeliveryFee;
+  }
+
   toJson() {
     return {
       id: this.id,
