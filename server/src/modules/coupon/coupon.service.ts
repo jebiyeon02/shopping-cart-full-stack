@@ -95,6 +95,68 @@ class CouponService {
     });
   }
 
+  getRecommendedCouponIds(
+    orderPrice: number,
+    checkoutItems: CheckoutItem[],
+    deliveryFee: number,
+    requestedAt: Date,
+  ) {
+    const availableCoupons = this.couponRepository
+      .getCouponList()
+      .filter((coupon) =>
+        coupon.isAvailable({
+          checkoutItems,
+          requestedAt,
+        }),
+      );
+
+    let targetPrice = orderPrice;
+    let firstMaxDiscountCouponId: number | null = null;
+    let firstMaxDiscountPrice = 0;
+    availableCoupons.forEach((coupon) => {
+      if (coupon.getDiscountType() === "fixed") {
+        const discountAmount = coupon.getDiscountAmount({
+          targetPrice,
+          deliveryFee,
+          checkoutItems,
+        });
+        if (discountAmount > firstMaxDiscountPrice) {
+          firstMaxDiscountCouponId = coupon.toJson().id;
+          firstMaxDiscountPrice = discountAmount;
+        }
+      }
+    });
+
+    // 적용할 쿠폰이 없어서 return
+    if (firstMaxDiscountCouponId === null) return [];
+    const firstCouponId = firstMaxDiscountCouponId;
+
+    targetPrice -= firstMaxDiscountPrice;
+    const firstCouponRemovedCoupons = availableCoupons.filter(
+      (coupon) => !coupon.isSameId(firstCouponId),
+    );
+
+    let secondMaxDiscountCouponId: number | null = null;
+    let secondMaxDiscountPrice = 0;
+
+    firstCouponRemovedCoupons.forEach((coupon) => {
+      const discountAmount = coupon.getDiscountAmount({
+        targetPrice,
+        deliveryFee,
+        checkoutItems,
+      });
+      if (discountAmount > secondMaxDiscountPrice) {
+        secondMaxDiscountCouponId = coupon.toJson().id;
+        secondMaxDiscountPrice = discountAmount;
+      }
+    });
+
+    // 적용할 2번째 쿠폰 없는 경우 바로 return
+    if (secondMaxDiscountCouponId === null) return [firstCouponId];
+
+    return [firstCouponId, secondMaxDiscountCouponId];
+  }
+
   createBaseCoupon() {
     // 초기 쿠폰 생성 (하드코딩)
     mockCouponData.forEach((couponData) =>

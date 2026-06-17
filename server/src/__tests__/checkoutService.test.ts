@@ -1,4 +1,3 @@
-import AppError from "../errors/AppError.js";
 import CartService from "../modules/cart/cart.service.js";
 import ProductService from "../modules/product/product.service.js";
 import { InMemoryCartRepository } from "../modules/cart/cart.repository.js";
@@ -41,7 +40,7 @@ describe("임시 영수증 서비스 테스트", () => {
 
     productService = new ProductService(productRepository, cartRepository);
     cartService = new CartService(cartRepository, productRepository);
-    couponService = new CouponService(couponRepository, checkoutService);
+    couponService = new CouponService(couponRepository);
     checkoutService = new CheckoutService(
       checkoutRepository,
       cartService,

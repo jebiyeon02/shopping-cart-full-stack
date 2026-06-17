@@ -75,7 +75,19 @@ class CheckoutService {
 
     const { checkoutItems } = checkout.toJson();
 
-    return this.couponService.getCoupons(checkoutItems, requestedAt);
+    const orderPrice = checkout.getOrderPrice();
+    const deliveryFee = checkout.toJson().deliveryFee;
+    const recommendedCouponIds = this.couponService.getRecommendedCouponIds(
+      orderPrice,
+      checkoutItems,
+      deliveryFee,
+      requestedAt,
+    );
+
+    return {
+      coupons: this.couponService.getCoupons(checkoutItems, requestedAt),
+      recommendedCouponIds,
+    };
   }
 
   applyCoupon(

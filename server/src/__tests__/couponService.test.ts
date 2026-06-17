@@ -105,4 +105,57 @@ describe("쿠폰 테스트", () => {
       },
     ]);
   });
+
+  test("존재하는 쿠폰 중 할인율이 가장 높은 쿠폰 2개의 id를 반환한다.", () => {
+    // given
+    const mockCoupons = [
+      {
+        baseInformation: {
+          name: "10,000원 할인 쿠폰",
+          type: "FIXED10000",
+          expiryDate: new Date("2026-06-10"),
+        },
+        discountPolicy: {
+          fixedDiscountPrice: 10000,
+          fixedDiscountRate: null,
+        },
+        condition: {
+          minAmount: 0,
+          startTime: null,
+          endTime: null,
+        },
+      },
+      {
+        baseInformation: {
+          name: "20,000원 할인 쿠폰",
+          type: "FIXED20000",
+          expiryDate: new Date("2026-06-10"),
+        },
+        discountPolicy: {
+          fixedDiscountPrice: 20000,
+          fixedDiscountRate: null,
+        },
+        condition: {
+          minAmount: 100000,
+          startTime: null,
+          endTime: null,
+        },
+      },
+    ];
+    mockCoupons.forEach((couponData) => couponService.createCoupon(couponData));
+    const requestedAt = new Date("2026-06-10");
+    const { checkoutItems, deliveryFee, orderPrice } =
+      checkoutService.getCheckoutContent(checkoutId);
+
+    // when
+    const recommendedCouponIds = couponService.getRecommendedCouponIds(
+      orderPrice,
+      checkoutItems,
+      deliveryFee,
+      requestedAt,
+    );
+
+    // then
+    expect(recommendedCouponIds).toEqual([3, 2]);
+  });
 });
