@@ -73,13 +73,23 @@ class CheckoutService {
     return this.couponService.getCoupons(checkoutItems, requestedAt);
   }
 
-  applyCoupon(checkoutId: number, couponIds: [number?, number?]) {
+  applyCoupon(
+    checkoutId: number,
+    couponIds: [number?, number?],
+    requestedAt: Date,
+  ) {
     const checkout = this.checkoutRepository.findById(checkoutId);
     if (!checkout) {
       throw new AppError("CHECKOUT_NOT_FOUND");
     }
+    const availableCoupons = this.couponService
+      .getCoupons(checkout.toJson().checkoutItems, requestedAt)
+      .filter((coupon) => coupon.isAvailable);
 
-    checkout.updateAppliedCoupons(couponIds);
+    if (!availableCoupons.every((coupon) => couponIds.includes(coupon.id))) {
+      // TODO: 커스텀 에러 처리 필요
+      throw new Error("사용 불가능한 쿠폰이 존재합니다.");
+    }
 
     return checkout.toJson().appliedCouponIds;
   }

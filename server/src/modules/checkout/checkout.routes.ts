@@ -10,6 +10,10 @@ const createCheckoutRouter = (checkoutController: CheckoutController) => {
     "/:checkoutId/coupons",
     checkoutController.getCheckoutCoupons,
   );
+  checkoutRouter.patch(
+    "/:checkoutId/coupons",
+    checkoutController.applyCheckoutCoupons,
+  );
 
   return checkoutRouter;
 };

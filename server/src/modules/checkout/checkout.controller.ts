@@ -44,17 +44,47 @@ class CheckoutController {
   getCheckoutCoupons = (req: Request, res: Response, next: NextFunction) => {
     const { checkoutId } = req.params;
 
-    const requestedAt = new Date(); // 백엔드한테 요청이 온 시간 기준
+    const requestedAt = new Date(); // TODO: 백엔드한테 요청이 온 시간 기준
     try {
       const checkoutCoupons = this.checkoutService.getCheckoutCoupons(
         Number(checkoutId),
         requestedAt,
       );
 
-      res.status(201).json({
+      res.status(200).json({
         code: 200,
         message: "요청에 성공했습니다.",
         result: { coupons: checkoutCoupons },
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  applyCheckoutCoupons = (req: Request, res: Response, next: NextFunction) => {
+    const { checkoutId } = req.params;
+    const { couponIds } = req.body;
+
+    const requestedAt = new Date(); // TODO: 백엔드한테 요청이 온 시간 기준
+
+    try {
+      this.checkoutService.applyCoupon(
+        Number(checkoutId),
+        couponIds,
+        requestedAt,
+      );
+      const checkoutContent = this.checkoutService.getCheckoutContent(
+        Number(checkoutId),
+      );
+
+      res.status(200).json({
+        code: 200,
+        message: "쿠폰이 적용되었습니다.",
+        result: {
+          couponDiscountPrice: checkoutContent.couponDiscountPrice,
+          deliveryFee: checkoutContent.deliveryFee,
+          totalPrice: checkoutContent.totalPrice,
+        },
       });
     } catch (error) {
       next(error);
