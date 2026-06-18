@@ -195,13 +195,12 @@ export class MiracleSaleCoupon extends Coupon {
       this.condition.endTime,
     );
 
-    if (startHour > requestHour && startMinutes > requestMinutes) {
+    if (requestHour < startHour) return false;
+    if (requestHour === startHour && requestMinutes < startMinutes)
       return false;
-    }
 
-    if (endHour <= requestHour && endMinutes <= requestMinutes) {
-      return false;
-    }
+    if (requestHour > endHour) return false;
+    if (requestHour === endHour && requestMinutes >= endMinutes) return false;
 
     return true;
   }
