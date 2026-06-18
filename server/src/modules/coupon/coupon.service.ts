@@ -69,7 +69,7 @@ class CouponService {
         checkoutItems,
         deliveryFee,
       });
-
+      targetPrice -= discountPrice;
       totalDiscountPrice += discountPrice;
     });
 
