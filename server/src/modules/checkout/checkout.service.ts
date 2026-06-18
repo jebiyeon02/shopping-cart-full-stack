@@ -11,6 +11,18 @@ class CheckoutService {
   ) {}
 
   createCheckout(cartId: number, selectedProductIds: number[]) {
+    const cartItemIds = this.cartService
+      .getCartItems(cartId)
+      .map((item) => item.productId);
+
+    if (
+      !selectedProductIds.every((selectedId) =>
+        cartItemIds.includes(selectedId),
+      )
+    ) {
+      throw new AppError("PRODUCT_NOT_EXIST_IN_CART");
+    }
+
     const checkoutItems = this.cartService
       .getCartItems(cartId)
       .filter((cartItem) => selectedProductIds.includes(cartItem.productId));
@@ -98,6 +110,20 @@ class CheckoutService {
     requestedAt: Date,
   ) {
     const checkout = this.#findCheckout(checkoutId);
+
+    const { checkoutItems } = checkout.toJson();
+
+    const allCouponIds = this.couponService
+      .getCoupons(checkoutItems, requestedAt)
+      .map((coupon) => coupon.id);
+
+    if (
+      !couponIds.every(
+        (couponId) => couponId && allCouponIds.includes(couponId),
+      )
+    ) {
+      throw new AppError("COUPON_NOT_FOUND");
+    }
 
     if (couponIds.length > 2) {
       throw new AppError("COUPON_APPLY_COUNT_EXCEEDED");
