@@ -116,6 +116,37 @@ class CheckoutController {
       next(error);
     }
   };
+
+  validateAppliedCoupons = (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    const { checkoutId } = req.params;
+
+    try {
+      const { appliedCouponIds } = this.checkoutService.getCheckoutContent(
+        Number(checkoutId),
+      );
+
+      const requestedAt = new Date();
+      this.checkoutService.validateCoupons(
+        Number(checkoutId),
+        appliedCouponIds,
+        requestedAt,
+      );
+
+      res.status(200).json({
+        code: 200,
+        message: "올바른 쿠폰입니다.",
+        result: {
+          valid: true,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 export default CheckoutController;

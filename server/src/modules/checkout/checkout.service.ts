@@ -21,10 +21,7 @@ class CheckoutService {
   }
 
   getCheckoutContent(checkoutId: number) {
-    const checkout = this.checkoutRepository.findById(checkoutId);
-    if (!checkout) {
-      throw new AppError("CHECKOUT_NOT_FOUND");
-    }
+    const checkout = this.#findCheckout(checkoutId);
 
     const { id, checkoutItems, remoteArea, appliedCouponIds, deliveryFee } =
       checkout.toJson();
@@ -50,12 +47,8 @@ class CheckoutService {
   }
 
   updateRemoteArea(checkoutId: number, nextRemoteArea: boolean) {
-    const checkout = this.checkoutRepository.findById(checkoutId);
-    if (!checkout) {
-      throw new AppError("CHECKOUT_NOT_FOUND");
-    }
+    const checkout = this.#findCheckout(checkoutId);
 
-    // TODO: 상세 에러처리 필요
     checkout.updateRemoteArea(nextRemoteArea);
     if (nextRemoteArea) {
       checkout.updateDeliveryFee(6000);
@@ -67,11 +60,7 @@ class CheckoutService {
   }
 
   getCheckoutCoupons(checkoutId: number, requestedAt: Date) {
-    const checkout = this.checkoutRepository.findById(checkoutId);
-
-    if (!checkout) {
-      throw new AppError("CHECKOUT_NOT_FOUND");
-    }
+    const checkout = this.#findCheckout(checkoutId);
 
     const { checkoutItems } = checkout.toJson();
 
@@ -95,11 +84,22 @@ class CheckoutService {
     couponIds: [number?, number?],
     requestedAt: Date,
   ) {
-    const checkout = this.checkoutRepository.findById(checkoutId);
-    if (!checkout) {
-      throw new AppError("CHECKOUT_NOT_FOUND");
-    }
-    if (couponIds.length >= 2) {
+    const checkout = this.#findCheckout(checkoutId);
+    this.validateCoupons(checkoutId, couponIds, requestedAt);
+
+    checkout.updateAppliedCoupons(couponIds);
+
+    return checkout.toJson().appliedCouponIds;
+  }
+
+  validateCoupons(
+    checkoutId: number,
+    couponIds: [number?, number?],
+    requestedAt: Date,
+  ) {
+    const checkout = this.#findCheckout(checkoutId);
+
+    if (couponIds.length > 2) {
       throw new AppError("COUPON_APPLY_COUNT_EXCEEDED");
     }
     const unavailableCoupons = this.couponService
@@ -109,10 +109,15 @@ class CheckoutService {
     if (unavailableCoupons.some((coupon) => couponIds.includes(coupon.id))) {
       throw new AppError("UNAVIALABLE_COUPON_EXIST");
     }
+  }
 
-    checkout.updateAppliedCoupons(couponIds);
+  #findCheckout(checkoutId: number) {
+    const checkout = this.checkoutRepository.findById(checkoutId);
+    if (!checkout) {
+      throw new AppError("CHECKOUT_NOT_FOUND");
+    }
 
-    return checkout.toJson().appliedCouponIds;
+    return checkout;
   }
 }
 
