@@ -69,6 +69,13 @@
 }
 ```
 
+```json
+{
+  "code": "CART_NOT_EXIST",
+  "message": "장바구니가 존재하지 않습니다."
+}
+```
+
 ---
 
 ### 2. 임시 영수증 조회
@@ -235,6 +242,22 @@ recommendedCouponIds는 클라이언트의 최초 선택 상태를 위한 추천
 }
 ```
 
+**Response `400`**
+
+```json
+{
+  "code": "COUPON_APPLY_COUNT_EXCEEDED",
+  "message": "쿠폰은 2개까지 사용하실 수 있습니다."
+}
+```
+
+```json
+{
+  "code": "UNAVIALABLE_COUPON_EXIST",
+  "message": "사용 불가능한 쿠폰이 존재합니다."
+}
+```
+
 **Response `404`**
 
 ```json
@@ -248,20 +271,6 @@ recommendedCouponIds는 클라이언트의 최초 선택 상태를 위한 추천
 {
   "code": "CHECKOUT_NOT_FOUND",
   "message": "임시 영수증이 존재하지 않습니다."
-}
-```
-
-```json
-{
-  "code": "COUPON_APPLY_COUNT_EXCEEDED",
-  "message": "쿠폰은 2개까지 사용하실 수 있습니다."
-}
-```
-
-```json
-{
-  "code": "UNAVIALABLE_COUPON_EXIST",
-  "message": "사용 불가능한 쿠폰이 존재합니다."
 }
 ```
 
@@ -345,6 +354,13 @@ recommendedCouponIds는 클라이언트의 최초 선택 상태를 위한 추천
 {
   "code": "CHECKOUT_NOT_FOUND",
   "message": "임시 영수증이 존재하지 않습니다."
+}
+```
+
+```json
+{
+  "code": "COUPON_NOT_FOUND",
+  "message": "해당 쿠폰이 존재하지 않습니다."
 }
 ```
 
