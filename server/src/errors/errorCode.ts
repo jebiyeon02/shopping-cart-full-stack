@@ -59,6 +59,21 @@ const CHECKOUT_ERROR_CODE = {
   },
 } as const;
 
+const COUPON_ERROR_CODE = {
+  COUPON_NOT_FOUND: {
+    code: "COUPON_NOT_FOUND",
+    message: "해당 쿠폰이 존재하지 않습니다.",
+  },
+  COUPON_APPLY_COUNT_EXCEEDED: {
+    code: "COUPON_APPLY_COUNT_EXCEEDED",
+    message: "쿠폰은 2개까지 사용하실 수 있습니다.",
+  },
+  UNAVIALABLE_COUPON_EXIST: {
+    code: "UNAVIALABLE_COUPON_EXIST",
+    message: "사용 불가능한 쿠폰이 존재합니다.",
+  },
+} as const;
+
 const COMMON_ERROR_CODE = {
   INTERNAL_SERVER_ERROR: {
     code: "INTERNAL_SERVER_ERROR",
@@ -70,6 +85,7 @@ export const ERROR_CODE = {
   ...PRODUCT_ERROR_CODE,
   ...CART_ERROR_CODE,
   ...CHECKOUT_ERROR_CODE,
+  ...COUPON_ERROR_CODE,
   ...COMMON_ERROR_CODE,
 } as const;
 
@@ -91,6 +107,10 @@ export const ERROR_STATUS: Record<ErrorCodeKey, number> = {
   CART_NOT_EXIST: 404,
 
   CHECKOUT_NOT_FOUND: 404,
+
+  COUPON_NOT_FOUND: 404,
+  COUPON_APPLY_COUNT_EXCEEDED: 400,
+  UNAVIALABLE_COUPON_EXIST: 400,
 
   INTERNAL_SERVER_ERROR: 500,
 };

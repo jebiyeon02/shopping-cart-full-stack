@@ -70,7 +70,7 @@ class CheckoutService {
     const checkout = this.checkoutRepository.findById(checkoutId);
 
     if (!checkout) {
-      throw new Error("임시 영수증이 존재하지 않습니다.");
+      throw new AppError("CHECKOUT_NOT_FOUND");
     }
 
     const { checkoutItems } = checkout.toJson();
@@ -100,16 +100,14 @@ class CheckoutService {
       throw new AppError("CHECKOUT_NOT_FOUND");
     }
     if (couponIds.length >= 2) {
-      // TODO: 커스텀 에러 처리 필요
-      throw new Error("쿠폰은 2개까지 사용하실 수 있습니다.");
+      throw new AppError("COUPON_APPLY_COUNT_EXCEEDED");
     }
     const unavailableCoupons = this.couponService
       .getCoupons(checkout.toJson().checkoutItems, requestedAt)
       .filter((coupon) => !coupon.isAvailable);
 
     if (unavailableCoupons.some((coupon) => couponIds.includes(coupon.id))) {
-      // TODO: 커스텀 에러 처리 필요
-      throw new Error("사용 불가능한 쿠폰이 존재합니다.");
+      throw new AppError("UNAVIALABLE_COUPON_EXIST");
     }
 
     checkout.updateAppliedCoupons(couponIds);

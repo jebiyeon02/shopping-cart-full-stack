@@ -251,6 +251,20 @@ recommendedCouponIds는 클라이언트의 최초 선택 상태를 위한 추천
 }
 ```
 
+```json
+{
+  "code": "COUPON_APPLY_COUNT_EXCEEDED",
+  "message": "쿠폰은 2개까지 사용하실 수 있습니다."
+}
+```
+
+```json
+{
+  "code": "UNAVIALABLE_COUPON_EXIST",
+  "message": "사용 불가능한 쿠폰이 존재합니다."
+}
+```
+
 ---
 
 ### 5. 도서산간 토글

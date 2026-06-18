@@ -1,3 +1,4 @@
+import AppError from "../../errors/AppError.js";
 import { CheckoutItem } from "../checkout/Checkout.js";
 import { CouponItem } from "./Coupon.js";
 import { mockCouponData } from "./coupon.mock.js";
@@ -44,8 +45,7 @@ class CouponService {
         const coupon = this.couponRepository.findById(couponId);
 
         if (!coupon) {
-          // TODO: 커스텀 에러 처리하기
-          throw new Error("쿠폰이 존재하지 않습니다.");
+          throw new AppError("COUPON_NOT_FOUND");
         }
 
         return coupon;
@@ -84,8 +84,7 @@ class CouponService {
   ) {
     const coupon = this.couponRepository.findById(couponId);
     if (!coupon) {
-      // TODO: 커스텀 에러처리하기
-      throw new Error("쿠폰이 존재하지 않습니다.");
+      throw new AppError("COUPON_NOT_FOUND");
     }
 
     return coupon.getDiscountAmount({
