@@ -15,6 +15,30 @@ export type CheckoutContent = {
   totalPrice: number;
 };
 
+export const createCheckout = async (
+  cartId: number,
+  selectedProductIds: number[],
+): Promise<number> => {
+  const response = await fetch(`${BASE_URL}/checkout`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      cartId,
+      selectedProductIds,
+    }),
+  });
+
+  if (!response.ok) {
+    throwApiError(response);
+  }
+
+  const data: ApiResponse<{ checkoutId: number }> = await response.json();
+  const checkoutId = data.result.checkoutId;
+
+  return checkoutId;
+};
+
 export const getCheckoutContent = async (
   checkoutId: number,
 ): Promise<CheckoutContent> => {
