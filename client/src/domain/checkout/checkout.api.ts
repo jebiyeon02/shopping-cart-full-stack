@@ -65,7 +65,7 @@ export const updateCheckoutApplyCoupon = async (
 ): Promise<
   Pick<CheckoutContent, "couponDiscountPrice" | "deliveryFee" | "totalPrice">
 > => {
-  const response = await fetch(`${BASE_URL}/checkout/${checkoutId}`, {
+  const response = await fetch(`${BASE_URL}/checkout/${checkoutId}/coupons`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -80,32 +80,43 @@ export const updateCheckoutApplyCoupon = async (
   const data: ApiResponse<
     Pick<CheckoutContent, "couponDiscountPrice" | "deliveryFee" | "totalPrice">
   > = await response.json();
-  const updatedPrice = data.result;
+  const { deliveryFee, couponDiscountPrice, totalPrice } = data.result;
 
-  return updatedPrice;
+  return { deliveryFee, couponDiscountPrice, totalPrice };
 };
 
 export const updateCheckoutRemoteArea = async (
   checkoutId: number,
-  remoteArea: boolean,
+  nextRemoteArea: boolean,
 ): Promise<
-  Pick<CheckoutContent, "couponDiscountPrice" | "deliveryFee" | "totalPrice">
+  Pick<
+    CheckoutContent,
+    "remoteArea" | "couponDiscountPrice" | "deliveryFee" | "totalPrice"
+  >
 > => {
-  const response = await fetch(`${BASE_URL}/checkout/${checkoutId}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
+  const response = await fetch(
+    `${BASE_URL}/checkout/${checkoutId}/remote-area`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ remoteArea: nextRemoteArea }),
     },
-  });
+  );
 
   if (!response.ok) {
     await throwApiError(response);
   }
 
   const data: ApiResponse<
-    Pick<CheckoutContent, "couponDiscountPrice" | "deliveryFee" | "totalPrice">
+    Pick<
+      CheckoutContent,
+      "remoteArea" | "couponDiscountPrice" | "deliveryFee" | "totalPrice"
+    >
   > = await response.json();
-  const updatedPrice = data.result;
+  const { remoteArea, deliveryFee, couponDiscountPrice, totalPrice } =
+    data.result;
 
-  return updatedPrice;
+  return { remoteArea, deliveryFee, couponDiscountPrice, totalPrice };
 };
