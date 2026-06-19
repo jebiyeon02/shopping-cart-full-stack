@@ -20,6 +20,7 @@ export const createCheckout = async (
   selectedProductIds: number[],
 ): Promise<number> => {
   const response = await fetch(`${BASE_URL}/checkout`, {
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
@@ -56,4 +57,55 @@ export const getCheckoutContent = async (
   const checkoutContent = data.result;
 
   return checkoutContent;
+};
+
+export const updateCheckoutApplyCoupon = async (
+  checkoutId: number,
+  couponIds: CheckoutContent["appliedCouponIds"],
+): Promise<
+  Pick<CheckoutContent, "couponDiscountPrice" | "deliveryFee" | "totalPrice">
+> => {
+  const response = await fetch(`${BASE_URL}/checkout/${checkoutId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ couponIds }),
+  });
+
+  if (!response.ok) {
+    await throwApiError(response);
+  }
+
+  const data: ApiResponse<
+    Pick<CheckoutContent, "couponDiscountPrice" | "deliveryFee" | "totalPrice">
+  > = await response.json();
+  const updatedPrice = data.result;
+
+  return updatedPrice;
+};
+
+export const updateCheckoutRemoteArea = async (
+  checkoutId: number,
+  remoteArea: boolean,
+): Promise<
+  Pick<CheckoutContent, "couponDiscountPrice" | "deliveryFee" | "totalPrice">
+> => {
+  const response = await fetch(`${BASE_URL}/checkout/${checkoutId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    await throwApiError(response);
+  }
+
+  const data: ApiResponse<
+    Pick<CheckoutContent, "couponDiscountPrice" | "deliveryFee" | "totalPrice">
+  > = await response.json();
+  const updatedPrice = data.result;
+
+  return updatedPrice;
 };
