@@ -10,7 +10,7 @@ import { useCheckoutContent } from "./CheckoutItemList/useCheckoutContent";
 
 const CheckoutPage = () => {
   const { checkoutId } = useParams();
-  // TODO: checkoutId가 존재하지 않을 때 분기처리 필요
+  if (!checkoutId) return "잘못된 접근입니다.";
   const {
     checkoutContent,
     requestUpdateCheckoutRemoteArea,
@@ -22,7 +22,7 @@ const CheckoutPage = () => {
   const [remoteAreaChecked, setRemoteAreaChecked] = useState(false);
 
   if (!checkoutContent) return "로딩중...";
-  const { checkoutItems } = checkoutContent;
+  const { checkoutItems, orderPrice, deliveryFee } = checkoutContent;
 
   return (
     <div>
@@ -49,8 +49,12 @@ const CheckoutPage = () => {
       <CheckoutPaymentSummary />
 
       <CheckoutCouponModal
+        checkoutId={Number(checkoutId)}
         isCheckoutCouponModalOpen={isCheckoutCouponModalOpen}
         onCloseModal={() => {}}
+        checkoutItems={checkoutItems}
+        orderPrice={orderPrice}
+        deliveryFee={deliveryFee}
       />
     </div>
   );
