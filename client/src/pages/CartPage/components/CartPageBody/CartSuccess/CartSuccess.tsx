@@ -2,16 +2,11 @@ import { useNavigate } from "react-router-dom";
 import type { CartItemModel } from "../../../../../domain/cart/cart.api";
 import CartEmpty from "./CartEmpty";
 import { useCartSelectionContext } from "../../../CartSelectionContext";
-import {
-  getDeliveryFee,
-  getFilteredCartItem,
-  getOrderPrice,
-  getProductAllItemCount,
-  getTotalPrice,
-} from "../../../../../domain/cart/cart.util";
 import BaseButton from "../../../../../shared/components/BaseButton";
 import CartContent from "./CartContent/CartContent";
 import styled from "@emotion/styled";
+import useAsyncTask from "../../../../../shared/useAsyncTask";
+import { createCheckout } from "../../../../../domain/checkout/checkout.api";
 
 const CartSuccess = ({ cartItems }: { cartItems: CartItemModel[] }) => {
   return (
@@ -38,30 +33,29 @@ const BottomArea = styled.div`
   transform: translateX(-50%);
 `;
 
-// 이런 식으로 로직 분리를 위해서 "특수화"? 라는 개념을 적용해봤다..!
 const OrderConfirmButton = ({ cartItems }: { cartItems: CartItemModel[] }) => {
   const navigate = useNavigate();
+  const { asyncState, executeAsyncFunction } = useAsyncTask<number>();
   const { selectedProductIds } = useCartSelectionContext();
-
-  const filteredCartItem = getFilteredCartItem(cartItems, selectedProductIds);
-  const orderPrice = getOrderPrice(filteredCartItem);
-  const deliveryFee = getDeliveryFee(orderPrice);
   const isOrderConfirm =
     cartItems.length === 0 || selectedProductIds.length === 0;
 
   const handleOrderConfirmButtonClick = () => {
-    navigate("/cart/order-confirm", {
-      state: {
-        productCount: filteredCartItem.length,
-        productItemCount: getProductAllItemCount(filteredCartItem),
-        totalPrice: getTotalPrice(orderPrice, deliveryFee),
+    executeAsyncFunction({
+      asyncFunction: () => createCheckout(1, selectedProductIds),
+      options: {
+        onSuccess: (checkoutId) => {
+          navigate(`/checkout/${checkoutId}`);
+        },
+        onFail: (error) => alert(error.message),
+        showLoading: true,
       },
     });
   };
 
   return (
     <BaseButton
-      disabled={isOrderConfirm}
+      disabled={isOrderConfirm || asyncState.status === "loading"}
       onClick={handleOrderConfirmButtonClick}
     >
       주문 확인
