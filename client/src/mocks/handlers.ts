@@ -185,4 +185,111 @@ export const handlers = [
       return new HttpResponse(null, { status: 204 });
     },
   ),
+  // 여기부터 checkout
+  http.post(`${API_BASE_URL}/checkout`, async () => {
+    await delay(3000);
+    return createSuccessResponse({
+      checkoutId: 1,
+    });
+  }),
+
+  http.patch(
+    `${API_BASE_URL}/checkout/:checkoutId/remote-area`,
+    async ({ request }) => {
+      const { nextRemoteArea } = (await request.json()) as {
+        nextRemoteArea: boolean;
+      };
+      await delay(2000);
+      return createSuccessResponse({
+        remoteArea: nextRemoteArea,
+        deliveryFee: 6000,
+        couponDiscountPrice: 0,
+        totalPrice: 61000,
+      });
+    },
+  ),
+
+  http.get(`${API_BASE_URL}/checkout/:checkoutId`, () => {
+    return createSuccessResponse({
+      checkoutId: 1,
+      checkoutItems: [
+        {
+          id: 1,
+          name: "나이키 양말",
+          price: 5000,
+          imgUrl: "https://sdasd.asdas.com",
+          itemCount: 3,
+        },
+        {
+          id: 2,
+          name: "아디다스 신발",
+          price: 50000,
+          imgUrl: "https://sdasd.asdas.com",
+          itemCount: 1,
+        },
+      ],
+      appliedCouponIds: [],
+      remoteArea: false,
+      orderPrice: 55000,
+      couponDiscountPrice: 0,
+      deliveryFee: 3000,
+      totalPrice: 58000,
+    });
+  }),
+
+  http.get(`${API_BASE_URL}/checkout/:checkoutId/coupons`, () => {
+    return createSuccessResponse({
+      coupons: [
+        {
+          id: 1,
+          name: "5,000원 할인 쿠폰",
+          type: "FIXED5000",
+          expiryDate: "2026-11-30",
+          fixedDiscountPrice: 5000,
+          fixedDiscountRate: null,
+          minAmount: 100000,
+          startTime: null,
+          endTime: null,
+          isAvailable: true,
+        },
+        {
+          id: 2,
+          name: "2+1 쿠폰",
+          type: "BOGO",
+          expiryDate: "2026-06-30",
+          fixedDiscountPrice: null,
+          fixedDiscountRate: null,
+          minAmount: null,
+          startTime: null,
+          endTime: null,
+          isAvailable: true,
+        },
+        {
+          id: 3,
+          name: "무료 배송 쿠폰",
+          type: "FREESHIPPING",
+          expiryDate: "2026-08-31",
+          fixedDiscountPrice: null,
+          fixedDiscountRate: null,
+          minAmount: 50000,
+          startTime: null,
+          endTime: null,
+          isAvailable: false,
+        },
+        {
+          id: 4,
+          name: "30% 시간제 할인 쿠폰",
+          type: "MIRACLESALE",
+          expiryDate: "2026-07-31",
+          fixedDiscountPrice: null,
+          fixedDiscountRate: 30,
+          minAmount: null,
+          startTime: "04:00",
+          endTime: "07:00",
+          isAvailable: true,
+        },
+      ],
+      recommendedCouponIds: [1, 4],
+    });
+  }),
 ];
