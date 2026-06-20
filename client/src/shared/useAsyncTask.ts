@@ -10,7 +10,7 @@ export type AsyncState<T> =
 export type ExecuteAsyncFunctionProps<T> = {
   asyncFunction: () => Promise<T>;
   options?: {
-    onSuccess?: () => void;
+    onSuccess?: (data: T) => void;
     onFail?: (error: AsyncError) => void;
     showLoading?: boolean;
   };
@@ -56,7 +56,7 @@ const useAsyncTask = <T>() => {
       try {
         const data = await asyncFunction();
         setSuccess(data);
-        options?.onSuccess?.();
+        options?.onSuccess?.(data);
       } catch (error) {
         const normalizedError = normalizeError(error);
         setFail(normalizedError);
