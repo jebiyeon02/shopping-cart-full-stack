@@ -9,8 +9,8 @@ export type CheckoutCoupon = {
   fixedDiscountPrice: number | null;
   fixedDiscountRate: number | null;
   minAmount: number | null;
-  startTime: number | null;
-  endTime: number | null;
+  startTime: string | null;
+  endTime: string | null;
   isAvailable: boolean;
 };
 
