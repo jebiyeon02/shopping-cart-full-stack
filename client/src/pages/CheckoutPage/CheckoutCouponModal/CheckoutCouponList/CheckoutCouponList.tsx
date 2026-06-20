@@ -14,6 +14,7 @@ const CheckoutCouponList = ({
       <div>쿠폰은 최대 2개까지 사용할 수 있습니다.</div>
       {coupons.map((coupon) => (
         <CheckoutCouponRow
+          key={coupon.id}
           coupon={coupon}
           selectedCouponIds={selectedCouponIds}
         />

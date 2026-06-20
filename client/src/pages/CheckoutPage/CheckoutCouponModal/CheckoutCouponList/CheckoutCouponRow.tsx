@@ -1,5 +1,6 @@
 import type { CheckoutContent } from "../../../../domain/checkout/checkout.api";
 import type { CheckoutCoupon } from "../../../../domain/coupon/coupon.api";
+import { formatCouponUsageConditions } from "../../../../domain/coupon/coupon.util";
 
 const CheckoutCouponRow = ({
   coupon,
@@ -8,7 +9,34 @@ const CheckoutCouponRow = ({
   coupon: CheckoutCoupon;
   selectedCouponIds: CheckoutContent["appliedCouponIds"];
 }) => {
-  return <div>쿠폰 아이템 row # </div>;
+  const {
+    name,
+    type,
+    expiryDate,
+    fixedDiscountPrice,
+    fixedDiscountRate,
+    minAmount,
+    startTime,
+    endTime,
+    isAvailable,
+  } = coupon;
+  return (
+    <div>
+      <label>
+        <input type="checkbox" />
+        {name},
+      </label>
+      <span>{expiryDate}</span>
+      <br />
+      <span>
+        {formatCouponUsageConditions({
+          minAmount,
+          startTime,
+          endTime,
+        })}
+      </span>
+    </div>
+  );
 };
 
 export default CheckoutCouponRow;
