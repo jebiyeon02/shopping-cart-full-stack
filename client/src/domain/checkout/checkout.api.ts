@@ -15,6 +15,11 @@ export type CheckoutContent = {
   totalPrice: number;
 };
 
+export type CheckoutRemoteAreaResponse = Pick<
+  CheckoutContent,
+  "remoteArea" | "couponDiscountPrice" | "deliveryFee" | "totalPrice"
+>;
+
 export const createCheckout = async (
   cartId: number,
   selectedProductIds: number[],
@@ -101,7 +106,7 @@ export const updateCheckoutRemoteArea = async (
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ remoteArea: nextRemoteArea }),
+      body: JSON.stringify({ nextRemoteArea }),
     },
   );
 
