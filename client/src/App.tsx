@@ -19,7 +19,7 @@ function App() {
           </CartProvider>
         }
       />
-      <Route path="checkout/:id" element={<CheckoutPage />} />
+      <Route path="checkout/:checkoutId" element={<CheckoutPage />} />
       <Route path="cart/order-confirm" element={<OrderConfirmPage />} />
     </Routes>
   );
