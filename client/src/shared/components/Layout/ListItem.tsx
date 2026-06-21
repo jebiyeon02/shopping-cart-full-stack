@@ -32,9 +32,17 @@ const ListItem = ({
           flexDirection: "column",
         })}
       >
-        {title}
-        {subTitle}
-        {detail}
+        {title && <div>{title}</div>}
+        {subTitle && <div>{subTitle}</div>}
+        {detail && (
+          <div
+            css={css({
+              marginTop: "8px",
+            })}
+          >
+            {detail}
+          </div>
+        )}
       </div>
       {suffix}
     </div>
