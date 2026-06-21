@@ -21,10 +21,10 @@ const OrderCompletePage = () => {
     <OrderCompletePageLayout>
       <Header actionIcon={<></>} />
       <OrderConfirmContent>
-        <OrderConfirmTitle>주문 확인</OrderConfirmTitle>
+        <OrderConfirmTitle>결제 확인</OrderConfirmTitle>
         <OrderConfirmDescription>
           총 {checkoutItems.length}종류의 상품
-          {getCheckoutAllItemCount(checkoutItems)}개를 주문합니다.
+          {getCheckoutAllItemCount(checkoutItems)}개를 주문했습니다.
           <br />
           최종 결제 금액을 확인해 주세요.
         </OrderConfirmDescription>
