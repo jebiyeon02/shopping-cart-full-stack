@@ -1,5 +1,6 @@
 import CartItem, { CartItemType } from "../cart/CartItem.js";
 import { ProductType } from "../product/Product.js";
+import { DELIVERY_FEE } from "./checkout.constant.js";
 
 export type CheckoutItem = Pick<ProductType, "imgUrl" | "name" | "price"> &
   CartItemType;
@@ -14,7 +15,10 @@ class Checkout {
   ) {
     this.#remoteArea = false;
     this.#appliedCouponIds = [];
-    this.#deliveryFee = 3000;
+    this.#deliveryFee =
+      this.getOrderPrice() >= DELIVERY_FEE.FREE_BOUNDARY
+        ? DELIVERY_FEE.FREE
+        : DELIVERY_FEE.DEFAULT;
   }
 
   updateRemoteArea(nextRemoteArea: boolean) {

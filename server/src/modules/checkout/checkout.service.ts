@@ -1,6 +1,7 @@
 import AppError from "../../errors/AppError.js";
 import CartService from "../cart/cart.service.js";
 import CouponService from "../coupon/coupon.service.js";
+import { DELIVERY_FEE } from "./checkout.constant.js";
 import { CheckoutRepository } from "./checkout.repository.js";
 
 class CheckoutService {
@@ -60,12 +61,17 @@ class CheckoutService {
 
   updateRemoteArea(checkoutId: number, nextRemoteArea: boolean) {
     const checkout = this.#findCheckout(checkoutId);
+    const nowDeliveryFee = checkout.toJson().deliveryFee;
 
     checkout.updateRemoteArea(nextRemoteArea);
     if (nextRemoteArea) {
-      checkout.updateDeliveryFee(6000);
+      checkout.updateDeliveryFee(
+        nowDeliveryFee + DELIVERY_FEE.REMOTE_AREA_EXTRA_FEE,
+      );
     } else {
-      checkout.updateDeliveryFee(3000);
+      checkout.updateDeliveryFee(
+        nowDeliveryFee - DELIVERY_FEE.REMOTE_AREA_EXTRA_FEE,
+      );
     }
 
     return checkout.toJson().remoteArea;
