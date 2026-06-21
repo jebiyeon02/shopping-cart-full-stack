@@ -40,7 +40,7 @@ export const getCheckoutCoupons = async (
 
 export const getCouponValidation = async (
   checkoutId: number,
-): Promise<boolean> => {
+): Promise<void> => {
   const response = await fetch(
     `${BASE_URL}/checkout/${checkoutId}/coupons/validation`,
     {
@@ -54,9 +54,4 @@ export const getCouponValidation = async (
   if (!response.ok) {
     await throwApiError(response);
   }
-
-  const data: ApiResponse<{ valid: boolean }> = await response.json();
-  const valid = data.result.valid;
-
-  return valid;
 };
