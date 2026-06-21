@@ -48,8 +48,18 @@ const CheckoutPage = () => {
           disabled={remoteAreaAsyncState.status === "loading"}
           onChange={(e) =>
             requestUpdateCheckoutRemoteArea(e.target.checked, {
-              onSuccess: ({ remoteArea }) =>
-                updateCheckoutContent({ remoteArea }),
+              onSuccess: ({
+                remoteArea,
+                couponDiscountPrice,
+                deliveryFee,
+                totalPrice,
+              }) =>
+                updateCheckoutContent({
+                  remoteArea,
+                  couponDiscountPrice,
+                  deliveryFee,
+                  totalPrice,
+                }),
               onFail: (error) => alert(error.message),
               showLoading: true,
             })
@@ -71,6 +81,7 @@ const CheckoutPage = () => {
           checkoutItems={checkoutItems}
           orderPrice={orderPrice}
           deliveryFee={deliveryFee}
+          updateCheckoutContent={updateCheckoutContent}
         />
       )}
     </div>

@@ -10,12 +10,14 @@ const CheckoutCouponModal = ({
   checkoutItems,
   orderPrice,
   deliveryFee,
+  updateCheckoutContent,
 }: {
   checkoutId: number;
   onCloseModal: () => void;
   checkoutItems: CheckoutContent["checkoutItems"];
   orderPrice: CheckoutContent["orderPrice"];
   deliveryFee: CheckoutContent["deliveryFee"];
+  updateCheckoutContent: (updateContent: Partial<CheckoutContent>) => void;
 }) => {
   const {
     getCheckoutCouponAsyncState,
@@ -23,8 +25,9 @@ const CheckoutCouponModal = ({
     updateApplyCouponAsyncState,
   } = useCheckoutCoupon(checkoutId);
   const [selectedCouponIds, setSelectedCouponIds] = useState<number[]>([]); // TODO: selectedCouponIds 커스텀 훅으로 분리하기, 분리 이유는 책임관점 -> 클라이언트 상태관리라는 목적!
-  const coupons = getCheckoutCouponAsyncState.data?.coupons;
-  if (!coupons) return "쿠폰 로딩중...";
+  if (getCheckoutCouponAsyncState.status !== "success") return "쿠폰 로딩중...";
+  // console.log(getCheckoutCouponAsyncState.data);
+  const coupons = getCheckoutCouponAsyncState.data.coupons;
 
   // TODO: coupons말고 다른 네이밍 필요, ~~Response 접미사도 다른 것 고려해보기
   // TODO: 최초 1번 마운트 시 추천 쿠폰조합 적용
@@ -58,6 +61,7 @@ const CheckoutCouponModal = ({
         requestUpdateCheckoutApplyCoupon={requestUpdateCheckoutApplyCoupon}
         updateApplyCouponAsyncState={updateApplyCouponAsyncState}
         onCloseModal={onCloseModal}
+        updateCheckoutContent={updateCheckoutContent}
       />
     </div>
   );

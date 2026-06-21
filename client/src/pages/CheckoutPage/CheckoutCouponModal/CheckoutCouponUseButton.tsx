@@ -1,5 +1,6 @@
 import {
   type CheckoutApplyCouponResponse,
+  type CheckoutContent,
   type CheckoutItem,
 } from "../../../domain/checkout/checkout.api";
 import type { CheckoutCoupon } from "../../../domain/coupon/coupon.api";
@@ -24,6 +25,7 @@ const CheckoutCouponUseButton = ({
   requestUpdateCheckoutApplyCoupon,
   updateApplyCouponAsyncState,
   onCloseModal,
+  updateCheckoutContent,
 }: {
   checkoutId: number;
   coupons: CheckoutCoupon[];
@@ -37,6 +39,7 @@ const CheckoutCouponUseButton = ({
   ) => Promise<void>;
   updateApplyCouponAsyncState: AsyncState<CheckoutApplyCouponResponse>;
   onCloseModal: () => void;
+  updateCheckoutContent: (updateContent: Partial<CheckoutContent>) => void;
 }) => {
   const selectedCoupons = getFilteredCoupon(coupons, selectedCouponIds);
 
@@ -49,7 +52,10 @@ const CheckoutCouponUseButton = ({
 
   const handleUseCouponButtonClick = async () => {
     await requestUpdateCheckoutApplyCoupon(selectedCouponIds, {
-      onSuccess: () => onCloseModal(),
+      onSuccess: ({ couponDiscountPrice, deliveryFee, totalPrice }) => {
+        updateCheckoutContent({ couponDiscountPrice, deliveryFee, totalPrice });
+        onCloseModal();
+      },
       onFail: (error) => alert(error.message),
       showLoading: true,
     });
