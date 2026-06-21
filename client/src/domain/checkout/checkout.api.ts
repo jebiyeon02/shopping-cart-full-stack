@@ -78,7 +78,7 @@ export const updateCheckoutApplyCoupon = async (
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ nextCouponIds }),
+    body: JSON.stringify({ couponIds: nextCouponIds }),
   });
 
   if (!response.ok) {
