@@ -50,11 +50,19 @@ class CheckoutController {
         Number(checkoutId),
         requestedAt,
       );
+      const recommendedCouponIds =
+        this.checkoutService.getCheckoutRecommendedCouponIds(
+          Number(checkoutId),
+          requestedAt,
+        );
 
       res.status(200).json({
         code: 200,
         message: "요청에 성공했습니다.",
-        result: { coupons: checkoutCoupons },
+        result: {
+          coupons: checkoutCoupons,
+          recommendedCouponIds: recommendedCouponIds,
+        },
       });
     } catch (error) {
       next(error);

@@ -76,6 +76,13 @@ class CheckoutService {
 
     const { checkoutItems } = checkout.toJson();
 
+    return this.couponService.getCoupons(checkoutItems, requestedAt);
+  }
+
+  getCheckoutRecommendedCouponIds(checkoutId: number, requestedAt: Date) {
+    const checkout = this.#findCheckout(checkoutId);
+    const { checkoutItems } = checkout.toJson();
+
     const orderPrice = checkout.getOrderPrice();
     const deliveryFee = checkout.toJson().deliveryFee;
     const recommendedCouponIds = this.couponService.getRecommendedCouponIds(
@@ -85,10 +92,7 @@ class CheckoutService {
       requestedAt,
     );
 
-    return {
-      coupons: this.couponService.getCoupons(checkoutItems, requestedAt),
-      recommendedCouponIds,
-    };
+    return recommendedCouponIds;
   }
 
   applyCoupon(
