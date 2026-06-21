@@ -1,8 +1,12 @@
+import { css } from "@emotion/react";
 import type { CheckoutApplyCouponResponse } from "../../../../domain/checkout/checkout.api";
 import type { CheckoutCoupon } from "../../../../domain/coupon/coupon.api";
 import List from "../../../../shared/components/Layout/List";
+import ListItem from "../../../../shared/components/Layout/ListItem";
 import type { AsyncState } from "../../../../shared/useAsyncTask";
 import CheckoutCouponRow from "./CheckoutCouponRow";
+import { typography } from "../../../../shared/styles/typography";
+import WarningIcon from "../../../../assets/warning.png";
 
 const CheckoutCouponList = ({
   coupons,
@@ -17,7 +21,17 @@ const CheckoutCouponList = ({
 }) => {
   return (
     <List gap="8px">
-      <div>쿠폰은 최대 2개까지 사용할 수 있습니다.</div>
+      <ListItem
+        prefix={
+          <img src={WarningIcon} css={css({ width: "16px", height: "16px" })} />
+        }
+        title={
+          <span css={typography.bodyMedium}>
+            쿠폰은 최대 2개까지 사용할 수 있습니다.
+          </span>
+        }
+      />
+
       {coupons.map((coupon) => (
         <CheckoutCouponRow
           key={coupon.id}
