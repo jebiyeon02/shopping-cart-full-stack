@@ -1,4 +1,5 @@
 import type { CheckoutItem } from "../../../domain/checkout/checkout.api";
+import List from "../../../shared/components/Layout/List";
 import CheckoutItemRow from "./CheckoutItemRow";
 
 const CheckoutItemList = ({
@@ -7,14 +8,14 @@ const CheckoutItemList = ({
   checkoutItems: CheckoutItem[];
 }) => {
   return (
-    <div>
+    <List gap="8px">
       {checkoutItems.map((checkoutItem) => (
         <CheckoutItemRow
           key={checkoutItem.productId}
           checkoutItem={checkoutItem}
         />
       ))}
-    </div>
+    </List>
   );
 };
 
