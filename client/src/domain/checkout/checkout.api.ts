@@ -20,6 +20,11 @@ export type CheckoutRemoteAreaResponse = Pick<
   "remoteArea" | "couponDiscountPrice" | "deliveryFee" | "totalPrice"
 >;
 
+export type CheckoutApplyCouponResponse = Pick<
+  CheckoutContent,
+  "couponDiscountPrice" | "deliveryFee" | "totalPrice"
+>;
+
 export const createCheckout = async (
   cartId: number,
   selectedProductIds: number[],
@@ -66,25 +71,21 @@ export const getCheckoutContent = async (
 
 export const updateCheckoutApplyCoupon = async (
   checkoutId: number,
-  couponIds: CheckoutContent["appliedCouponIds"],
-): Promise<
-  Pick<CheckoutContent, "couponDiscountPrice" | "deliveryFee" | "totalPrice">
-> => {
+  nextCouponIds: number[],
+): Promise<CheckoutApplyCouponResponse> => {
   const response = await fetch(`${BASE_URL}/checkout/${checkoutId}/coupons`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ couponIds }),
+    body: JSON.stringify({ nextCouponIds }),
   });
 
   if (!response.ok) {
     await throwApiError(response);
   }
 
-  const data: ApiResponse<
-    Pick<CheckoutContent, "couponDiscountPrice" | "deliveryFee" | "totalPrice">
-  > = await response.json();
+  const data: ApiResponse<CheckoutApplyCouponResponse> = await response.json();
   const { deliveryFee, couponDiscountPrice, totalPrice } = data.result;
 
   return { deliveryFee, couponDiscountPrice, totalPrice };
@@ -93,12 +94,7 @@ export const updateCheckoutApplyCoupon = async (
 export const updateCheckoutRemoteArea = async (
   checkoutId: number,
   nextRemoteArea: boolean,
-): Promise<
-  Pick<
-    CheckoutContent,
-    "remoteArea" | "couponDiscountPrice" | "deliveryFee" | "totalPrice"
-  >
-> => {
+): Promise<CheckoutRemoteAreaResponse> => {
   const response = await fetch(
     `${BASE_URL}/checkout/${checkoutId}/remote-area`,
     {
@@ -114,12 +110,7 @@ export const updateCheckoutRemoteArea = async (
     await throwApiError(response);
   }
 
-  const data: ApiResponse<
-    Pick<
-      CheckoutContent,
-      "remoteArea" | "couponDiscountPrice" | "deliveryFee" | "totalPrice"
-    >
-  > = await response.json();
+  const data: ApiResponse<CheckoutRemoteAreaResponse> = await response.json();
   const { remoteArea, deliveryFee, couponDiscountPrice, totalPrice } =
     data.result;
 

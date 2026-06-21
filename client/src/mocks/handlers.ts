@@ -209,6 +209,22 @@ export const handlers = [
     },
   ),
 
+  http.patch(
+    `${API_BASE_URL}/checkout/:checkoutId/coupons`,
+    async ({ request }) => {
+      const { nextCouponIds } = (await request.json()) as {
+        nextCouponIds: number[];
+      };
+      await delay(2000);
+      return createSuccessResponse({
+        appliedCouponIds: nextCouponIds,
+        deliveryFee: 6000,
+        couponDiscountPrice: 0,
+        totalPrice: 61000,
+      });
+    },
+  ),
+
   http.get(`${API_BASE_URL}/checkout/:checkoutId`, () => {
     return createSuccessResponse({
       checkoutId: 1,

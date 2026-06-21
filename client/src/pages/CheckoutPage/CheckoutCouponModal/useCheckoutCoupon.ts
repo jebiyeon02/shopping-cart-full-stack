@@ -1,36 +1,51 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   getCheckoutCoupons,
-  type CheckoutCoupon,
   type CheckoutCouponResponse,
 } from "../../../domain/coupon/coupon.api";
-import useAsyncTask from "../../../shared/useAsyncTask";
-import type { CheckoutContent } from "../../../domain/checkout/checkout.api";
+import useAsyncTask, {
+  type ExecuteAsyncFunctionProps,
+} from "../../../shared/useAsyncTask";
+import {
+  updateCheckoutApplyCoupon,
+  type CheckoutApplyCouponResponse,
+} from "../../../domain/checkout/checkout.api";
 
 const useCheckoutCoupon = (checkoutId: number) => {
-  const { asyncState, executeAsyncFunction } =
-    useAsyncTask<CheckoutCouponResponse>();
+  const {
+    asyncState: getCheckoutCouponAsyncState,
+    executeAsyncFunction: executeGetCheckoutCoupon,
+  } = useAsyncTask<CheckoutCouponResponse>();
 
-  const [coupons, setCoupons] = useState<CheckoutCoupon[] | null>(null);
-  let recommendedCouponIds: CheckoutContent["appliedCouponIds"] | null = null; // 렌더링용은 아니기 때문에 state로 쓰지 않았음.
+  const {
+    asyncState: updateApplyCouponAsyncState,
+    executeAsyncFunction: executeUpdateApplyCoupon,
+  } = useAsyncTask<CheckoutApplyCouponResponse>();
 
   useEffect(() => {
-    executeAsyncFunction({
+    executeGetCheckoutCoupon({
       asyncFunction: () => getCheckoutCoupons(checkoutId),
       options: {
-        onSuccess: ({
-          coupons: fetchedCoupons,
-          recommendedCouponIds: fetchedrecommendedCouponIds,
-        }) => {
-          setCoupons(fetchedCoupons);
-          recommendedCouponIds = fetchedrecommendedCouponIds;
-        },
         onFail: (error) => alert(error.message),
       },
     });
-  }, [executeAsyncFunction]);
+  }, [executeGetCheckoutCoupon]);
 
-  return { coupons, recommendedCouponIds };
+  const requestUpdateCheckoutApplyCoupon = async (
+    nextCouponIds: number[],
+    options: ExecuteAsyncFunctionProps<CheckoutApplyCouponResponse>["options"],
+  ) => {
+    await executeUpdateApplyCoupon({
+      asyncFunction: () => updateCheckoutApplyCoupon(checkoutId, nextCouponIds),
+      options,
+    });
+  };
+
+  return {
+    getCheckoutCouponAsyncState,
+    updateApplyCouponAsyncState,
+    requestUpdateCheckoutApplyCoupon,
+  };
 };
 
 export default useCheckoutCoupon;
