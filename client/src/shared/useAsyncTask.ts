@@ -66,9 +66,20 @@ const useAsyncTask = <T>() => {
     [setLoading, setSuccess, setFail],
   );
 
+  const setData = (nextData: T) => {
+    if (asyncState.status === "success") {
+      setAsyncState({
+        status: "success",
+        data: nextData,
+        error: null,
+      });
+    }
+  };
+
   return {
     asyncState,
     executeAsyncFunction,
+    setData,
   };
 };
 
