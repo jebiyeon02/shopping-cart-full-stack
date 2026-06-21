@@ -7,7 +7,7 @@ export type CheckoutItem = CartItemModel;
 export type CheckoutContent = {
   checkoutId: number;
   checkoutItems: CheckoutItem[];
-  appliedCouponIds: [number?, number?];
+  appliedCouponIds: number[];
   remoteArea: boolean;
   orderPrice: number;
   couponDiscountPrice: number;
