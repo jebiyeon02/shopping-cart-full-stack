@@ -1,6 +1,12 @@
 import type { CheckoutApplyCouponResponse } from "../../../../domain/checkout/checkout.api";
 import type { CheckoutCoupon } from "../../../../domain/coupon/coupon.api";
-import { formatCouponUsageConditions } from "../../../../domain/coupon/coupon.util";
+import {
+  formatCouponUsageConditions,
+  formatExpiryDate,
+} from "../../../../domain/coupon/coupon.util";
+import BaseCheckBox from "../../../../shared/components/BaseCheckBox";
+import ListItem from "../../../../shared/components/Layout/ListItem";
+import { typography } from "../../../../shared/styles/typography";
 import type { AsyncState } from "../../../../shared/useAsyncTask";
 
 const CheckoutCouponRow = ({
@@ -17,29 +23,37 @@ const CheckoutCouponRow = ({
   const { id, name, expiryDate, minAmount, startTime, endTime, isAvailable } =
     coupon;
   const isSelected = selectedCouponIds.includes(id);
+  const isDisabled =
+    updateApplyCouponAsyncState.status === "loading" ||
+    !isAvailable ||
+    (selectedCouponIds.length >= 2 && !selectedCouponIds.includes(id));
   return (
-    <div>
-      <label>
-        <input
-          type="checkbox"
-          checked={isSelected}
-          disabled={
-            updateApplyCouponAsyncState.status === "loading" || !isAvailable
-          }
-          onChange={(e) => onSelectCoupon(id, e.target.checked)}
-        />
-        {name},
-      </label>
-      <span>{expiryDate}</span>
-      <br />
-      <span>
-        {formatCouponUsageConditions({
-          minAmount,
-          startTime,
-          endTime,
-        })}
-      </span>
-    </div>
+    <ListItem
+      title={
+        <label>
+          <BaseCheckBox
+            isSelected={isSelected}
+            disabled={isDisabled}
+            onSelect={(nextSelect) => onSelectCoupon(id, nextSelect)}
+          />
+          <span css={typography.titleMedium}>{name}</span>
+        </label>
+      }
+      subTitle={
+        <div>
+          <div css={typography.bodySmall}>
+            만료일: {formatExpiryDate(expiryDate)}
+          </div>
+          {formatCouponUsageConditions({
+            minAmount,
+            startTime,
+            endTime,
+          }).map((conditionString) => (
+            <div css={typography.bodySmall}>{conditionString}</div>
+          ))}
+        </div>
+      }
+    />
   );
 };
 
