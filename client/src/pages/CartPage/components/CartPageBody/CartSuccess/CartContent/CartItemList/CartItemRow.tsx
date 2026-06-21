@@ -23,7 +23,7 @@ const CartItemRow = ({
 
   const { unselectCartItem, selectCartItem } = useCartSelectionContext();
 
-  const { id, name, price, itemCount, imgUrl } = cartItem;
+  const { productId, name, price, itemCount, imgUrl } = cartItem;
 
   const handleDeleteCartItem = async (productId: number) => {
     await requestDeleteCartItem(productId, {
@@ -65,12 +65,12 @@ const CartItemRow = ({
           type="checkbox"
           checked={isChecked}
           onChange={(event) => {
-            handleProductSelect(id, event.target.checked);
+            handleProductSelect(productId, event.target.checked);
           }}
         />
         <DeleteButton
           type="button"
-          onClick={() => handleDeleteCartItem(id)}
+          onClick={() => handleDeleteCartItem(productId)}
           disabled={deleteCartItemAsyncState.status === "loading"}
         >
           삭제
@@ -85,7 +85,9 @@ const CartItemRow = ({
           <CartItemCountStepper>
             <StepperButton
               type="button"
-              onClick={() => handleUpdateCartItemCount(id, itemCount - 1)}
+              onClick={() =>
+                handleUpdateCartItemCount(productId, itemCount - 1)
+              }
               disabled={
                 itemCount <= 1 ||
                 deleteCartItemAsyncState.status === "loading" ||
@@ -97,7 +99,9 @@ const CartItemRow = ({
             {itemCount}
             <StepperButton
               type="button"
-              onClick={() => handleUpdateCartItemCount(id, itemCount + 1)}
+              onClick={() =>
+                handleUpdateCartItemCount(productId, itemCount + 1)
+              }
               disabled={
                 deleteCartItemAsyncState.status === "loading" ||
                 updateCartItemCountAsyncState.status === "loading"

@@ -13,7 +13,7 @@ export const getFilteredCartItem = (
   selectedProductIds: number[],
 ) => {
   return cartItems.filter((cartItem) =>
-    selectedProductIds.includes(cartItem.id),
+    selectedProductIds.includes(cartItem.productId),
   );
 };
 

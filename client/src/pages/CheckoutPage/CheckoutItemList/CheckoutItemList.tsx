@@ -10,7 +10,10 @@ const CheckoutItemList = ({
     <div>
       <div>체크아웃 상품 리스트</div>
       {checkoutItems.map((checkoutItem) => (
-        <CheckoutItemRow key={checkoutItem.id} checkoutItem={checkoutItem} />
+        <CheckoutItemRow
+          key={checkoutItem.productId}
+          checkoutItem={checkoutItem}
+        />
       ))}
     </div>
   );

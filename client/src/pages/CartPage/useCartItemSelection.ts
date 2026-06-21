@@ -24,7 +24,7 @@ export const useCartItemSelection = (
     );
 
     if (!savedCartItemSelection) {
-      const allProductIds = cartItems.map((cartItem) => cartItem.id);
+      const allProductIds = cartItems.map((cartItem) => cartItem.productId);
 
       selectedProductIdsDispatch({
         type: "insertAll",

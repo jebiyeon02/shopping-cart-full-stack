@@ -10,13 +10,13 @@ import type { CartItemModel } from "../../../domain/cart/cart.api";
 
 const cartItems: CartItemModel[] = [
   {
-    id: 1,
+    productId: 1,
     name: "테스트 상품 1",
     price: 10000,
     itemCount: 2,
   },
   {
-    id: 2,
+    productId: 2,
     name: "테스트 상품 2",
     price: 3000,
     itemCount: 3,

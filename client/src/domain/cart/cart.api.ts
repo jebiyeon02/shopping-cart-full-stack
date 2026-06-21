@@ -1,7 +1,7 @@
 import { BASE_URL, throwApiError, type ApiResponse } from "../../shared/api";
 
 export type CartItemModel = {
-  id: number;
+  productId: number;
   name: string;
   price: number;
   imgUrl?: string;

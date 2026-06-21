@@ -12,7 +12,7 @@ const CartItemList = ({ cartItems }: { cartItems: CartItemModel[] }) => {
 
   const handleAllProductSelect = (nextChecked: boolean) => {
     if (nextChecked) {
-      const allProductIds = cartItems.map((cartItem) => cartItem.id);
+      const allProductIds = cartItems.map((cartItem) => cartItem.productId);
       selectAllCartItems(allProductIds);
       return;
     }
@@ -34,9 +34,9 @@ const CartItemList = ({ cartItems }: { cartItems: CartItemModel[] }) => {
       </CheckBoxLabel>
       {cartItems.map((cartItem) => (
         <CartItemRow
-          key={cartItem.id}
+          key={cartItem.productId}
           cartItem={cartItem}
-          isChecked={selectedProductIds.includes(cartItem.id)}
+          isChecked={selectedProductIds.includes(cartItem.productId)}
         />
       ))}
     </CartItemListLayout>
