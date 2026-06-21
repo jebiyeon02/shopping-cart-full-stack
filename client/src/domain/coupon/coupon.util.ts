@@ -33,8 +33,7 @@ export const getTotalCouponDiscountPrice = ({
   CheckoutContent,
   "checkoutItems" | "orderPrice" | "deliveryFee"
 >) => {
-  // 정액쿠폰 먼저 적용하도록 정렬
-  selectedCoupons.sort((a, b) => {
+  const sortedCoupons = selectedCoupons.toSorted((a, b) => {
     if (
       getCouponDiscountType({ fixedDiscountRate: a.fixedDiscountRate }) ===
       getCouponDiscountType({ fixedDiscountRate: b.fixedDiscountRate })
@@ -52,7 +51,7 @@ export const getTotalCouponDiscountPrice = ({
   let targetPrice = orderPrice;
   let totalDiscountPrice = 0;
 
-  selectedCoupons.forEach((coupon) => {
+  sortedCoupons.forEach((coupon) => {
     const discountPrice = getDiscountAmount({
       coupon,
       checkoutItems,
