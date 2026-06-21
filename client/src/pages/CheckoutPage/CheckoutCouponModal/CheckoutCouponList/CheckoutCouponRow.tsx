@@ -1,5 +1,6 @@
 import type { CheckoutApplyCouponResponse } from "../../../../domain/checkout/checkout.api";
 import type { CheckoutCoupon } from "../../../../domain/coupon/coupon.api";
+import { maxApplyCouponCount } from "../../../../domain/coupon/coupon.constant";
 import {
   formatCouponUsageConditions,
   formatExpiryDate,
@@ -26,7 +27,8 @@ const CheckoutCouponRow = ({
   const isDisabled =
     updateApplyCouponAsyncState.status === "loading" ||
     !isAvailable ||
-    (selectedCouponIds.length >= 2 && !selectedCouponIds.includes(id));
+    (selectedCouponIds.length >= maxApplyCouponCount &&
+      !selectedCouponIds.includes(id));
   return (
     <ListItem
       title={

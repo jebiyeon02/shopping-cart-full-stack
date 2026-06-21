@@ -7,6 +7,7 @@ import type { AsyncState } from "../../../../shared/useAsyncTask";
 import CheckoutCouponRow from "./CheckoutCouponRow";
 import { typography } from "../../../../shared/styles/typography";
 import WarningIcon from "../../../../assets/warning.png";
+import { maxApplyCouponCount } from "../../../../domain/coupon/coupon.constant";
 
 const CheckoutCouponList = ({
   coupons,
@@ -27,7 +28,7 @@ const CheckoutCouponList = ({
         }
         title={
           <span css={typography.bodyMedium}>
-            쿠폰은 최대 2개까지 사용할 수 있습니다.
+            쿠폰은 최대 {maxApplyCouponCount}개까지 사용할 수 있습니다.
           </span>
         }
       />
