@@ -8,7 +8,6 @@ const CheckoutItemList = ({
 }) => {
   return (
     <div>
-      <div>체크아웃 상품 리스트</div>
       {checkoutItems.map((checkoutItem) => (
         <CheckoutItemRow
           key={checkoutItem.productId}
