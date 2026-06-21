@@ -45,6 +45,7 @@ const CheckoutCouponModal = ({
         coupons={coupons}
         selectedCouponIds={selectedCouponIds}
         onSelectCoupon={handleSelectCoupon}
+        updateApplyCouponAsyncState={updateApplyCouponAsyncState}
       />
 
       <CheckoutCouponUseButton
