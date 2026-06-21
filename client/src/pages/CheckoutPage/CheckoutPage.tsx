@@ -1,44 +1,49 @@
 import { useState } from "react";
 import CheckoutItemList from "./CheckoutItemList/CheckoutItemList";
-import CheckoutCouponApplyButton from "./CheckoutCouponApplyButton";
 import CheckoutPaymentSummary from "./CheckoutPaymentSummary";
 
 import CheckoutCouponModal from "./CheckoutCouponModal/CheckoutCouponModal";
 
 import { useParams } from "react-router-dom";
-import { useCheckoutContent } from "./CheckoutItemList/useCheckoutContent";
+import { useCheckoutContent } from "./useCheckoutContent";
+import BaseButton from "../../shared/components/BaseButton";
 
 const CheckoutPage = () => {
   const { checkoutId } = useParams();
   if (!checkoutId) return "잘못된 접근입니다.";
   const {
-    checkoutContent,
+    getCheckoutContentAsyncState,
     requestUpdateCheckoutRemoteArea,
     remoteAreaAsyncState,
+    updateCheckoutContent,
   } = useCheckoutContent(Number(checkoutId));
 
   const [isCheckoutCouponModalOpen, setIsCheckoutCouponModalOpen] =
     useState(false);
-  const [remoteAreaChecked, setRemoteAreaChecked] = useState(false);
+
+  const checkoutContent = getCheckoutContentAsyncState.data;
 
   if (!checkoutContent) return "로딩중...";
-  const { checkoutItems, orderPrice, deliveryFee } = checkoutContent;
+  const { checkoutItems, remoteArea, orderPrice, deliveryFee, totalPrice } =
+    checkoutContent;
 
   return (
     <div>
       <div>주문 확인</div>
       <div>{`총 ${checkoutItems.length}종류의 상품 n개를 주문합니다. 최종 결제금액을 확인해 주세요.`}</div>
       <CheckoutItemList checkoutItems={checkoutItems} />
-      <CheckoutCouponApplyButton />
+      <BaseButton onClick={() => setIsCheckoutCouponModalOpen(true)}>
+        쿠폰 적용
+      </BaseButton>
       <label>
         <input
           type="checkbox"
-          checked={remoteAreaChecked}
+          checked={remoteArea}
           disabled={remoteAreaAsyncState.status === "loading"}
           onChange={(e) =>
             requestUpdateCheckoutRemoteArea(e.target.checked, {
-              onSuccess: ({ remoteArea: updatedRemoteArea }) =>
-                setRemoteAreaChecked(updatedRemoteArea),
+              onSuccess: ({ remoteArea }) =>
+                updateCheckoutContent({ remoteArea }),
               onFail: (error) => alert(error.message),
               showLoading: true,
             })
@@ -48,14 +53,15 @@ const CheckoutPage = () => {
       </label>
       <CheckoutPaymentSummary />
 
-      <CheckoutCouponModal
-        checkoutId={Number(checkoutId)}
-        isCheckoutCouponModalOpen={isCheckoutCouponModalOpen}
-        onCloseModal={() => {}}
-        checkoutItems={checkoutItems}
-        orderPrice={orderPrice}
-        deliveryFee={deliveryFee}
-      />
+      {isCheckoutCouponModalOpen && (
+        <CheckoutCouponModal
+          checkoutId={Number(checkoutId)}
+          onCloseModal={() => setIsCheckoutCouponModalOpen(false)}
+          checkoutItems={checkoutItems}
+          orderPrice={orderPrice}
+          deliveryFee={deliveryFee}
+        />
+      )}
     </div>
   );
 };

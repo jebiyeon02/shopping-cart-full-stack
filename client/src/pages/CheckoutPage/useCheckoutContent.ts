@@ -1,32 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   getCheckoutContent,
   updateCheckoutRemoteArea,
   type CheckoutContent,
   type CheckoutRemoteAreaResponse,
-} from "../../../domain/checkout/checkout.api";
+} from "../../domain/checkout/checkout.api";
 import useAsyncTask, {
   type ExecuteAsyncFunctionProps,
-} from "../../../shared/useAsyncTask";
+} from "../../shared/useAsyncTask";
 
 export const useCheckoutContent = (checkoutId: number) => {
-  const { asyncState, executeAsyncFunction } = useAsyncTask<CheckoutContent>();
+  const {
+    asyncState: getCheckoutContentAsyncState,
+    executeAsyncFunction: executeGetCheckoutContent,
+    setData: setCheckoutContent,
+  } = useAsyncTask<CheckoutContent>();
   const updateCheckoutRemoteAreaAsyncTask =
     useAsyncTask<CheckoutRemoteAreaResponse>();
 
-  const [checkoutContent, setCheckoutContent] =
-    useState<CheckoutContent | null>(null);
-
   useEffect(() => {
-    executeAsyncFunction({
+    executeGetCheckoutContent({
       asyncFunction: () => getCheckoutContent(checkoutId),
       options: {
-        onSuccess: (fetchedCheckoutContent) =>
-          setCheckoutContent(fetchedCheckoutContent),
         onFail: (error) => alert(error.message),
       },
     });
-  }, [executeAsyncFunction]);
+  }, [executeGetCheckoutContent]);
 
   updateCheckoutRemoteArea;
 
@@ -40,9 +39,17 @@ export const useCheckoutContent = (checkoutId: number) => {
     });
   };
 
+  const updateCheckoutContent = (updateContent: Partial<CheckoutContent>) => {
+    const checkoutContent = getCheckoutContentAsyncState.data;
+    if (checkoutContent) {
+      setCheckoutContent({ ...checkoutContent, ...updateContent });
+    }
+  };
+
   return {
-    checkoutContent,
+    getCheckoutContentAsyncState,
     requestUpdateCheckoutRemoteArea,
     remoteAreaAsyncState: updateCheckoutRemoteAreaAsyncTask.asyncState,
+    updateCheckoutContent,
   };
 };
