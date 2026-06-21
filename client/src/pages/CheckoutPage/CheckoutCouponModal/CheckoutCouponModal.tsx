@@ -4,6 +4,7 @@ import CheckoutCouponList from "./CheckoutCouponList/CheckoutCouponList";
 import CheckoutCouponUseButton from "./CheckoutCouponUseButton";
 import useCheckoutCoupon from "./useCheckoutCoupon";
 import { css } from "@emotion/react";
+import { typography } from "../../../shared/styles/typography";
 
 const CheckoutCouponModal = ({
   checkoutId,
@@ -86,9 +87,24 @@ const CheckoutCouponModal = ({
           padding: "16px",
         })}
       >
-        <div>
-          <span>쿠폰을 선택해주세요</span>
-          <button onClick={onCloseModal}>X</button>
+        <div
+          css={css({
+            display: "flex",
+            justifyContent: "space-between",
+          })}
+        >
+          <span css={typography.titleMedium}>쿠폰을 선택해주세요</span>
+          <button
+            onClick={onCloseModal}
+            css={css({
+              border: "none",
+              background: "none",
+              cursor: "pointer",
+              fontSize: "16px",
+            })}
+          >
+            X
+          </button>
         </div>
         <CheckoutCouponList
           coupons={coupons}
