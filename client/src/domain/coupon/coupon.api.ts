@@ -33,9 +33,9 @@ export const getCheckoutCoupons = async (
   }
 
   const data: ApiResponse<CheckoutCouponResponse> = await response.json();
-  const { coupons, recommendedCouponIds } = data.result;
+  const checkoutCouponResponse = data.result;
 
-  return { coupons, recommendedCouponIds };
+  return checkoutCouponResponse;
 };
 
 export const getCouponValidation = async (
