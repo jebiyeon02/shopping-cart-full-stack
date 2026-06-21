@@ -9,6 +9,7 @@ import { useCheckoutContent } from "./useCheckoutContent";
 import BaseButton from "../../shared/components/BaseButton";
 import useAsyncTask from "../../shared/useAsyncTask";
 import { getCouponValidation } from "../../domain/coupon/coupon.api";
+import { getCheckoutAllItemCount } from "../../domain/checkout/checkout.util";
 
 const CheckoutPage = () => {
   const { checkoutId } = useParams();
@@ -61,7 +62,7 @@ const CheckoutPage = () => {
   return (
     <div>
       <div>주문 확인</div>
-      <div>{`총 ${checkoutItems.length}종류의 상품 n개를 주문합니다. 최종 결제금액을 확인해 주세요.`}</div>
+      <div>{`총 ${checkoutItems.length}종류의 상품 ${getCheckoutAllItemCount(checkoutItems)}개를 주문합니다. 최종 결제금액을 확인해 주세요.`}</div>
       <CheckoutItemList checkoutItems={checkoutItems} />
       <BaseButton onClick={() => setIsCheckoutCouponModalOpen(true)}>
         쿠폰 적용

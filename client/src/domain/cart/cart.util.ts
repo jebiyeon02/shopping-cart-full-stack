@@ -21,10 +21,6 @@ export const getDeliveryFee = (orderPrice: number) => {
   return orderPrice >= DELIVERY.FREE_PRICE_BOUNDARY ? 0 : DELIVERY.FEE;
 };
 
-export const getProductAllItemCount = (filteredCartItem: CartItemModel[]) => {
-  return filteredCartItem.reduce((acc, item) => acc + item.itemCount, 0);
-};
-
 export const getTotalPrice = (orderPrice: number, deliveryFee: number) => {
   return orderPrice + deliveryFee;
 };
