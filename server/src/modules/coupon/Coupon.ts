@@ -1,3 +1,4 @@
+import { DELIVERY_FEE } from "../checkout/checkout.constant.js";
 import { CheckoutItem } from "../checkout/Checkout.js";
 import { getFormatDate, stringToHoursAndMinutes } from "./coupon.util.js";
 
@@ -161,6 +162,9 @@ export class FreeShippingCoupon extends Coupon {
       return false;
     }
     if (orderPrice < this.condition.minAmount) {
+      return false;
+    }
+    if (orderPrice >= DELIVERY_FEE.FREE_BOUNDARY) {
       return false;
     }
 

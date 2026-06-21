@@ -62,16 +62,20 @@ class CheckoutService {
   updateRemoteArea(checkoutId: number, nextRemoteArea: boolean) {
     const checkout = this.#findCheckout(checkoutId);
     const nowDeliveryFee = checkout.toJson().deliveryFee;
+    const orderPrice = checkout.getOrderPrice();
 
     checkout.updateRemoteArea(nextRemoteArea);
-    if (nextRemoteArea) {
-      checkout.updateDeliveryFee(
-        nowDeliveryFee + DELIVERY_FEE.REMOTE_AREA_EXTRA_FEE,
-      );
-    } else {
-      checkout.updateDeliveryFee(
-        nowDeliveryFee - DELIVERY_FEE.REMOTE_AREA_EXTRA_FEE,
-      );
+    // 총 주문금액이 10만원 보다 작을 때만 배송비에 변화가 존재한다. (10만원 이상이면 도서산관 여부 관계없이 무조건 무료로 적용)
+    if (orderPrice < DELIVERY_FEE.FREE_BOUNDARY) {
+      if (nextRemoteArea) {
+        checkout.updateDeliveryFee(
+          nowDeliveryFee + DELIVERY_FEE.REMOTE_AREA_EXTRA_FEE,
+        );
+      } else {
+        checkout.updateDeliveryFee(
+          nowDeliveryFee - DELIVERY_FEE.REMOTE_AREA_EXTRA_FEE,
+        );
+      }
     }
 
     return checkout.toJson().remoteArea;
