@@ -24,8 +24,14 @@ const CheckoutPage = () => {
   const checkoutContent = getCheckoutContentAsyncState.data;
 
   if (!checkoutContent) return "로딩중...";
-  const { checkoutItems, remoteArea, orderPrice, deliveryFee, totalPrice } =
-    checkoutContent;
+  const {
+    checkoutItems,
+    remoteArea,
+    orderPrice,
+    deliveryFee,
+    couponDiscountPrice,
+    totalPrice,
+  } = checkoutContent;
 
   return (
     <div>
@@ -51,7 +57,12 @@ const CheckoutPage = () => {
         />
         제주도 및 도서 산간 지역
       </label>
-      <CheckoutPaymentSummary />
+      <CheckoutPaymentSummary
+        orderPrice={orderPrice}
+        couponDiscountPrice={couponDiscountPrice}
+        deliveryFee={deliveryFee}
+        totalPrice={totalPrice}
+      />
 
       {isCheckoutCouponModalOpen && (
         <CheckoutCouponModal
