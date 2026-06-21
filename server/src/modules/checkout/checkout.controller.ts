@@ -145,13 +145,7 @@ class CheckoutController {
         requestedAt,
       );
 
-      res.status(200).json({
-        code: 200,
-        message: "올바른 쿠폰입니다.",
-        result: {
-          valid: true,
-        },
-      });
+      res.status(204).send();
     } catch (error) {
       next(error);
     }
