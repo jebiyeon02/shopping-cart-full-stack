@@ -102,7 +102,7 @@ export const updateCheckoutRemoteArea = async (
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ nextRemoteArea }),
+      body: JSON.stringify({ remoteArea: nextRemoteArea }),
     },
   );
 
