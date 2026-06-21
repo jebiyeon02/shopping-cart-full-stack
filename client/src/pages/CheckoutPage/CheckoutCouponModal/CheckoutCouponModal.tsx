@@ -24,14 +24,22 @@ const CheckoutCouponModal = ({
   deliveryFee: CheckoutContent["deliveryFee"];
 }) => {
   const { coupons, recommendedCouponIds } = useCheckoutCoupon(checkoutId);
-  const [selectedCouponIds, setSelectedCouponIds] = useState<
-    CheckoutContent["appliedCouponIds"]
-  >([]);
+  const [selectedCouponIds, setSelectedCouponIds] = useState<number[]>([]); // TODO: selectedCouponIds 커스텀 훅으로 분리하기, 분리 이유는 책임관점 -> 클라이언트 상태관리라는 목적!
   if (!coupons) return "쿠폰 로딩중...";
-  const selectedCoupons = getFilteredCoupon(coupons, selectedCouponIds);
 
   // TODO: coupons말고 다른 네이밍 필요, ~~Response 접미사도 다른 것 고려해보기
   // TODO: 최초 1번 마운트 시 추천 쿠폰조합 적용
+
+  console.log(orderPrice);
+
+  const handleSelectCoupon = (couponId: number, nextSelect: boolean) => {
+    if (nextSelect && selectedCouponIds.length < 2) {
+      setSelectedCouponIds((prev) => [...prev, couponId]);
+      return;
+    }
+
+    setSelectedCouponIds((prev) => prev.filter((id) => id !== couponId));
+  };
 
   return (
     <div>
@@ -39,16 +47,16 @@ const CheckoutCouponModal = ({
       <CheckoutCouponList
         coupons={coupons}
         selectedCouponIds={selectedCouponIds}
+        onSelectCoupon={handleSelectCoupon}
       />
 
-      {getTotalCouponDiscountPrice({
-        selectedCoupons,
-        checkoutItems,
-        orderPrice,
-        deliveryFee,
-      })}
-
-      <CheckoutCouponUseButton />
+      <CheckoutCouponUseButton
+        coupons={coupons}
+        selectedCouponIds={selectedCouponIds}
+        checkoutItems={checkoutItems}
+        orderPrice={orderPrice}
+        deliveryFee={deliveryFee}
+      />
     </div>
   );
 };

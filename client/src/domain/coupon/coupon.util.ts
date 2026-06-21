@@ -19,7 +19,7 @@ export const formatCouponUsageConditions = ({
 
 export const getFilteredCoupon = (
   coupons: CheckoutCoupon[],
-  selectedCouponIds: CheckoutContent["appliedCouponIds"],
+  selectedCouponIds: number[],
 ) => {
   return coupons.filter((coupon) => selectedCouponIds.includes(coupon.id));
 };

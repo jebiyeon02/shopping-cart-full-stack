@@ -5,9 +5,11 @@ import CheckoutCouponRow from "./CheckoutCouponRow";
 const CheckoutCouponList = ({
   coupons,
   selectedCouponIds,
+  onSelectCoupon,
 }: {
   coupons: CheckoutCoupon[];
-  selectedCouponIds: CheckoutContent["appliedCouponIds"];
+  selectedCouponIds: number[];
+  onSelectCoupon: (couponId: number, nextSelect: boolean) => void;
 }) => {
   return (
     <div>
@@ -17,6 +19,7 @@ const CheckoutCouponList = ({
           key={coupon.id}
           coupon={coupon}
           selectedCouponIds={selectedCouponIds}
+          onSelectCoupon={onSelectCoupon}
         />
       ))}
     </div>
