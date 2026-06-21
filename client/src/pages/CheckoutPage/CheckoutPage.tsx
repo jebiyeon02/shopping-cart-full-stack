@@ -4,19 +4,26 @@ import CheckoutPaymentSummary from "./CheckoutPaymentSummary";
 
 import CheckoutCouponModal from "./CheckoutCouponModal/CheckoutCouponModal";
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCheckoutContent } from "./useCheckoutContent";
 import BaseButton from "../../shared/components/BaseButton";
+import useAsyncTask from "../../shared/useAsyncTask";
+import { getCouponValidation } from "../../domain/coupon/coupon.api";
 
 const CheckoutPage = () => {
   const { checkoutId } = useParams();
   if (!checkoutId) return "잘못된 접근입니다.";
+  const navigate = useNavigate();
   const {
     getCheckoutContentAsyncState,
     requestUpdateCheckoutRemoteArea,
     remoteAreaAsyncState,
     updateCheckoutContent,
   } = useCheckoutContent(Number(checkoutId));
+  const {
+    asyncState: requestPaymentAsyncState,
+    executeAsyncFunction: executePayment,
+  } = useAsyncTask<void>();
 
   const [isCheckoutCouponModalOpen, setIsCheckoutCouponModalOpen] =
     useState(false);
@@ -32,6 +39,24 @@ const CheckoutPage = () => {
     couponDiscountPrice,
     totalPrice,
   } = checkoutContent;
+
+  const handlePaymentButtonClick = async () => {
+    await executePayment({
+      asyncFunction: () => getCouponValidation(Number(checkoutId)),
+      options: {
+        onSuccess: () => {
+          navigate("/order-complete", {
+            state: {
+              checkoutItems,
+              totalPrice,
+            },
+          });
+        },
+        onFail: (error) => alert(error.message),
+        showLoading: true,
+      },
+    });
+  };
 
   return (
     <div>
@@ -73,6 +98,13 @@ const CheckoutPage = () => {
         deliveryFee={deliveryFee}
         totalPrice={totalPrice}
       />
+
+      <BaseButton
+        onClick={handlePaymentButtonClick}
+        disabled={requestPaymentAsyncState.status === "loading"}
+      >
+        결제하기
+      </BaseButton>
 
       <CheckoutCouponModal
         checkoutId={Number(checkoutId)}
