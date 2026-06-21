@@ -13,6 +13,7 @@ import { getCheckoutAllItemCount } from "../../domain/checkout/checkout.util";
 import { typography } from "../../shared/styles/typography";
 import Header from "../../shared/components/Header";
 import BaseCheckBox from "../../shared/components/BaseCheckBox";
+import { css } from "@emotion/react";
 
 const CheckoutPage = () => {
   const { checkoutId } = useParams();
@@ -63,7 +64,11 @@ const CheckoutPage = () => {
   };
 
   return (
-    <div>
+    <div
+      css={css({
+        position: "relative",
+      })}
+    >
       <Header actionIcon={<div>뒤로가기</div>} />
       <div css={typography.titleLarge}>주문 확인</div>
       <div>{`총 ${checkoutItems.length}종류의 상품 ${getCheckoutAllItemCount(checkoutItems)}개를 주문합니다.`}</div>

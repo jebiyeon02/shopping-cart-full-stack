@@ -3,6 +3,7 @@ import type { CheckoutContent } from "../../../domain/checkout/checkout.api";
 import CheckoutCouponList from "./CheckoutCouponList/CheckoutCouponList";
 import CheckoutCouponUseButton from "./CheckoutCouponUseButton";
 import useCheckoutCoupon from "./useCheckoutCoupon";
+import { css } from "@emotion/react";
 
 const CheckoutCouponModal = ({
   checkoutId,
@@ -59,27 +60,56 @@ const CheckoutCouponModal = ({
   if (!isCheckoutCouponModalOpen) return null;
 
   return (
-    <div>
-      <div>쿠폰을 선택해주세요</div>
-      <CheckoutCouponList
-        coupons={coupons}
-        selectedCouponIds={selectedCouponIds}
-        onSelectCoupon={handleSelectCoupon}
-        updateApplyCouponAsyncState={updateApplyCouponAsyncState}
-      />
-      <CheckoutCouponUseButton
-        checkoutId={checkoutId}
-        coupons={coupons}
-        selectedCouponIds={selectedCouponIds}
-        checkoutItems={checkoutItems}
-        orderPrice={orderPrice}
-        deliveryFee={deliveryFee}
-        requestUpdateCheckoutApplyCoupon={requestUpdateCheckoutApplyCoupon}
-        updateApplyCouponAsyncState={updateApplyCouponAsyncState}
-        onCloseModal={onCloseModal}
-        updateCheckoutContent={updateCheckoutContent}
-      />
-    </div>
+    <section
+      css={css({
+        position: "absolute",
+        left: 0,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+      })}
+      onClick={(e) => {
+        if (e.currentTarget === e.target) {
+          onCloseModal();
+        }
+      }}
+    >
+      <article
+        css={css({
+          border: "1px solid #fff",
+          borderRadius: "4px",
+          backgroundColor: "white",
+          padding: "16px",
+        })}
+      >
+        <div>
+          <span>쿠폰을 선택해주세요</span>
+          <button onClick={onCloseModal}>X</button>
+        </div>
+        <CheckoutCouponList
+          coupons={coupons}
+          selectedCouponIds={selectedCouponIds}
+          onSelectCoupon={handleSelectCoupon}
+          updateApplyCouponAsyncState={updateApplyCouponAsyncState}
+        />
+        <CheckoutCouponUseButton
+          checkoutId={checkoutId}
+          coupons={coupons}
+          selectedCouponIds={selectedCouponIds}
+          checkoutItems={checkoutItems}
+          orderPrice={orderPrice}
+          deliveryFee={deliveryFee}
+          requestUpdateCheckoutApplyCoupon={requestUpdateCheckoutApplyCoupon}
+          updateApplyCouponAsyncState={updateApplyCouponAsyncState}
+          onCloseModal={onCloseModal}
+          updateCheckoutContent={updateCheckoutContent}
+        />
+      </article>
+    </section>
   );
 };
 
