@@ -14,6 +14,7 @@ import { typography } from "../../shared/styles/typography";
 import Header from "../../shared/components/Header";
 import BaseCheckBox from "../../shared/components/BaseCheckBox";
 import { css } from "@emotion/react";
+import ArrowBackIcon from "../../assets/arrow_back.png";
 
 const CheckoutPage = () => {
   const { checkoutId } = useParams();
@@ -69,7 +70,23 @@ const CheckoutPage = () => {
         position: "relative",
       })}
     >
-      <Header actionIcon={<div>뒤로가기</div>} />
+      <Header
+        actionIcon={
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            css={css({
+              width: "20px",
+              height: "20px",
+              border: "none",
+              background: "none",
+              cursor: "pointer",
+            })}
+          >
+            <img src={ArrowBackIcon} alt="뒤로가기" />
+          </button>
+        }
+      />
       <div css={typography.titleLarge}>주문 확인</div>
       <div>{`총 ${checkoutItems.length}종류의 상품 ${getCheckoutAllItemCount(checkoutItems)}개를 주문합니다.`}</div>
       <div>최종 결제금액을 확인해 주세요.</div>
