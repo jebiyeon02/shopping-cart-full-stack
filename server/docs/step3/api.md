@@ -235,6 +235,7 @@ recommendedCouponIds는 클라이언트의 최초 선택 상태를 위한 추천
   "code": 200,
   "message": "쿠폰이 적용되었습니다.",
   "result": {
+    "appliedCouponIds": [1, 2],
     "couponDiscountPrice": 0,
     "deliveryFee": 3000,
     "totalPrice": 58000

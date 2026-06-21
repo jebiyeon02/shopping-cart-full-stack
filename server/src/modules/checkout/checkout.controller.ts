@@ -81,6 +81,7 @@ class CheckoutController {
         code: 200,
         message: "쿠폰이 적용되었습니다.",
         result: {
+          appliedCouponIds: checkoutContent.appliedCouponIds,
           couponDiscountPrice: checkoutContent.couponDiscountPrice,
           deliveryFee: checkoutContent.deliveryFee,
           totalPrice: checkoutContent.totalPrice,
