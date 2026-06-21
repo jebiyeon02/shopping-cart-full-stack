@@ -115,7 +115,10 @@ export class BogoCoupon extends Coupon {
     super(id, baseInformation, discountPolicy, condition);
   }
 
-  isAvailable({ requestedAt }: CouponAvailabilityContext) {
+  isAvailable({ checkoutItems, requestedAt }: CouponAvailabilityContext) {
+    if (!checkoutItems.some((item) => item.itemCount >= 3)) {
+      return false;
+    }
     if (requestedAt > this.baseInformation.expiryDate) {
       return false;
     }
