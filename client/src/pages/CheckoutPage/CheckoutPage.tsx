@@ -74,16 +74,15 @@ const CheckoutPage = () => {
         totalPrice={totalPrice}
       />
 
-      {isCheckoutCouponModalOpen && (
-        <CheckoutCouponModal
-          checkoutId={Number(checkoutId)}
-          onCloseModal={() => setIsCheckoutCouponModalOpen(false)}
-          checkoutItems={checkoutItems}
-          orderPrice={orderPrice}
-          deliveryFee={deliveryFee}
-          updateCheckoutContent={updateCheckoutContent}
-        />
-      )}
+      <CheckoutCouponModal
+        checkoutId={Number(checkoutId)}
+        isCheckoutCouponModalOpen={isCheckoutCouponModalOpen}
+        onCloseModal={() => setIsCheckoutCouponModalOpen(false)}
+        checkoutItems={checkoutItems}
+        orderPrice={orderPrice}
+        deliveryFee={deliveryFee}
+        updateCheckoutContent={updateCheckoutContent}
+      />
     </div>
   );
 };
