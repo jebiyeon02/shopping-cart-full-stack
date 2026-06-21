@@ -57,6 +57,7 @@ const CheckoutCouponModal = ({
         deliveryFee={deliveryFee}
         requestUpdateCheckoutApplyCoupon={requestUpdateCheckoutApplyCoupon}
         updateApplyCouponAsyncState={updateApplyCouponAsyncState}
+        onCloseModal={onCloseModal}
       />
     </div>
   );

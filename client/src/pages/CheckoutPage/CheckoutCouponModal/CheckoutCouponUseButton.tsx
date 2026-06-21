@@ -23,6 +23,7 @@ const CheckoutCouponUseButton = ({
   deliveryFee,
   requestUpdateCheckoutApplyCoupon,
   updateApplyCouponAsyncState,
+  onCloseModal,
 }: {
   checkoutId: number;
   coupons: CheckoutCoupon[];
@@ -35,6 +36,7 @@ const CheckoutCouponUseButton = ({
     options: ExecuteAsyncFunctionProps<CheckoutApplyCouponResponse>["options"],
   ) => Promise<void>;
   updateApplyCouponAsyncState: AsyncState<CheckoutApplyCouponResponse>;
+  onCloseModal: () => void;
 }) => {
   const selectedCoupons = getFilteredCoupon(coupons, selectedCouponIds);
 
@@ -47,7 +49,7 @@ const CheckoutCouponUseButton = ({
 
   const handleUseCouponButtonClick = async () => {
     await requestUpdateCheckoutApplyCoupon(selectedCouponIds, {
-      onSuccess: () => {},
+      onSuccess: () => onCloseModal(),
       onFail: (error) => alert(error.message),
       showLoading: true,
     });
@@ -55,7 +57,10 @@ const CheckoutCouponUseButton = ({
 
   return (
     <BaseButton
-      disabled={updateApplyCouponAsyncState.status === "loading"}
+      disabled={
+        updateApplyCouponAsyncState.status === "loading" ||
+        totalCouponDiscountPrice === 0
+      }
       onClick={handleUseCouponButtonClick}
     >
       총 {formatPrice(totalCouponDiscountPrice)}원 할인 쿠폰 사용하기
