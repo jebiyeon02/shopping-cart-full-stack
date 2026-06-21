@@ -1,5 +1,11 @@
+import { formatPrice } from "../../shared/utils";
 import type { CheckoutContent } from "../checkout/checkout.api";
 import type { CheckoutCoupon } from "./coupon.api";
+
+export const formatExpiryDate = (expiryDate: string) => {
+  const [year, month, date] = expiryDate.split("-");
+  return `${year}년 ${month}월 ${date}일`;
+};
 
 export const formatCouponUsageConditions = ({
   minAmount,
@@ -8,7 +14,7 @@ export const formatCouponUsageConditions = ({
 }: Pick<CheckoutCoupon, "minAmount" | "startTime" | "endTime">) => {
   const formattedConditions = [];
   if (minAmount) {
-    formattedConditions.push(`최소 주문 금액:${minAmount}원`);
+    formattedConditions.push(`최소 주문 금액: ${formatPrice(minAmount)}원`);
   }
   if (startTime && endTime) {
     formattedConditions.push(`사용 가능 시간: ${startTime}부터 ${endTime}까지`);
