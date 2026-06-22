@@ -22,7 +22,7 @@ export type CheckoutRemoteAreaResponse = Pick<
 
 export type CheckoutApplyCouponResponse = Pick<
   CheckoutContent,
-  "couponDiscountPrice" | "deliveryFee" | "totalPrice"
+  "appliedCouponIds" | "couponDiscountPrice" | "deliveryFee" | "totalPrice"
 >;
 
 export const createCheckout = async (
@@ -86,9 +86,10 @@ export const updateCheckoutApplyCoupon = async (
   }
 
   const data: ApiResponse<CheckoutApplyCouponResponse> = await response.json();
-  const { deliveryFee, couponDiscountPrice, totalPrice } = data.result;
+  const { appliedCouponIds, deliveryFee, couponDiscountPrice, totalPrice } =
+    data.result;
 
-  return { deliveryFee, couponDiscountPrice, totalPrice };
+  return { appliedCouponIds, deliveryFee, couponDiscountPrice, totalPrice };
 };
 
 export const updateCheckoutRemoteArea = async (
