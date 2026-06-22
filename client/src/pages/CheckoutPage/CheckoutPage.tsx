@@ -107,7 +107,17 @@ const CheckoutPage = () => {
       </BaseButton>
 
       <div css={typography.titleMedium}>배송 정보</div>
-      <label>
+      <label
+        css={[
+          typography.bodyMedium,
+          css({
+            display: "flex",
+            justifyContent: "start",
+            alignItems: "center",
+            gap: "4px",
+          }),
+        ]}
+      >
         <BaseCheckBox
           isSelected={remoteArea}
           disabled={remoteAreaAsyncState.status === "loading"}
