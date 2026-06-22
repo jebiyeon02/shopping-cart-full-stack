@@ -57,6 +57,9 @@ const OrderConfirmButton = ({ cartItems }: { cartItems: CartItemModel[] }) => {
     <BaseButton
       disabled={isOrderConfirm || asyncState.status === "loading"}
       onClick={handleOrderConfirmButtonClick}
+      style={"black"}
+      display="full"
+      rounded="none"
     >
       주문 확인
     </BaseButton>

@@ -31,7 +31,12 @@ const OrderCompletePage = () => {
         <TotalPriceLabel>총 결제 금액</TotalPriceLabel>
         <TotalPrice>{formatPrice(totalPrice)}원</TotalPrice>
       </OrderConfirmContent>
-      <BaseButton onClick={() => navigate("/cart")}>
+      <BaseButton
+        onClick={() => navigate("/cart")}
+        style={"black"}
+        display="full"
+        rounded="none"
+      >
         장바구니로 돌아가기
       </BaseButton>
     </OrderCompletePageLayout>

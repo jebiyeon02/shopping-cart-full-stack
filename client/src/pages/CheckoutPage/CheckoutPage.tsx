@@ -15,6 +15,7 @@ import Header from "../../shared/components/Header";
 import BaseCheckBox from "../../shared/components/BaseCheckBox";
 import { css } from "@emotion/react";
 import ArrowBackIcon from "../../assets/arrow_back.png";
+import type { CheckoutItem } from "../../domain/checkout/checkout.api";
 
 const CheckoutPage = () => {
   const { checkoutId } = useParams();
@@ -26,10 +27,6 @@ const CheckoutPage = () => {
     remoteAreaAsyncState,
     updateCheckoutContent,
   } = useCheckoutContent(Number(checkoutId));
-  const {
-    asyncState: requestPaymentAsyncState,
-    executeAsyncFunction: executePayment,
-  } = useAsyncTask<void>();
 
   const [isCheckoutCouponModalOpen, setIsCheckoutCouponModalOpen] =
     useState(false);
@@ -46,21 +43,22 @@ const CheckoutPage = () => {
     totalPrice,
   } = checkoutContent;
 
-  const handlePaymentButtonClick = async () => {
-    await executePayment({
-      asyncFunction: () => getCouponValidation(Number(checkoutId)),
-      options: {
-        onSuccess: () => {
-          navigate("/order-complete", {
-            state: {
-              checkoutItems,
-              totalPrice,
-            },
-          });
-        },
-        onFail: (error) => alert(error.message),
-        showLoading: true,
-      },
+  const handleRemoteAreaSelect = (nextSelect: boolean) => {
+    requestUpdateCheckoutRemoteArea(nextSelect, {
+      onSuccess: ({
+        remoteArea,
+        couponDiscountPrice,
+        deliveryFee,
+        totalPrice,
+      }) =>
+        updateCheckoutContent({
+          remoteArea,
+          couponDiscountPrice,
+          deliveryFee,
+          totalPrice,
+        }),
+      onFail: (error) => alert(error.message),
+      showLoading: true,
     });
   };
 
@@ -68,6 +66,10 @@ const CheckoutPage = () => {
     <div
       css={css({
         position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        gap: "12px",
+        padding: "64px 24px",
       })}
     >
       <Header
@@ -87,52 +89,54 @@ const CheckoutPage = () => {
           </button>
         }
       />
-      <div css={typography.titleLarge}>주문 확인</div>
-      <div>{`총 ${checkoutItems.length}종류의 상품 ${getCheckoutAllItemCount(checkoutItems)}개를 주문합니다.`}</div>
-      <div>최종 결제금액을 확인해 주세요.</div>
+      <div css={[typography.titleLarge, { marginTop: "24px" }]}>주문 확인</div>
+      <div
+        css={typography.bodyMedium}
+      >{`총 ${checkoutItems.length}종류의 상품 ${getCheckoutAllItemCount(checkoutItems)}개를 주문합니다.`}</div>
+      <div css={typography.bodyMedium}>최종 결제금액을 확인해 주세요.</div>
+
       <CheckoutItemList checkoutItems={checkoutItems} />
-      <BaseButton onClick={() => setIsCheckoutCouponModalOpen(true)}>
+
+      <BaseButton
+        onClick={() => setIsCheckoutCouponModalOpen(true)}
+        style={"white"}
+        display="full"
+        rounded="md"
+      >
         쿠폰 적용
       </BaseButton>
+
       <div css={typography.titleMedium}>배송 정보</div>
       <label>
         <BaseCheckBox
           isSelected={remoteArea}
           disabled={remoteAreaAsyncState.status === "loading"}
-          onSelect={(nextSelect) =>
-            requestUpdateCheckoutRemoteArea(nextSelect, {
-              onSuccess: ({
-                remoteArea,
-                couponDiscountPrice,
-                deliveryFee,
-                totalPrice,
-              }) =>
-                updateCheckoutContent({
-                  remoteArea,
-                  couponDiscountPrice,
-                  deliveryFee,
-                  totalPrice,
-                }),
-              onFail: (error) => alert(error.message),
-              showLoading: true,
-            })
-          }
+          onSelect={handleRemoteAreaSelect}
         />
         제주도 및 도서 산간 지역
       </label>
+
       <CheckoutPaymentSummary
         orderPrice={orderPrice}
         couponDiscountPrice={couponDiscountPrice}
         deliveryFee={deliveryFee}
         totalPrice={totalPrice}
       />
-
-      <BaseButton
-        onClick={handlePaymentButtonClick}
-        disabled={requestPaymentAsyncState.status === "loading"}
+      <div
+        css={css({
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          width: "100%",
+          zIndex: 1,
+        })}
       >
-        결제하기
-      </BaseButton>
+        <PaymentButton
+          checkoutId={Number(checkoutId)}
+          checkoutItems={checkoutItems}
+          totalPrice={totalPrice}
+        />
+      </div>
 
       <CheckoutCouponModal
         checkoutId={Number(checkoutId)}
@@ -148,3 +152,49 @@ const CheckoutPage = () => {
 };
 
 export default CheckoutPage;
+
+const PaymentButton = ({
+  checkoutId,
+  checkoutItems,
+  totalPrice,
+}: {
+  checkoutId: number;
+  checkoutItems: CheckoutItem[];
+  totalPrice: number;
+}) => {
+  const navigate = useNavigate();
+
+  const {
+    asyncState: requestPaymentAsyncState,
+    executeAsyncFunction: executePayment,
+  } = useAsyncTask<void>();
+
+  const handlePaymentButtonClick = async () => {
+    await executePayment({
+      asyncFunction: () => getCouponValidation(Number(checkoutId)),
+      options: {
+        onSuccess: () => {
+          navigate("/order-complete", {
+            state: {
+              checkoutItems,
+              totalPrice,
+            },
+          });
+        },
+        onFail: (error) => alert(error.message),
+        showLoading: true,
+      },
+    });
+  };
+  return (
+    <BaseButton
+      onClick={handlePaymentButtonClick}
+      disabled={requestPaymentAsyncState.status === "loading"}
+      style={"black"}
+      display="full"
+      rounded="none"
+    >
+      결제하기
+    </BaseButton>
+  );
+};

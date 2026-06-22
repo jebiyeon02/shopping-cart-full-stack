@@ -1,10 +1,25 @@
-import { useEffect, useRef, useState } from "react";
-import type { CheckoutContent } from "../../../domain/checkout/checkout.api";
+import type {
+  CheckoutApplyCouponResponse,
+  CheckoutContent,
+  CheckoutItem,
+} from "../../../domain/checkout/checkout.api";
 import CheckoutCouponList from "./CheckoutCouponList/CheckoutCouponList";
-import CheckoutCouponUseButton from "./CheckoutCouponUseButton";
 import useCheckoutCoupon from "./useCheckoutCoupon";
 import { css } from "@emotion/react";
 import { typography } from "../../../shared/styles/typography";
+import { maxApplyCouponCount } from "../../../domain/coupon/coupon.constant";
+import useSelectedCheckoutCoupon from "./useSelectedCheckoutCoupon";
+import type { CheckoutCoupon } from "../../../domain/coupon/coupon.api";
+import type {
+  AsyncState,
+  ExecuteAsyncFunctionProps,
+} from "../../../shared/useAsyncTask";
+import {
+  getFilteredCoupon,
+  getTotalCouponDiscountPrice,
+} from "../../../domain/coupon/coupon.util";
+import BaseButton from "../../../shared/components/BaseButton";
+import { formatPrice } from "../../../shared/utils";
 
 const CheckoutCouponModal = ({
   checkoutId,
@@ -28,34 +43,19 @@ const CheckoutCouponModal = ({
     requestUpdateCheckoutApplyCoupon,
     updateApplyCouponAsyncState,
   } = useCheckoutCoupon(checkoutId);
-  const [selectedCouponIds, setSelectedCouponIds] = useState<number[]>([]); // TODO: selectedCouponIds 커스텀 훅으로 분리하기, 분리 이유는 책임관점 -> 클라이언트 상태관리라는 목적!
+  const { selectedCouponIds, addSelectedCouponId, deleteSelectedCouponId } =
+    useSelectedCheckoutCoupon(getCheckoutCouponAsyncState);
 
-  const isCheckoutCouponModalMounted = useRef(false);
-
-  useEffect(() => {
-    if (
-      getCheckoutCouponAsyncState.data &&
-      !isCheckoutCouponModalMounted.current
-    ) {
-      setSelectedCouponIds(
-        getCheckoutCouponAsyncState.data.recommendedCouponIds,
-      );
-
-      isCheckoutCouponModalMounted.current = true;
-    }
-  }, [getCheckoutCouponAsyncState.data, isCheckoutCouponModalMounted]);
-
-  if (getCheckoutCouponAsyncState.status !== "success") return "쿠폰 로딩중...";
+  if (getCheckoutCouponAsyncState.status !== "success") return null;
 
   const { coupons } = getCheckoutCouponAsyncState.data;
 
   const handleSelectCoupon = (couponId: number, nextSelect: boolean) => {
-    if (nextSelect && selectedCouponIds.length < 2) {
-      setSelectedCouponIds((prev) => [...prev, couponId]);
+    if (nextSelect && selectedCouponIds.length < maxApplyCouponCount) {
+      addSelectedCouponId(couponId);
       return;
     }
-
-    setSelectedCouponIds((prev) => prev.filter((id) => id !== couponId));
+    deleteSelectedCouponId(couponId);
   };
 
   if (!isCheckoutCouponModalOpen) return null;
@@ -72,6 +72,7 @@ const CheckoutCouponModal = ({
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "rgba(0, 0, 0, 0.5)",
+        zIndex: 10,
       })}
       onClick={(e) => {
         if (e.currentTarget === e.target) {
@@ -81,6 +82,8 @@ const CheckoutCouponModal = ({
     >
       <article
         css={css({
+          display: "flex",
+          flexDirection: "column",
           border: "1px solid #fff",
           borderRadius: "4px",
           backgroundColor: "white",
@@ -106,12 +109,14 @@ const CheckoutCouponModal = ({
             X
           </button>
         </div>
+
         <CheckoutCouponList
           coupons={coupons}
           selectedCouponIds={selectedCouponIds}
           onSelectCoupon={handleSelectCoupon}
           updateApplyCouponAsyncState={updateApplyCouponAsyncState}
         />
+
         <CheckoutCouponUseButton
           checkoutId={checkoutId}
           coupons={coupons}
@@ -130,3 +135,74 @@ const CheckoutCouponModal = ({
 };
 
 export default CheckoutCouponModal;
+
+const CheckoutCouponUseButton = ({
+  coupons,
+  selectedCouponIds,
+  checkoutItems,
+  orderPrice,
+  deliveryFee,
+  requestUpdateCheckoutApplyCoupon,
+  updateApplyCouponAsyncState,
+  onCloseModal,
+  updateCheckoutContent,
+}: {
+  checkoutId: number;
+  coupons: CheckoutCoupon[];
+  selectedCouponIds: number[];
+  checkoutItems: CheckoutItem[];
+  orderPrice: number;
+  deliveryFee: number;
+  requestUpdateCheckoutApplyCoupon: (
+    nextCouponIds: number[],
+    options: ExecuteAsyncFunctionProps<CheckoutApplyCouponResponse>["options"],
+  ) => Promise<void>;
+  updateApplyCouponAsyncState: AsyncState<CheckoutApplyCouponResponse>;
+  onCloseModal: () => void;
+  updateCheckoutContent: (updateContent: Partial<CheckoutContent>) => void;
+}) => {
+  const selectedCoupons = getFilteredCoupon(coupons, selectedCouponIds);
+
+  const totalCouponDiscountPrice = getTotalCouponDiscountPrice({
+    selectedCoupons,
+    checkoutItems,
+    orderPrice,
+    deliveryFee,
+  });
+
+  const handleUseCouponButtonClick = async () => {
+    await requestUpdateCheckoutApplyCoupon(selectedCouponIds, {
+      onSuccess: ({
+        appliedCouponIds,
+        couponDiscountPrice,
+        deliveryFee,
+        totalPrice,
+      }) => {
+        updateCheckoutContent({
+          appliedCouponIds,
+          couponDiscountPrice,
+          deliveryFee,
+          totalPrice,
+        });
+        onCloseModal();
+      },
+      onFail: (error) => alert(error.message),
+      showLoading: true,
+    });
+  };
+
+  return (
+    <BaseButton
+      disabled={
+        updateApplyCouponAsyncState.status === "loading" ||
+        totalCouponDiscountPrice === 0
+      }
+      onClick={handleUseCouponButtonClick}
+      style={"gray"}
+      display="inline"
+      rounded="md"
+    >
+      총 {formatPrice(totalCouponDiscountPrice)}원 할인 쿠폰 사용하기
+    </BaseButton>
+  );
+};
