@@ -48,18 +48,14 @@ export const getTotalCouponDiscountPrice = ({
   "checkoutItems" | "orderPrice" | "deliveryFee"
 >) => {
   const sortedCoupons = selectedCoupons.toSorted((a, b) => {
-    if (
-      getCouponDiscountType({ fixedDiscountRate: a.fixedDiscountRate }) ===
-      getCouponDiscountType({ fixedDiscountRate: b.fixedDiscountRate })
-    ) {
+    const aIsRateDiscountCoupon = isRateDiscountCoupon(a);
+    const bIsRateDiscountCoupon = isRateDiscountCoupon(b);
+
+    if (aIsRateDiscountCoupon === bIsRateDiscountCoupon) {
       return 0;
     }
 
-    return getCouponDiscountType({
-      fixedDiscountRate: a.fixedDiscountRate,
-    }) === "fixed"
-      ? -1
-      : 1;
+    return aIsRateDiscountCoupon ? 1 : -1;
   });
 
   let targetPrice = orderPrice;
@@ -79,14 +75,10 @@ export const getTotalCouponDiscountPrice = ({
   return totalDiscountPrice;
 };
 
-const getCouponDiscountType = ({
+const isRateDiscountCoupon = ({
   fixedDiscountRate,
-}: Pick<CheckoutCoupon, "fixedDiscountRate">): "ratio" | "fixed" => {
-  if (fixedDiscountRate) {
-    return "ratio";
-  }
-
-  return "fixed";
+}: Pick<CheckoutCoupon, "fixedDiscountRate">) => {
+  return fixedDiscountRate !== null;
 };
 
 const getDiscountAmount = ({
