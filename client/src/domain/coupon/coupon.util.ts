@@ -1,6 +1,7 @@
 import { formatPrice } from "../../shared/utils";
 import type { CheckoutContent } from "../checkout/checkout.api";
 import type { CheckoutCoupon } from "./coupon.api";
+import { BOGO_MIN_ITEM_COUNT } from "./coupon.constant";
 
 export const formatExpiryDate = (expiryDate: string) => {
   const [year, month, date] = expiryDate.split("-");
@@ -100,7 +101,7 @@ const getDiscountAmount = ({
 
   if (coupon.type.includes("BOGO")) {
     const filteredPrice = checkoutItems
-      .filter((item) => item.itemCount >= 3)
+      .filter((item) => item.itemCount >= BOGO_MIN_ITEM_COUNT)
       .map((item) => item.price);
 
     if (filteredPrice.length === 0) {
