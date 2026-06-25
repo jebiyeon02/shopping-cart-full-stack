@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { AsyncState } from "../../../shared/useAsyncTask";
-import type { CheckoutCouponResponse } from "../../../domain/coupon/coupon.api";
+import type { CheckoutCouponResponse } from "../../../domain/checkout/checkout.api";
 
 const useSelectedCheckoutCoupon = (
   getCheckoutCouponAsyncState: AsyncState<CheckoutCouponResponse>,

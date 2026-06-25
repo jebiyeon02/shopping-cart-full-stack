@@ -8,14 +8,17 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useCheckoutContent } from "./useCheckoutContent";
 import BaseButton from "../../shared/components/BaseButton";
 import useAsyncTask from "../../shared/useAsyncTask";
-import { getCouponValidation } from "../../domain/coupon/coupon.api";
+
 import { getCheckoutAllItemCount } from "../../domain/checkout/checkout.util";
 import { typography } from "../../shared/styles/typography";
 import Header from "../../shared/components/Header";
 import BaseCheckBox from "../../shared/components/BaseCheckBox";
 import { css } from "@emotion/react";
 import ArrowBackIcon from "../../assets/arrow_back.png";
-import type { CheckoutItem } from "../../domain/checkout/checkout.api";
+import {
+  getCouponValidation,
+  type CheckoutItem,
+} from "../../domain/checkout/checkout.api";
 
 const CheckoutPage = () => {
   const { checkoutId } = useParams();

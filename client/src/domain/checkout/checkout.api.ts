@@ -15,6 +15,19 @@ export type CheckoutContent = {
   totalPrice: number;
 };
 
+export type CheckoutCoupon = {
+  id: number;
+  name: string;
+  type: string;
+  expiryDate: string;
+  fixedDiscountPrice: number | null;
+  fixedDiscountRate: number | null;
+  minAmount: number | null;
+  startTime: string | null;
+  endTime: string | null;
+  isAvailable: boolean;
+};
+
 export type CheckoutRemoteAreaResponse = Pick<
   CheckoutContent,
   "remoteArea" | "couponDiscountPrice" | "deliveryFee" | "totalPrice"
@@ -24,6 +37,11 @@ export type CheckoutApplyCouponResponse = Pick<
   CheckoutContent,
   "appliedCouponIds" | "couponDiscountPrice" | "deliveryFee" | "totalPrice"
 >;
+
+export type CheckoutCouponResponse = {
+  coupons: CheckoutCoupon[];
+  recommendedCouponIds: CheckoutContent["appliedCouponIds"];
+};
 
 export const createCheckout = async (
   cartId: number,
@@ -116,4 +134,41 @@ export const updateCheckoutRemoteArea = async (
     data.result;
 
   return { remoteArea, deliveryFee, couponDiscountPrice, totalPrice };
+};
+
+export const getCheckoutCoupons = async (
+  checkoutId: number,
+): Promise<CheckoutCouponResponse> => {
+  const response = await fetch(`${BASE_URL}/checkout/${checkoutId}/coupons`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    await throwApiError(response);
+  }
+
+  const data: ApiResponse<CheckoutCouponResponse> = await response.json();
+  const checkoutCouponResponse = data.result;
+
+  return checkoutCouponResponse;
+};
+
+export const getCouponValidation = async (
+  checkoutId: number,
+): Promise<void> => {
+  const response = await fetch(
+    `${BASE_URL}/checkout/${checkoutId}/coupons/validation`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+
+  if (!response.ok) {
+    await throwApiError(response);
+  }
 };

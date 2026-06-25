@@ -1,25 +1,25 @@
 import type {
   CheckoutApplyCouponResponse,
   CheckoutContent,
+  CheckoutCoupon,
   CheckoutItem,
 } from "../../../domain/checkout/checkout.api";
 import CheckoutCouponList from "./CheckoutCouponList/CheckoutCouponList";
 import useCheckoutCoupon from "./useCheckoutCoupon";
 import { css } from "@emotion/react";
 import { typography } from "../../../shared/styles/typography";
-import { MAX_APPLY_COUPON_COUNT } from "../../../domain/coupon/coupon.constant";
 import useSelectedCheckoutCoupon from "./useSelectedCheckoutCoupon";
-import type { CheckoutCoupon } from "../../../domain/coupon/coupon.api";
 import type {
   AsyncState,
   ExecuteAsyncFunctionProps,
 } from "../../../shared/useAsyncTask";
+import BaseButton from "../../../shared/components/BaseButton";
+import { formatPrice } from "../../../shared/utils";
+import { MAX_APPLY_COUPON_COUNT } from "../../../domain/checkout/checkout.constant";
 import {
   getFilteredCoupon,
   getTotalCouponDiscountPrice,
-} from "../../../domain/coupon/coupon.util";
-import BaseButton from "../../../shared/components/BaseButton";
-import { formatPrice } from "../../../shared/utils";
+} from "../../../domain/checkout/checkout.util";
 
 const CheckoutCouponModal = ({
   checkoutId,

@@ -1,14 +1,12 @@
 import { useEffect } from "react";
-import {
-  getCheckoutCoupons,
-  type CheckoutCouponResponse,
-} from "../../../domain/coupon/coupon.api";
 import useAsyncTask, {
   type ExecuteAsyncFunctionProps,
 } from "../../../shared/useAsyncTask";
 import {
+  getCheckoutCoupons,
   updateCheckoutApplyCoupon,
   type CheckoutApplyCouponResponse,
+  type CheckoutCouponResponse,
 } from "../../../domain/checkout/checkout.api";
 
 const useCheckoutCoupon = (checkoutId: number) => {

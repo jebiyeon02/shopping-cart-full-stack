@@ -1,10 +1,12 @@
-import type { CheckoutApplyCouponResponse } from "../../../../domain/checkout/checkout.api";
-import type { CheckoutCoupon } from "../../../../domain/coupon/coupon.api";
-import { MAX_APPLY_COUPON_COUNT } from "../../../../domain/coupon/coupon.constant";
+import type {
+  CheckoutApplyCouponResponse,
+  CheckoutCoupon,
+} from "../../../../domain/checkout/checkout.api";
+import { MAX_APPLY_COUPON_COUNT } from "../../../../domain/checkout/checkout.constant";
 import {
   formatCouponUsageConditions,
   formatExpiryDate,
-} from "../../../../domain/coupon/coupon.util";
+} from "../../../../domain/checkout/checkout.util";
 import BaseCheckBox from "../../../../shared/components/BaseCheckBox";
 import ListItem from "../../../../shared/components/Layout/ListItem";
 import { typography } from "../../../../shared/styles/typography";

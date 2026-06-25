@@ -1,13 +1,15 @@
 import { css } from "@emotion/react";
-import type { CheckoutApplyCouponResponse } from "../../../../domain/checkout/checkout.api";
-import type { CheckoutCoupon } from "../../../../domain/coupon/coupon.api";
+import type {
+  CheckoutApplyCouponResponse,
+  CheckoutCoupon,
+} from "../../../../domain/checkout/checkout.api";
 import List from "../../../../shared/components/Layout/List";
 import ListItem from "../../../../shared/components/Layout/ListItem";
 import type { AsyncState } from "../../../../shared/useAsyncTask";
 import CheckoutCouponRow from "./CheckoutCouponRow";
 import { typography } from "../../../../shared/styles/typography";
 import WarningIcon from "../../../../assets/warning.png";
-import { MAX_APPLY_COUPON_COUNT } from "../../../../domain/coupon/coupon.constant";
+import { MAX_APPLY_COUPON_COUNT } from "../../../../domain/checkout/checkout.constant";
 
 const CheckoutCouponList = ({
   coupons,
