@@ -27,8 +27,6 @@ export const useCheckoutContent = (checkoutId: number) => {
     });
   }, [executeGetCheckoutContent]);
 
-  updateCheckoutRemoteArea;
-
   const requestUpdateCheckoutRemoteArea = async (
     nextRemoteArea: boolean,
     options: ExecuteAsyncFunctionProps<CheckoutRemoteAreaResponse>["options"],
