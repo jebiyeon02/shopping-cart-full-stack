@@ -1,1 +1,1 @@
-export const maxApplyCouponCount = 2;
+export const MAX_APPLY_COUPON_COUNT = 2;

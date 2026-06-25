@@ -7,7 +7,7 @@ import CheckoutCouponList from "./CheckoutCouponList/CheckoutCouponList";
 import useCheckoutCoupon from "./useCheckoutCoupon";
 import { css } from "@emotion/react";
 import { typography } from "../../../shared/styles/typography";
-import { maxApplyCouponCount } from "../../../domain/coupon/coupon.constant";
+import { MAX_APPLY_COUPON_COUNT } from "../../../domain/coupon/coupon.constant";
 import useSelectedCheckoutCoupon from "./useSelectedCheckoutCoupon";
 import type { CheckoutCoupon } from "../../../domain/coupon/coupon.api";
 import type {
@@ -51,7 +51,7 @@ const CheckoutCouponModal = ({
   const { coupons } = getCheckoutCouponAsyncState.data;
 
   const handleSelectCoupon = (couponId: number, nextSelect: boolean) => {
-    if (nextSelect && selectedCouponIds.length < maxApplyCouponCount) {
+    if (nextSelect && selectedCouponIds.length < MAX_APPLY_COUPON_COUNT) {
       addSelectedCouponId(couponId);
       return;
     }
