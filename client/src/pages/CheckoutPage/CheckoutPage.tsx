@@ -25,7 +25,8 @@ const CheckoutPage = () => {
     getCheckoutContentAsyncState,
     requestUpdateCheckoutRemoteArea,
     remoteAreaAsyncState,
-    updateCheckoutContent,
+    applyRemoteAreaResult,
+    applyCheckoutCouponResult,
   } = useCheckoutContent(Number(checkoutId));
 
   const [isCheckoutCouponModalOpen, setIsCheckoutCouponModalOpen] =
@@ -51,7 +52,7 @@ const CheckoutPage = () => {
         deliveryFee,
         totalPrice,
       }) =>
-        updateCheckoutContent({
+        applyRemoteAreaResult({
           remoteArea,
           couponDiscountPrice,
           deliveryFee,
@@ -155,7 +156,7 @@ const CheckoutPage = () => {
         checkoutItems={checkoutItems}
         orderPrice={orderPrice}
         deliveryFee={deliveryFee}
-        updateCheckoutContent={updateCheckoutContent}
+        applyCheckoutCouponResult={applyCheckoutCouponResult}
       />
     </div>
   );

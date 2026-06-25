@@ -37,6 +37,42 @@ export const useCheckoutContent = (checkoutId: number) => {
     });
   };
 
+  const applyRemoteAreaResult = ({
+    remoteArea,
+    couponDiscountPrice,
+    deliveryFee,
+    totalPrice,
+  }: {
+    remoteArea: boolean;
+    couponDiscountPrice: number;
+    deliveryFee: number;
+    totalPrice: number;
+  }) => {
+    updateCheckoutContent({
+      remoteArea,
+      couponDiscountPrice,
+      deliveryFee,
+      totalPrice,
+    });
+  };
+
+  const applyCheckoutCouponResult = ({
+    appliedCouponIds,
+    couponDiscountPrice,
+    deliveryFee,
+    totalPrice,
+  }: Pick<
+    CheckoutContent,
+    "appliedCouponIds" | "couponDiscountPrice" | "deliveryFee" | "totalPrice"
+  >) => {
+    updateCheckoutContent({
+      appliedCouponIds,
+      couponDiscountPrice,
+      deliveryFee,
+      totalPrice,
+    });
+  };
+
   const updateCheckoutContent = (updateContent: Partial<CheckoutContent>) => {
     const checkoutContent = getCheckoutContentAsyncState.data;
     if (checkoutContent) {
@@ -48,6 +84,7 @@ export const useCheckoutContent = (checkoutId: number) => {
     getCheckoutContentAsyncState,
     requestUpdateCheckoutRemoteArea,
     remoteAreaAsyncState: updateCheckoutRemoteAreaAsyncTask.asyncState,
-    updateCheckoutContent,
+    applyRemoteAreaResult,
+    applyCheckoutCouponResult,
   };
 };

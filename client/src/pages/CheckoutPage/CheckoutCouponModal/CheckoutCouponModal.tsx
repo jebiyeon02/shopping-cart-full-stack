@@ -28,7 +28,7 @@ const CheckoutCouponModal = ({
   checkoutItems,
   orderPrice,
   deliveryFee,
-  updateCheckoutContent,
+  applyCheckoutCouponResult,
 }: {
   checkoutId: number;
   isCheckoutCouponModalOpen: boolean;
@@ -36,7 +36,15 @@ const CheckoutCouponModal = ({
   checkoutItems: CheckoutContent["checkoutItems"];
   orderPrice: CheckoutContent["orderPrice"];
   deliveryFee: CheckoutContent["deliveryFee"];
-  updateCheckoutContent: (updateContent: Partial<CheckoutContent>) => void;
+  applyCheckoutCouponResult: ({
+    appliedCouponIds,
+    couponDiscountPrice,
+    deliveryFee,
+    totalPrice,
+  }: Pick<
+    CheckoutContent,
+    "appliedCouponIds" | "couponDiscountPrice" | "deliveryFee" | "totalPrice"
+  >) => void;
 }) => {
   const {
     getCheckoutCouponAsyncState,
@@ -127,7 +135,7 @@ const CheckoutCouponModal = ({
           requestUpdateCheckoutApplyCoupon={requestUpdateCheckoutApplyCoupon}
           updateApplyCouponAsyncState={updateApplyCouponAsyncState}
           onCloseModal={onCloseModal}
-          updateCheckoutContent={updateCheckoutContent}
+          applyCheckoutCouponResult={applyCheckoutCouponResult}
         />
       </article>
     </section>
@@ -145,7 +153,7 @@ const CheckoutCouponUseButton = ({
   requestUpdateCheckoutApplyCoupon,
   updateApplyCouponAsyncState,
   onCloseModal,
-  updateCheckoutContent,
+  applyCheckoutCouponResult,
 }: {
   checkoutId: number;
   coupons: CheckoutCoupon[];
@@ -159,7 +167,15 @@ const CheckoutCouponUseButton = ({
   ) => Promise<void>;
   updateApplyCouponAsyncState: AsyncState<CheckoutApplyCouponResponse>;
   onCloseModal: () => void;
-  updateCheckoutContent: (updateContent: Partial<CheckoutContent>) => void;
+  applyCheckoutCouponResult: ({
+    appliedCouponIds,
+    couponDiscountPrice,
+    deliveryFee,
+    totalPrice,
+  }: Pick<
+    CheckoutContent,
+    "appliedCouponIds" | "couponDiscountPrice" | "deliveryFee" | "totalPrice"
+  >) => void;
 }) => {
   const selectedCoupons = getFilteredCoupon(coupons, selectedCouponIds);
 
@@ -178,7 +194,7 @@ const CheckoutCouponUseButton = ({
         deliveryFee,
         totalPrice,
       }) => {
-        updateCheckoutContent({
+        applyCheckoutCouponResult({
           appliedCouponIds,
           couponDiscountPrice,
           deliveryFee,
